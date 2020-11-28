@@ -3,7 +3,7 @@ window.whatsapp = class {
 		title       = "¿Necesitas ayuda?",
 		description = "Chatea con nosotros por Whatsapp",
 		agents      = [],
-		time        = null
+		time        = []
 	}) {
 		this.wTitle       = title,
 		this.wDescription = description,
@@ -36,26 +36,16 @@ window.whatsapp = class {
 	}
 	isEnabled(time) {
 		const date = new Date();
-		if (typeof time === "string" && time === "24h") return true
-		if (time === null) return true
+		if (time.length === 0) return true
 		const _s = time[0].split(":")
 		const _e = time[1].split(":")
-		const utcDiff = 5,
-		start = {
-			hours: Number(_s[0]) + utcDiff,
-			minutes: Number(_s[1])
-		},
-		end = {
-			hours: Number(_e[0]) + utcDiff,
-			minutes: Number(_e[1])
-		},
-		utc = {
-			hours: date.getUTCHours(),
-			minutes: date.getUTCMinutes()
+		if (date.getTime() >= new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), Number(_e[0]), Number(_e[1])).getTime()) {
+			return false
 		}
-		if (utc.hours >= end.hours && utc.minutes > end.minutes) return false
-		else if (utc.hours <= start.hours && utc.minutes < start.minutes) return false
-		else return true
+		if (date.getTime() <= new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), Number(_s[0]), Number(_s[1])).getTime()) {
+			return false
+		}
+		return true
 	}
 	render() {
 		if (!this.wAgents.length) return;
