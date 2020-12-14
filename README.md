@@ -1,4 +1,4 @@
-# corbeta-whatsapp-widget
+# whatsapp-widget
 
 ## Agents:
 
