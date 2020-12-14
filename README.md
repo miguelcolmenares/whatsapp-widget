@@ -1,2 +1,2 @@
-# corbeta-whatsapp-widget
+# whatsapp-widget
  
