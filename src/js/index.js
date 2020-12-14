@@ -1,32 +1,14 @@
 "use strict"
-class Whatsapp {
+class WhatsappWidget {
 	constructor({
 		title       = "¿Necesitas ayuda?",
 		description = "Chatea con nosotros por Whatsapp",
-		agents      = [],
-		time        = []
+		agents      = []
 	}) {
 		this.title       = title,
 		this.description = description,
-		this.agents      = agents,
-		this.time        = time
-		if (!this.isEnabled(this.time)) return
+		this.agents      = agents || []
 		this.render()
-	}
-	getAgent({
-		cta = "",
-		hours = "",
-		name = "",
-		phone = ""
-	}) {
-		return `<a href="#" data-phone="${phone}" data-title="${name}" class="wa-w_a_a js-owaa" title="${name} ${phone}">
-			<span class="wa-w_a_a_i"><span class="wa-w-i wa-w-i-cc"></span></span>
-			<span class="wa-w_a_a_c">
-				<span class="a_t">${name}</span>
-				<span class="a_s">${hours}</span>
-				<span class="a_c">${cta}<span class="a_c_i wa-w-i wa-w-i-e"></span></span>
-			</span>
-		</a>`
 	}
 	getHeader() {
 		return `<header class="wa-w_h">
@@ -38,20 +20,16 @@ class Whatsapp {
 		</header>`
 	}
 	getStyles() {
-		return fetch('./dist/css/whatsapp-widget.min.css').then(res => res.text()).then(style => `<style>${style}</style>`)
-	}
-	isEnabled(time = []) {
-		if (!time.length) return !0
-		const date = new Date()
-		const [_start, _end] = [time[0].split(":"), time[1].split(":")]
-		if (date.getTime() >= new Date(date.getFullYear(), date.getMonth(), date.getDate(), +_end[0], +_end[1]).getTime()) return !!0
-		if (date.getTime() <= new Date(date.getFullYear(), date.getMonth(), date.getDate(), +_start[0], +_start[1]).getTime()) return !!0
-		return !0
+		return fetch('./dist/css/whatsapp-widget.css').then(res => res.text()).then(style => `<style>${style}</style>`)
 	}
 	async render() {
 		if (!this.agents.length) return
 		let agents = ""
-		for (const agent of this.agents) agents += this.getAgent(agent)
+		for (const agent of this.agents) {
+			const Agent = new WhatsappAgent(agent)
+			if (!Agent.isEnabled()) return
+			agents += Agent.render()
+		}
 		document.body.insertAdjacentHTML("beforeend",
 			`${await this.getStyles()}
 			<div class="wa-w">
@@ -90,4 +68,38 @@ class Whatsapp {
 	}
 }
 
-window.whatsapp = Whatsapp
+class WhatsappAgent {
+	constructor({
+		cta = "",
+		hours = "",
+		name = "",
+		phone = "",
+		schedule = []
+	}) {
+		this.cta = cta,
+		this.description = hours,
+		this.name = name,
+		this.phone = phone,
+		this.schedule = schedule || []
+	}
+	isEnabled() {
+		const date = new Date()
+		if (!this.schedule.length || !this.schedule[date.getDay()].length) return !!0
+		const [_start, _end] = [this.schedule[date.getDay()][0].split(":"), this.schedule[date.getDay()][1].split(":")]
+		const [openTime, closeTime] = [new Date(date.getFullYear(), date.getMonth(), date.getDate() < 10 ? '0' + date.getDate() : date.getDate(), +_start[0], +_start[1]), new Date(date.getFullYear(), date.getMonth(), date.getDate() < 10 ? '0' + date.getDate() : date.getDate(), +_end[0], +_end[1])]
+		if (date.getTime() >= openTime.getTime() && date.getTime() <= closeTime.getTime()) return !0
+		return !!0
+	}
+	render() {
+		return `<a href="#" data-phone="${this.phone}" data-title="${this.name}" class="wa-w_a_a js-owaa" title="${this.name} ${this.phone}">
+		<span class="wa-w_a_a_i"><span class="wa-w-i wa-w-i-cc"></span></span>
+		<span class="wa-w_a_a_c">
+			<span class="a_t">${this.name}</span>
+			<span class="a_s">${this.description}</span>
+			<span class="a_c">${this.cta}<span class="a_c_i wa-w-i wa-w-i-e"></span></span>
+		</span>
+	</a>`
+	}
+}
+
+window.whatsapp = WhatsappWidget

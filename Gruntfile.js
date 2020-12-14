@@ -26,7 +26,7 @@ module.exports = function (grunt) {
                     compress: true,
                 },
                 files: {
-                    'dist/css/<%= pkg.name %>.min.css': 'src/less/index.less'
+                    'dist/css/<%= pkg.name %>.css': 'src/less/index.less'
                 }
             }
         },
@@ -56,7 +56,7 @@ module.exports = function (grunt) {
             main: {
                 files: [
                     {
-                        'dist/js/<%= pkg.name %>.min.js': ['src/js/index.js']
+                        'dist/js/<%= pkg.name %>.js': ['src/js/index.js']
                     },
                 ],
             }
