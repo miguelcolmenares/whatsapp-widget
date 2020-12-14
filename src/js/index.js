@@ -24,7 +24,7 @@ class Whatsapp {
 			<span class="wa-w_a_a_c">
 				<span class="a_t">${name}</span>
 				<span class="a_s">${hours}</span>
-				<span class="a_c">${cta}<span class="a_c_i"></span></span>
+				<span class="a_c">${cta}<span class="a_c_i wa-w-i wa-w-i-e"></span></span>
 			</span>
 		</a>`
 	}
@@ -32,7 +32,7 @@ class Whatsapp {
 		return `<header class="wa-w_h">
 			<span class="wa-w_h_t">${this.title}</span>
 			<span class="wa-w_h_s">
-				<span class="wa-w_h_i"></span>
+				<span class="wa-w_h_i wa-w-i wa-w-i-w"></span>
 				${this.description}
 			</span>
 		</header>`
