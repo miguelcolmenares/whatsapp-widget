@@ -38,7 +38,7 @@ class Whatsapp {
 		</header>`
 	}
 	getStyles() {
-		return fetch('./style.min.css').then(res => res.text()).then(style => `<style>${style}</style>`)
+		return fetch('https://static.miguelcolmenares.com/keyrus/corbeta/whatsapp-widget.min.css').then(res => res.text()).then(style => `<style>${style}</style>`)
 	}
 	isEnabled(time = []) {
 		if (!time.length) return !0
