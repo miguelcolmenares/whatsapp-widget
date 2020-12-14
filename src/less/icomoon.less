@@ -1,0 +1,41 @@
+@font-face {
+  font-family: '@{icomoon-font-family}';
+  src:  url('@{icomoon-font-path}/@{icomoon-font-family}.woff2?bwlac5') format('woff2');
+  src:  url('@{icomoon-font-path}/@{icomoon-font-family}.woff2?bwlac5') format('woff2'),
+    url('@{icomoon-font-path}/@{icomoon-font-family}.woff2bwlac5') format('woff'),
+    url('@{icomoon-font-path}/@{icomoon-font-family}.svg?bwlac5#@{icomoon-font-family}') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+.wa-w-i {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: '@{icomoon-font-family}' !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  &-cc {
+    &:before {
+      content: @icon-customer-contact; 
+    }
+  }
+  &-e {
+    &:before {
+      content: @icon-external; 
+    }
+  }
+  &-w {
+    &:before {
+      content: @icon-whatsapp; 
+    }
+  }
+}
+
