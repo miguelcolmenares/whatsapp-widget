@@ -24,23 +24,14 @@ module.exports = function (grunt) {
             dist : {
                 options: {
                     compress: true,
+                    paths: ['dist/css'],
+                    plugins: [
+                        new (require('less-plugin-autoprefix'))({ browsers: ["last 2 versions"] })
+                    ]
                 },
                 files: {
                     'dist/css/<%= pkg.name %>.css': 'src/less/index.less'
                 }
-            }
-        },
-        postcss: {
-            options: {
-                map: false,
-                processors: [
-                    require("pixrem")(), // add fallbacks for rem units
-                    require("autoprefixer")({ overrideBrowserslist: "last 2 versions" }), // add vendor prefixes
-                    require("cssnano")() // minify the result
-                ]
-            },
-            dist: {
-                src: "dist/css/*.css"
             }
         },
         uglify: {
@@ -66,7 +57,6 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-less');
-    grunt.loadNpmTasks('grunt-postcss');
     grunt.loadNpmTasks('grunt-contrib-uglify-es');
 
     grunt.registerTask('default', ['clean', 'copy', 'less', 'uglify']);
