@@ -3,11 +3,8 @@
   "version": "3.0.0",
   "description": "Whatsapp widget",
   "main": "Gruntfile.js",
-  "browserslist": [
-    "defaults",
-    "not IE 11"
-  ],
   "scripts": {
+    "build": "grunt",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
