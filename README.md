@@ -1,21 +1,56 @@
-# whatsapp-widget
+# Whatsapp widget
+> Add a flotating widget to open WhatsApp
 
-## Agents:
+## How to use
 
-list of params required to add a new agent:
+Add this javascript at the end of your page:
+```html
+<script type="text/javascript">
+!function(w,h,a,t,s,p){
+    w.whatsapp || (
+    s = h.createElement(a),
+    s.src = t,
+    p = h.getElementsByTagName(a)[0],
+    p.parentNode.insertBefore(s, p)
+    )}(window, document, "script", "https://cdn.jsdelivr.net/gh/miguelcolmenares/whatsapp-widget@latest/dist/js/whatsapp-widget.js");
+    window.onload = function(){
+        new whatsapp({
+        agents:[{
+            name : "Servicio al cliente",
+            phone: "+57 320 2851704",
+            hours: "Disponible 9am - 6pm",
+            cta : "Haz clic para iniciar chat"
+        }],
+        time : ["9:00", "16:25"]
+    })
+};
+</script>
+```
 
-**name**: string
+### Options
 
-**phone**: string
+#### name
+Type: `String` 
+Default: `""`
 
-**hours**: string
+#### phone
+Type: `String` 
+Default: `""`
 
-**cta**: string
+#### hours
+Type: `String` 
+Default: `""`
 
-**schedule**: array
+#### cta
+Type: `String` 
+Default: `""`
+
+#### schedule
+Type: `Array` 
+Default: `[]`
 
 ## Example:
-```
+```javascript
 new whatsapp({
  agents:[{
   name : "Servicio al cliente",
