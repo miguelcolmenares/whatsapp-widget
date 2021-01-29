@@ -30,23 +30,23 @@ Add this javascript at the end of your page:
 ### Options
 
 #### name
-Type: `String` 
+Type: `String`  
 Default: `""`
 
 #### phone
-Type: `String` 
+Type: `String`  
 Default: `""`
 
 #### hours
-Type: `String` 
+Type: `String`  
 Default: `""`
 
 #### cta
-Type: `String` 
+Type: `String`  
 Default: `""`
 
 #### schedule
-Type: `Array` 
+Type: `Array`  
 Default: `[]`
 
 ## Example:
