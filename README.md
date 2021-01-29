@@ -1,7 +1,8 @@
-# Whatsapp widget
+# Whatsapp widget v3.0.0 ![alt text](https://data.jsdelivr.com/v1/package/gh/miguelcolmenares/whatsapp-widget/badge "JsDelivr")
+
 > Add a flotating widget to open WhatsApp
 
-## How to use
+## Getting Started
 
 Add this javascript at the end of your page:
 ```html
