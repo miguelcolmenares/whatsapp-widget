@@ -1,73 +1,112 @@
-"use strict"
+"use strict";
 class WhatsappWidget {
 	constructor({
 		title       = "¿Necesitas ayuda?",
 		description = "Chatea con nosotros por Whatsapp",
 		agents      = []
 	}) {
-		this.title       = title,
+		this.agents      = agents,
 		this.description = description,
-		this.agents      = agents || []
-		this.render()
+		this.package     = "{{package}}",
+		this.title       = title,
+		this.url         = "{{url}}@{{version}}",
+		this.version     = "{{version}}",
+		this.$widget;
+		if (!this.agents.length) return;
+		this.render();
 	}
-	getHeader() {
-		return `<header class="wa-w_h">
-			<span class="wa-w_h_t">${this.title}</span>
-			<span class="wa-w_h_s">
-				<span class="wa-w_h_i wa-w-i wa-w-i-w"></span>
-				${this.description}
-			</span>
-		</header>`
+	_agents() {
+		const agentsContainer = document.createElement("section");
+		agentsContainer.classList.add("wa-w_a");
+		this.agents.forEach(agent => {
+			const _agent = new WhatsappAgent(agent);
+			_agent.isEnabled ? agentsContainer.append(new WhatsappAgent(agent).render()) : "";
+		});
+		return agentsContainer;
 	}
-	getStyles() {
-		return fetch('./dist/css/whatsapp-widget.css').then(res => res.text()).then(style => `<style>${style}</style>`)
+	_button() {
+		const button = document.createRange().createContextualFragment(
+		`<button class="wa-w_b" title="${this.title}">
+			<span class="wa-w-i wa-w-i-w"></span>
+		</button>`);
+		return button;
 	}
-	async render() {
-		if (!this.agents.length) return
-		let agents = ""
-		for (const agent of this.agents) {
-			const Agent = new WhatsappAgent(agent)
-			if (!Agent.isEnabled()) return
-			agents += Agent.render()
+	_click() {
+		if ("dataLayer" in window) {
+			// eslint-disable-next-line no-undef
+			dataLayer.push({
+				event: "ga_event",
+				category: "Widget WhatsApp",
+				action: "Click WhatsApp",
+				label: "Click Icono"
+			});
 		}
-		document.body.insertAdjacentHTML("beforeend",
-			`${await this.getStyles()}
-			<div class="wa-w">
-				${this.getHeader()}
-				<section class="wa-w_a">${agents}</section>
-				<button class="wa-w_b" title="${this.title}"><span class="wa-w-i wa-w-i-w"></span></button>
-			</div>`),
-			document.querySelector(".wa-w_b").addEventListener("click", () => {
-				if ('dataLayer' in window) {
-					dataLayer.push({
-						event: "ga_event",
-						category: "Widget WhatsApp",
-						action: "Click WhatsApp",
-						label: "Click Icono"
-					})
-				}
-				document.querySelector(".wa-w").classList.toggle("open")
-			}),
-			document.querySelector(".js-owaa").addEventListener("click", e => {
-				e.preventDefault(), this.openAgent(e.currentTarget.dataset)
-			})
+		this.$widget.classList.toggle("open");
 	}
-	openAgent({ phone = "", title = "" }) {
-		if ('dataLayer' in window) {
+	_clickAgent({ phone = "", title = "" }) {
+		if ("dataLayer" in window) {
+			// eslint-disable-next-line no-undef
 			dataLayer.push({
 				event: "ga_event",
 				category: "Widget WhatsApp",
 				action: "Click WhatsApp",
 				label: title,
-			})
+			});
 		}
 		window.open(
 			`https://wa.me/${phone.replace(/ /g, "").replace("+", "")}`,
 			"_blank"
-		)
+		);
+	}
+	_header() {
+		return document.createRange().createContextualFragment(
+			`<header class="wa-w_h">
+			<span class="wa-w_h_t">${this.title}</span>
+			<span class="wa-w_h_s">
+				<span class="wa-w_h_i wa-w-i wa-w-i-w"></span>
+				${this.description}
+			</span>
+		</header>`);
+	}
+	async _styles() {
+		const styles = document.createElement("style");
+		await fetch(`${this.url}/dist/css/${this.package}.css`)
+			.then(res => res.text())
+			.then(style => styles.innerHTML = style);
+		return styles;
+	}
+	async render() {
+		document.head.append(await this._styles());
+
+		const widget = document.createElement("div");
+		widget.classList.add("wa-w");
+		widget.append(this._header());
+		widget.append(this._agents());
+		widget.append(this._button());
+		document.body.append(widget);
+
+		//button click
+		widget.querySelector(".wa-w_b").addEventListener("click", () => {
+			this._click();
+		});
+
+		//agent click
+		widget.querySelectorAll(".js-owaa").forEach(agent => {
+			agent.addEventListener("click", e => {
+				e.preventDefault();
+				this._clickAgent(agent.dataset);
+			});
+		});
+
+		return this.widget = widget;
+	}
+	get widget() {
+		return this.$widget;
+	}
+	set widget($element) {
+		this.$widget = $element;
 	}
 }
-
 class WhatsappAgent {
 	constructor({
 		cta = "",
@@ -80,26 +119,27 @@ class WhatsappAgent {
 		this.description = hours,
 		this.name = name,
 		this.phone = phone,
-		this.schedule = schedule || []
+		this.schedule = schedule;
 	}
-	isEnabled() {
-		const date = new Date()
-		if (!this.schedule.length || !this.schedule[date.getDay()].length) return !!0
-		const [_start, _end] = [this.schedule[date.getDay()][0].split(":"), this.schedule[date.getDay()][1].split(":")]
-		const [openTime, closeTime] = [new Date(date.getFullYear(), date.getMonth(), date.getDate() < 10 ? '0' + date.getDate() : date.getDate(), +_start[0], +_start[1]), new Date(date.getFullYear(), date.getMonth(), date.getDate() < 10 ? '0' + date.getDate() : date.getDate(), +_end[0], +_end[1])]
-		if (date.getTime() >= openTime.getTime() && date.getTime() <= closeTime.getTime()) return !0
-		return !!0
+	get isEnabled() {
+		const date = new Date();
+		if (!this.schedule.length || !this.schedule[date.getDay()].length) return !0;
+		const [_start, _end] = [this.schedule[date.getDay()][0].split(":"), this.schedule[date.getDay()][1].split(":")];
+		const [openTime, closeTime] = [new Date(date.getFullYear(), date.getMonth(), date.getDate() < 10 ? "0" + date.getDate() : date.getDate(), +_start[0], +_start[1]), new Date(date.getFullYear(), date.getMonth(), date.getDate() < 10 ? "0" + date.getDate() : date.getDate(), +_end[0], +_end[1])];
+		if (date.getTime() >= openTime.getTime() && date.getTime() <= closeTime.getTime()) return !0;
+		return !!0;
 	}
 	render() {
-		return `<a href="#" data-phone="${this.phone}" data-title="${this.name}" class="wa-w_a_a js-owaa" title="${this.name} ${this.phone}">
-		<span class="wa-w_a_a_i"><span class="wa-w-i wa-w-i-cc"></span></span>
-		<span class="wa-w_a_a_c">
-			<span class="a_t">${this.name}</span>
-			<span class="a_s">${this.description}</span>
-			<span class="a_c">${this.cta}<span class="a_c_i wa-w-i wa-w-i-e"></span></span>
-		</span>
-	</a>`
+		const agent = document.createRange().createContextualFragment(`<a href="#" data-phone="${this.phone}" data-title="${this.name}" class="wa-w_a_a js-owaa" title="${this.name} ${this.phone}">
+			<span class="wa-w_a_a_i"><span class="wa-w-i wa-w-i-cc"></span></span>
+			<span class="wa-w_a_a_c">
+				<span class="a_t">${this.name}</span>
+				<span class="a_s">${this.description}</span>
+				<span class="a_c">${this.cta}<span class="a_c_i wa-w-i wa-w-i-e"></span></span>
+			</span>
+		</a>`);
+		return agent;
 	}
 }
 
-window.whatsapp = WhatsappWidget
+window.whatsapp = WhatsappWidget;

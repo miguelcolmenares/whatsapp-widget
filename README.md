@@ -1,4 +1,6 @@
-# Whatsapp widget v3.0.0 ![alt text](https://data.jsdelivr.com/v1/package/gh/miguelcolmenares/whatsapp-widget/badge "JsDelivr")
+# Whatsapp widget
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/miguelcolmenares/whatsapp-widget)
+![alt text](https://data.jsdelivr.com/v1/package/gh/miguelcolmenares/whatsapp-widget/badge "JsDelivr")
 
 > Add a flotating widget to open WhatsApp
 
@@ -17,12 +19,25 @@ Add this javascript at the end of your page:
     window.onload = function(){
         new whatsapp({
         agents:[{
-            name : "Servicio al cliente",
-            phone: "+57 320 2851704",
+            name: "Servicio al cliente",
+            phone: "+57 320 1234567",
             hours: "Disponible 9am - 6pm",
-            cta : "Haz clic para iniciar chat"
-        }],
-        time : ["9:00", "16:25"]
+            cta: "Haz clic para iniciar chat",
+            schedule: [
+                ["9:00", "18:00"], //Sundays or Holidays
+                ["9:00", "20:00"],
+                ["9:00", "20:00"],
+                ["9:00", "20:00"],
+                ["9:00", "20:00"],
+                ["9:00", "22:00"],
+                ["10:00", "18:00"] // Saturday
+            ]
+        },{
+            name: "Soporte técnico",
+            phone: "+57 320 7654321",
+            hours: "Disponible 9am - 6pm",
+            cta: "Haz clic para iniciar chat"
+        }]
     })
 };
 </script>
@@ -31,23 +46,23 @@ Add this javascript at the end of your page:
 ### Options
 
 #### name
-Type: `String`  
+Type: `String`
 Default: `""`
 
 #### phone
-Type: `String`  
+Type: `String`
 Default: `""`
 
 #### hours
-Type: `String`  
+Type: `String`
 Default: `""`
 
 #### cta
-Type: `String`  
+Type: `String`
 Default: `""`
 
 #### schedule
-Type: `Array`  
+Type: `Array`
 Default: `[]`
 
 ## Example:
