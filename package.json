@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/miguelcolmenares/corbeta-whatsapp-widget.git"
+    "url": "git+https://github.com/miguelcolmenares/whatsapp-widget.git"
   },
   "author": "Miguel Colmenares <me@miguelcolmenares.com>",
   "license": "Apache",
   "bugs": {
-    "url": "https://github.com/miguelcolmenares/corbeta-whatsapp-widget/issues"
+    "url": "https://github.com/miguelcolmenares/whatsapp-widget/issues"
   },
-  "homepage": "https://github.com/miguelcolmenares/corbeta-whatsapp-widget#readme",
+  "homepage": "https://github.com/miguelcolmenares/whatsapp-widget#readme",
   "devDependencies": {
     "grunt": "^1.3.0",
     "grunt-contrib-clean": "^2.0.0",
