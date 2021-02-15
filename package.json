@@ -1,9 +1,9 @@
 {
   "name": "whatsapp-widget",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "description": "Whatsapp widget",
   "main": "Gruntfile.js",
-  "cdn" : "https://cdn.jsdelivr.net/gh/miguelcolmenares/whatsapp-widget",
+  "cdn": "https://cdn.jsdelivr.net/gh/miguelcolmenares/whatsapp-widget",
   "scripts": {
     "build": "grunt",
     "lint": "eslint src/ --quiet"
