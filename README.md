@@ -15,9 +15,9 @@ Add this javascript at the end of your page:
     s.src = t,
     p = h.getElementsByTagName(a)[0],
     p.parentNode.insertBefore(s, p)
-    )}(window, document, "script", "https://cdn.jsdelivr.net/gh/miguelcolmenares/whatsapp-widget@latest/dist/js/whatsapp-widget.js");
-    window.onload = function(){
-        new whatsapp({
+)}(window, document, "script", "https://cdn.jsdelivr.net/gh/miguelcolmenares/whatsapp-widget@latest/dist/js/whatsapp-widget.js");
+window.addEventListener('load', function(){
+    new whatsapp({
         agents:[{
             name: "Servicio al cliente",
             phone: "+57 320 1234567",
@@ -39,7 +39,7 @@ Add this javascript at the end of your page:
             cta: "Haz clic para iniciar chat"
         }]
     })
-};
+});
 </script>
 ```
 

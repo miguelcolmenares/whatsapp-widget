@@ -3,13 +3,13 @@
     --whatsapp-white: @white;
     --whatsapp-green: @green;
     --whatsapp-light-green: @light-green;
+    --whatsapp-font-family: @font-family;
 }
 .wa-w { //Whatsapp widget container
 	background: var(--whatsapp-white);
 	border-top-left-radius: 4px;
 	border-bottom-left-radius: 4px;
-	box-shadow: var(--whatsapp-black) -2px 0 6px;
-	font-family: @font-family;
+	font-family: var(--whatsapp-font-family);
 	font-size: 18px;
 	line-height: 21px;
 	position: fixed;
@@ -27,7 +27,9 @@
 		letter-spacing: 0;
 	}
     &.open {
+        box-shadow: var(--whatsapp-black) -2px 0 6px;
         transform: translate(0,-50%);
+        z-index: 9;
     }
     &_h {
         align-items: center;

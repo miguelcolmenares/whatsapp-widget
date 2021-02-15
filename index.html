@@ -17,7 +17,7 @@
                 p.parentNode.insertBefore(s, p)
             )
         }(window, document, "script", "https://cdn.jsdelivr.net/gh/miguelcolmenares/whatsapp-widget@latest/dist/js/whatsapp-widget.js");
-        window.onload = function () {
+        window.addEventListener('load', function () {
             new whatsapp({
                 agents: [{
                     name: "Servicio al cliente",
@@ -40,7 +40,7 @@
                     cta: "Haz clic para iniciar chat"
                 }]
             })
-        };
+        });
     </script>
 </body>
 </html>
