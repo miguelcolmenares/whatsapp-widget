@@ -41,7 +41,7 @@ class WhatsappWidget {
 				label: "Click Icono"
 			});
 		}
-		this.$widget.classList.toggle("open");
+		this.widget.classList.toggle("open");
 	}
 	_clickAgent({ phone = "", title = "" }) {
 		if ("dataLayer" in window) {
@@ -72,11 +72,11 @@ class WhatsappWidget {
 		const styles = document.createElement("style");
 		await fetch(`${this.url}/dist/css/${this.package}.css`)
 			.then(res => res.text())
-			.then(style => styles.innerHTML = style);
-		return styles;
+			.then(style => styles.append(style));
+		return document.head.append(styles);
 	}
 	async render() {
-		document.head.append(await this._styles());
+		await this._styles();
 
 		const widget = document.createElement("div");
 		widget.classList.add("wa-w");
