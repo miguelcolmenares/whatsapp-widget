@@ -2,7 +2,7 @@
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/miguelcolmenares/whatsapp-widget)
 ![alt text](https://data.jsdelivr.com/v1/package/gh/miguelcolmenares/whatsapp-widget/badge "JsDelivr")
 
-> Add a flotating widget to open WhatsApp
+> Add a floating widget to open WhatsApp
 
 ## Getting Started
 
