@@ -15,7 +15,7 @@ Add this javascript at the end of your page:
     s.src = t,
     p = h.getElementsByTagName(a)[0],
     p.parentNode.insertBefore(s, p)
-)}(window, document, "script", "https://cdn.jsdelivr.net/gh/miguelcolmenares/whatsapp-widget@latest/dist/js/whatsapp-widget.js");
+)}(window, document, "script", "https://cdn.jsdelivr.net/gh/miguelcolmenares/whatsapp-widget/dist/js/whatsapp-widget.js");
 window.addEventListener('load', function(){
     new whatsapp({
         agents:[{
@@ -46,23 +46,23 @@ window.addEventListener('load', function(){
 ### Options
 
 #### name
-Type: `String`
+Type: `String`  
 Default: `""`
 
 #### phone
-Type: `String`
+Type: `String`  
 Default: `""`
 
 #### hours
-Type: `String`
+Type: `String`  
 Default: `""`
 
 #### cta
-Type: `String`
+Type: `String`  
 Default: `""`
 
 #### schedule
-Type: `Array`
+Type: `Array`   
 Default: `[]`
 
 ## Example:
