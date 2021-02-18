@@ -13,7 +13,16 @@ class WhatsappWidget {
 		this.version     = "{{version}}",
 		this.$widget;
 		if (!this.agents.length) return;
+		if (this._activeAgents() === 0) return;
 		this.render();
+	}
+	_activeAgents(){
+		let agentsActive = 0;
+		this.agents.forEach(agent => {
+			const _agent = new WhatsappAgent(agent);
+			_agent.isEnabled ? agentsActive++ : "";
+		});
+		return agentsActive;
 	}
 	_agents() {
 		const agentsContainer = document.createElement("section");

@@ -1,6 +1,6 @@
 {
   "name": "whatsapp-widget",
-  "version": "3.2.1",
+  "version": "3.2.2",
   "description": "Whatsapp widget",
   "main": "Gruntfile.js",
   "cdn": "https://cdn.jsdelivr.net/gh/miguelcolmenares/whatsapp-widget",
