@@ -46,12 +46,12 @@ window.addEventListener('load', function(){
 ## Widget Options
 
 | Argument        | Type           | Default value  |
-| ------------- |:-------------:| -----:|
+| ----------|:--------:| ----:|
 | name      | `String` | `""` |
-| phone      | `String` | `""` |
-| hours | `String` | `""` |
-| cta | `String` | `""` |
-| schedule | `Array` | `[]` |
+| phone     | `String` | `""` |
+| hours     | `String` | `""` |
+| cta       | `String` | `""` |
+| schedule  | `Array`  | `[]` |
 
 ## Example:
 ```javascript
