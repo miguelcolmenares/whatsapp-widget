@@ -43,27 +43,15 @@ window.addEventListener('load', function(){
 </script>
 ```
 
-### Options
+## Widget Options
 
-#### name
-Type: `String`  
-Default: `""`
-
-#### phone
-Type: `String`  
-Default: `""`
-
-#### hours
-Type: `String`  
-Default: `""`
-
-#### cta
-Type: `String`  
-Default: `""`
-
-#### schedule
-Type: `Array`   
-Default: `[]`
+| Argument        | Type           | Default value  |
+| ----------|:--------:| ----:|
+| name      | `String` | `""` |
+| phone     | `String` | `""` |
+| hours     | `String` | `""` |
+| cta       | `String` | `""` |
+| schedule  | `Array`  | `[]` |
 
 ## Example:
 ```javascript
