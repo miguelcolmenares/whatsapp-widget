@@ -24,7 +24,7 @@
     "@babel/preset-env": "^7.9.5",
     "@testing-library/dom": "^7.2.1",
     "@testing-library/jest-dom": "^5.5.0",
-    "babel-jest": "^25.3.0",
+    "babel-jest": "^27.3.1",
     "eslint": "^7.20.0",
     "grunt": "^1.4.1",
     "grunt-contrib-clean": "^2.0.0",
