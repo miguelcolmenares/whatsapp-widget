@@ -105,7 +105,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-contrib-cssmin");
     grunt.loadNpmTasks("grunt-contrib-less");
     grunt.loadNpmTasks("grunt-string-replace");
-    grunt.loadNpmTasks("grunt-contrib-uglify-es");
+    grunt.loadNpmTasks("grunt-contrib-uglify");
 
     grunt.registerTask("default", ["clean", "copy", "less", "cssmin", "uglify", "string-replace"]);
 };
