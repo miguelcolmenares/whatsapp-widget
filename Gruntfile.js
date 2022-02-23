@@ -1,7 +1,6 @@
 
 "use strict";
 module.exports = function (grunt) {
-
     grunt.initConfig({
         pkg: grunt.file.readJSON("package.json"),
         clean: {
@@ -49,10 +48,7 @@ module.exports = function (grunt) {
                         cdnPath: "'<%= pkg.cdn %>@<%= pkg.version %>'",
                         version: "'<%= pkg.version %>'"
                     },
-                    paths: ["dist/css"],
-                    plugins: [
-                        new (require("less-plugin-autoprefix"))({ browsers: ["last 2 versions"] })
-                    ]
+                    paths: ["dist/css"]
                 },
                 files: {
                     "dist/css/<%= pkg.name %>.css": "src/less/index.less"
@@ -84,8 +80,7 @@ module.exports = function (grunt) {
         uglify: {
             options: {
                 banner:
-                    "/*! <%= pkg.name %> - v<%= pkg.version %> - " +
-                    "<%= grunt.template.today(\"yyyy-mm-dd\") %> */",
+                    "/*! <%= pkg.name %> - v<%= pkg.version %> */",
                 report: "gzip",
                 compress: true,
                 exportAll: true,
@@ -100,12 +95,7 @@ module.exports = function (grunt) {
         },
     });
 
-    grunt.loadNpmTasks("grunt-contrib-clean");
-    grunt.loadNpmTasks("grunt-contrib-copy");
-    grunt.loadNpmTasks("grunt-contrib-cssmin");
-    grunt.loadNpmTasks("grunt-contrib-less");
-    grunt.loadNpmTasks("grunt-string-replace");
-    grunt.loadNpmTasks("grunt-contrib-uglify");
+    require("load-grunt-tasks")(grunt);
 
     grunt.registerTask("default", ["clean", "copy", "less", "cssmin", "uglify", "string-replace"]);
 };
