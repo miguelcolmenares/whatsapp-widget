@@ -1,6 +1,7 @@
 # Whatsapp widget
+[![GitHub Actions Status Badge](https://github.com/miguelcolmenares/whatsapp-widget/workflows/CodeQL/badge.svg)](https://github.com/miguelcolmenares/whatsapp-widget/actions/workflows/codeql-analysis.yml)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/miguelcolmenares/whatsapp-widget)
-![alt text](https://data.jsdelivr.com/v1/package/gh/miguelcolmenares/whatsapp-widget/badge "JsDelivr")
+[![](https://data.jsdelivr.com/v1/package/gh/miguelcolmenares/whatsapp-widget/badge?style=rounded)](https://www.jsdelivr.com/package/gh/miguelcolmenares/whatsapp-widget)
 
 > Add a floating widget to open WhatsApp
 
