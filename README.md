@@ -24,6 +24,7 @@ window.addEventListener('load', function(){
             phone: "+57 320 1234567",
             hours: "Disponible 9am - 6pm",
             cta: "Haz clic para iniciar chat",
+            message: "Hola, me gustaría obtener más información",
             schedule: [
                 ["9:00", "18:00"], //Sundays or Holidays
                 ["9:00", "20:00"],
@@ -52,6 +53,7 @@ window.addEventListener('load', function(){
 | phone     | `String` | `""` |
 | hours     | `String` | `""` |
 | cta       | `String` | `""` |
+| message   | `String` | `""` |
 | schedule  | `Array`  | `[]` |
 
 ## Example:
@@ -62,6 +64,7 @@ new whatsapp({
   phone: "+57 320 2851704",
   hours: "Disponible 9am - 6pm",
   cta  : "Haz clic para iniciar chat",
+  message: "Hola, me gustaría obtener más información",
   schedule: [
    ["9:00", "18:00"], //Sundays or Holidays
    ["9:00", "20:00"],
