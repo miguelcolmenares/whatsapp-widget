@@ -1,3 +1,5 @@
+import striptags from "striptags";
+import { agent } from "../types/agent";
 export class WhatsappAgent {
     public cta : string
     public hours : string
@@ -27,12 +29,12 @@ export class WhatsappAgent {
     }
 
     render() {
-		const agent = document.createRange().createContextualFragment(`<a href="#" data-phone="${this.phone}" data-title="${this.name}" data-message="${this.message}" class="wa-w_a_a js-owaa" title="${this.name} ${this.phone}">
+		const agent = document.createRange().createContextualFragment(`<a href="#" data-phone="${striptags(this.phone)}" data-title="${striptags(this.name)}" data-message="${striptags(this.message)}" class="wa-w_a_a js-owaa" title="${striptags(this.name)} ${striptags(this.phone)}">
 			<span class="wa-w_a_a_i"><span class="wa-w-i wa-w-i-cc"></span></span>
 			<span class="wa-w_a_a_c">
-				<span class="a_t">${this.name}</span>
+				<span class="a_t">${striptags(this.name)}</span>
 				<span class="a_s">${this.hours}</span>
-				<span class="a_c">${this.cta}<span class="a_c_i wa-w-i wa-w-i-e"></span></span>
+				<span class="a_c">${striptags(this.cta)}<span class="a_c_i wa-w-i wa-w-i-e"></span></span>
 			</span>
 		</a>`);
 		return agent;
