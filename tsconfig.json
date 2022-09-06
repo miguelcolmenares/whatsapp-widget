@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        "outDir": "./dist/js/",
+        "sourceMap": true,
+        "strict": true,
+        "noImplicitReturns": true,
+        "noImplicitAny": true,
+        "module": "es6",
+        "moduleResolution": "node",
+        "target": "es2015",
+        "allowJs": true,
+        "experimentalDecorators": true,
+        "typeRoots": ["./node_modules/@types", "./src/types"]
+    },
+    "include": ["./src/**/*"]
+}
