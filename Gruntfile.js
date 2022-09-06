@@ -54,48 +54,10 @@ module.exports = function (grunt) {
                     "dist/css/<%= pkg.name %>.css": "src/less/index.less"
                 }
             }
-        },
-        "string-replace": {
-            dist: {
-                files: [{
-                    expand: true,
-                    cwd: "dist/",
-                    src: "js/*",
-                    dest: "dist/"
-                }],
-                options: {
-                    replacements: [{
-                        pattern: /\{\{(version)\}\}/igm,
-                        replacement: "<%= pkg.version %>"
-                    }, {
-                        pattern: /\{\{(package)\}\}/igm,
-                        replacement: "<%= pkg.name %>"
-                    }, {
-                        pattern: /\{\{(url)\}\}/igm,
-                        replacement: "<%= pkg.cdn %>"
-                    }]
-                }
-            }
-        },
-        uglify: {
-            options: {
-                banner:
-                    "/*! <%= pkg.name %> - v<%= pkg.version %> */",
-                report: "gzip",
-                compress: true,
-                exportAll: true,
-            },
-            main: {
-                files: [
-                    {
-                        "dist/js/<%= pkg.name %>.js": ["src/js/index.js"]
-                    },
-                ],
-            }
-        },
+        }
     });
 
     require("load-grunt-tasks")(grunt);
 
-    grunt.registerTask("default", ["clean", "copy", "less", "cssmin", "uglify", "string-replace"]);
+    grunt.registerTask("default", ["clean", "copy", "less", "cssmin"]);
 };
