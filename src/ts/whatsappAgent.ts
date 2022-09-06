@@ -33,7 +33,7 @@ export class WhatsappAgent {
 			<span class="wa-w_a_a_i"><span class="wa-w-i wa-w-i-cc"></span></span>
 			<span class="wa-w_a_a_c">
 				<span class="a_t">${striptags(this.name)}</span>
-				<span class="a_s">${this.hours}</span>
+				<span class="a_s">${striptags(this.hours)}</span>
 				<span class="a_c">${striptags(this.cta)}<span class="a_c_i wa-w-i wa-w-i-e"></span></span>
 			</span>
 		</a>`);
