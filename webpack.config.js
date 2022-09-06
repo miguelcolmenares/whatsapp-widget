@@ -21,15 +21,6 @@ module.exports = {
                         { search: "{{version}}", replace: PACKAGE.version }
                     ]
                 }
-            },
-            {
-                test: /\.less$/i,
-                exclude: /node_modules/,
-                use : [
-                    "style-loader",
-                    "css-loader",
-                    "less-loader"
-                ]
             }
         ]
     },
