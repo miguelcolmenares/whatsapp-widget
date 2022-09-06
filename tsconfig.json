@@ -10,7 +10,8 @@
         "target": "es2015",
         "allowJs": true,
         "experimentalDecorators": true,
-        "typeRoots": ["./node_modules/@types", "./src/types"]
+        "typeRoots": ["./node_modules/@types", "./src/types"],
+        "esModuleInterop" : true
     },
     "include": ["./src/**/*"]
 }

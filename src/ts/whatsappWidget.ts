@@ -1,4 +1,6 @@
 import {WhatsappAgent} from "./whatsappAgent"
+import striptags from "striptags";
+import { agent } from "../types/agent"
 
 export class WhatsappWidget {
     public agents: agent[]
@@ -50,7 +52,7 @@ export class WhatsappWidget {
 
     #button() : DocumentFragment {
 		const button = document.createRange().createContextualFragment(
-		`<button class="wa-w_b" title="${this.title}">
+		`<button class="wa-w_b" title="${striptags(this.title)}">
 			<span class="wa-w-i wa-w-i-w"></span>
 		</button>`);
 		return button;
@@ -85,9 +87,9 @@ export class WhatsappWidget {
 				label: title,
 			});
 		}
-		const text = message.length ? `?text=${message}` : "";
+		const text : string = message.length ? `?text=${striptags(message)}` : "";
 		window.open(
-			`https://wa.me/${phone.replace(/ /g, "").replace("+", "")}${text}`,
+			`https://wa.me/${phone.replace(/ /g, "").replace("+", "")}${striptags(text)}`,
 			"_blank"
 		);
 	}
@@ -95,10 +97,10 @@ export class WhatsappWidget {
     #header() : DocumentFragment {
         return document.createRange().createContextualFragment(
 			`<header class="wa-w_h">
-			<span class="wa-w_h_t">${this.title}</span>
+			<span class="wa-w_h_t">${striptags(this.title)}</span>
 			<span class="wa-w_h_s">
 				<span class="wa-w_h_i wa-w-i wa-w-i-w"></span>
-				${this.description}
+				${striptags(this.description)}
 			</span>
 		</header>`);
     }
