@@ -1,4 +1,4 @@
-interface agent {
+export interface agent {
     name : string,
     phone : string,
     hours : string

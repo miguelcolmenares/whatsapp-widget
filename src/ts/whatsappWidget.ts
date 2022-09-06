@@ -4,10 +4,10 @@ export class WhatsappWidget {
     public agents: agent[]
     public description: string
     public title: string
-    public package: string = "{{package}}"
-    public url : string = "{{url}}"
-    public version : string = "{{version}}"
-    $widget!: HTMLElement
+    private package: string = "{{package}}"
+    private url : string = "{{url}}"
+    private version : string = "{{version}}"
+    private $widget!: HTMLElement
     constructor(args : {
         title : string,
         description : string,
