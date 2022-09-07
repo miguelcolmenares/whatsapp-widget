@@ -1,17 +1,21 @@
 {
-    "compilerOptions": {
-        "outDir": "./dist/js/",
-        "sourceMap": true,
-        "strict": true,
-        "noImplicitReturns": true,
-        "noImplicitAny": true,
-        "module": "es6",
-        "moduleResolution": "node",
-        "target": "es2015",
-        "allowJs": true,
-        "experimentalDecorators": true,
-        "typeRoots": ["./node_modules/@types", "./src/types"],
-        "esModuleInterop" : true
-    },
-    "include": ["./src/**/*"]
+	"extends": "@tsconfig/recommended/tsconfig.json",
+	"compilerOptions": {
+		"outDir": "./dist/js/",
+		"sourceMap": false,
+		"strict": true,
+		"noImplicitReturns": true,
+		"noImplicitAny": true,
+		"module": "es6",
+		"moduleResolution": "node",
+		"target": "ES2015",
+		"allowJs": true,
+		"typeRoots": ["./node_modules/@types", "./src/types"],
+		"esModuleInterop" : true,
+		"skipLibCheck": true,
+		"forceConsistentCasingInFileNames": true
+	},
+	"$schema": "https://json.schemastore.org/tsconfig",
+	"display": "Recommended",
+	"include": ["./src/**/*"]
 }
