@@ -22,7 +22,7 @@
 	"devDependencies": {
 		"@tsconfig/recommended": "^1.0.1",
 		"@types/jest": "^28.0.0",
-		"eslint": "^8.23.0",
+		"eslint": "^8.23.1",
 		"grunt-contrib-clean": "^2.0.1",
 		"grunt-contrib-copy": "^1.0.0",
 		"grunt-contrib-cssmin": "^4.0.0",
