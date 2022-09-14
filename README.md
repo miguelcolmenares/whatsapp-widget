@@ -19,6 +19,8 @@ Add this javascript at the end of your page:
 )}(window, document, "script", "https://cdn.jsdelivr.net/gh/miguelcolmenares/whatsapp-widget/dist/js/whatsapp-widget.js");
 window.addEventListener('load', function(){
     new whatsapp({
+        title: '¿Necesitas ayuda?',
+        description: 'Chatea con nosotros por Whatsapp',
         agents:[{
             name: "Servicio al cliente",
             phone: "+57 320 1234567",
@@ -48,32 +50,41 @@ window.addEventListener('load', function(){
 ## Widget Options
 
 | Argument        | Type           | Default value  |
-| ----------|:--------:| ----:|
-| name      | `String` | `""` |
-| phone     | `String` | `""` |
-| hours     | `String` | `""` |
-| cta       | `String` | `""` |
-| message   | `String` | `""` |
-| schedule  | `Array`  | `[]` |
+| --------------|:--------:| ---------------------------------:|
+| title         | `String` | `¿Necesitas ayuda?`               |
+| description   | `String` | `Chatea con nosotros por Whatsap` |
+| agents        | `Array`  | `[]` |
+
+## Agents Options
+| Argument      | Type     | Default value  |
+| --------------|:--------:| ----:|
+| name          | `String` | `""` |
+| phone         | `String` | `""` |
+| hours         | `String` | `""` |
+| cta           | `String` | `""` |
+| message       | `String` | `""` |
+| schedule      | `Array`  | `[]` |
 
 ## Example:
 ```javascript
 new whatsapp({
- agents:[{
-  name : "Servicio al cliente",
-  phone: "+57 320 2851704",
-  hours: "Disponible 9am - 6pm",
-  cta  : "Haz clic para iniciar chat",
-  message: "Hola, me gustaría obtener más información",
-  schedule: [
-   ["9:00", "18:00"], //Sundays or Holidays
-   ["9:00", "20:00"],
-   ["9:00", "20:00"],
-   ["9:00", "20:00"],
-   ["9:00", "20:00"],
-   ["9:00", "22:00"],
-   ["10:00", "18:00"] // Saturday
-  ]
- }]
+    title: '¿Necesitas ayuda?',
+    description: 'Chatea con nosotros por Whatsapp',
+    agents:[{
+        name : "Servicio al cliente",
+        phone: "+57 320 2851704",
+        hours: "Disponible 9am - 6pm",
+        cta  : "Haz clic para iniciar chat",
+        message: "Hola, me gustaría obtener más información",
+        schedule: [
+            ["9:00", "18:00"], //Sundays or Holidays
+            ["9:00", "20:00"],
+            ["9:00", "20:00"],
+            ["9:00", "20:00"],
+            ["9:00", "20:00"],
+            ["9:00", "22:00"],
+            ["10:00", "18:00"] // Saturday
+        ]
+    }]
 })
 ```
