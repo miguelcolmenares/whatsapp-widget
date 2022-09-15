@@ -16,8 +16,7 @@ module.exports = {
 				options: {
 					multiple: [
 						{ search: "{{package}}", replace: PACKAGE.name },
-						{ search: "{{url}}", replace: PACKAGE.cdn },
-						{ search: "{{version}}", replace: PACKAGE.version }
+						{ search: "{{url}}", replace: PACKAGE.cdn }
 					]
 				}
 			}
