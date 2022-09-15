@@ -52,7 +52,7 @@ window.addEventListener('load', function(){
 | Argument        | Type           | Default value  |
 | --------------|:--------:| ---------------------------------:|
 | title         | `String` | `¿Necesitas ayuda?`               |
-| description   | `String` | `Chatea con nosotros por Whatsap` |
+| description   | `String` | `Chatea con nosotros por Whatsapp` |
 | agents        | `Array`  | `[]` |
 
 ## Agents Options
