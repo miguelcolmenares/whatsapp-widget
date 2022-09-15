@@ -8,7 +8,6 @@ export class WhatsappWidget {
     public title: string
     private package: string = "{{package}}"
     private url : string = "{{url}}"
-    private version : string = "{{version}}"
     private $widget!: HTMLElement
     constructor(args : {
         title : string,
@@ -105,21 +104,16 @@ export class WhatsappWidget {
 		</header>`);
     }
 
-    #styles() : void {
-        if (!document.getElementById(this.package)) {
-            const head  = document.head;
-            const link  = document.createElement('link');
-            link.id   = this.package;
-            link.rel  = 'stylesheet';
-            link.type = 'text/css';
-            link.href = `${this.url}@${this.version}/dist/css/${this.package}.css`;
-            link.media = 'all';
-            head.appendChild(link);
-        }
+    async #styles() : Promise<HTMLStyleElement> {
+		const styles = document.createElement("style");
+		await fetch(`${this.url}/dist/css/${this.package}.css`)
+			.then(res => res.text())
+			.then(style => styles.append(style));
+		return document.head.appendChild(styles);
     }
 
-    render () {
-        this.#styles();
+    async render () {
+        await this.#styles();
         const widget = document.createElement("div");
 		widget.classList.add("wa-w");
 		widget.append(this.#header());
