@@ -16,7 +16,7 @@ export class WhatsappAgent {
         this.schedule = args.schedule
     }
 
-    get isEnabled() {
+    get isEnabled() : boolean {
         const date = new Date();
 		if (!this?.schedule?.length
             || !this?.schedule[date.getDay()]?.length
@@ -28,7 +28,7 @@ export class WhatsappAgent {
 		return !!0;
     }
 
-    render() {
+    render() : DocumentFragment {
 		const agent = document.createRange().createContextualFragment(`<a href="#" data-phone="${striptags(this.phone)}" data-title="${striptags(this.name)}" data-message="${striptags(this.message)}" class="wa-w_a_a js-owaa" title="${striptags(this.name)} ${striptags(this.phone)}">
 			<span class="wa-w_a_a_i"><span class="wa-w-i wa-w-i-cc"></span></span>
 			<span class="wa-w_a_a_c">

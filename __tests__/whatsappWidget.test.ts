@@ -24,4 +24,8 @@ describe("WhatsappWidget", () => {
     test("defines render()", () => {
         expect(typeof whatsappWidget.render).toBe("function");
     });
+
+    test("defines agents", () => {
+        expect(typeof whatsappWidget.agents).toBe("object");
+    });
 });
