@@ -3,7 +3,7 @@ import { WhatsappAgent } from "../src/ts/whatsappAgent";
 import { agent } from "../src/types/agent";
 
 describe("WhatsappAgent", () => {
-    const args : agent = {
+    const defaultArgs : agent = {
         cta : "test cta",
         hours : "test hours",
         message : "test message",
@@ -19,14 +19,27 @@ describe("WhatsappAgent", () => {
             ["10:00", "18:00"] // Saturday
         ]
     }
+    const args = defaultArgs;
 
-    const whatsappAgent = new WhatsappAgent(args);
+    const {schedule, ...argsNoShedule} = defaultArgs;
+
+    test("constructor method", () => {
+        const whatsappAgent = new WhatsappAgent(args);
+        expect(whatsappAgent).toBeInstanceOf(WhatsappAgent);
+    });
 
     test("defines render()", () => {
+        const whatsappAgent = new WhatsappAgent(args);
         expect(typeof whatsappAgent.render).toBe("function");
     });
 
     test("defines isEnabled", () => {
+        const whatsappAgent = new WhatsappAgent(args);
         expect(typeof whatsappAgent.isEnabled).toBe("boolean");
+    })
+
+    test("isEnabled returns true when schedule is not defined", () => {
+        const failAgent = new WhatsappAgent(argsNoShedule);
+        expect(failAgent.isEnabled).toBe(true);
     })
 });

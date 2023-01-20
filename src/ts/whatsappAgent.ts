@@ -18,9 +18,7 @@ export class WhatsappAgent {
 
     get isEnabled() : boolean {
         const date = new Date();
-		if (!this?.schedule?.length
-            || !this?.schedule[date.getDay()]?.length
-        )
+		if (!this?.schedule?.length || !this?.schedule[date.getDay()]?.length)
         return !0;
 		const [_start, _end] = [this.schedule[date.getDay()][0].split(":"), this.schedule[date.getDay()][1].split(":")];
 		const [openTime, closeTime] = [new Date(date.getFullYear(), date.getMonth(), date.getDate() < 10 ? 0 + date.getDate() : date.getDate(), +_start[0], +_start[1]), new Date(date.getFullYear(), date.getMonth(), date.getDate() < 10 ? 0 + date.getDate() : date.getDate(), +_end[0], +_end[1])];

@@ -7,7 +7,7 @@
 	"scripts": {
 		"build": "grunt && npx webpack --mode production",
 		"lint": "eslint src/ --quiet",
-		"test": "npx jest --coverage"
+		"test": "npx jest --coverage --verbose"
 	},
 	"repository": {
 		"type": "git",
@@ -29,6 +29,7 @@
 		"grunt-contrib-cssmin": "^4.0.0",
 		"grunt-contrib-less": "^3.0.0",
 		"jest": "^28.0.0",
+		"jest-environment-jsdom": "^29.3.1",
 		"jest-puppeteer": "^6.2.0",
 		"load-grunt-tasks": "^5.1.0",
 		"string-replace-loader": "^3.1.0",
