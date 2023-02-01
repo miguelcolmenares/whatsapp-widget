@@ -16,11 +16,9 @@ export class WhatsappAgent {
         this.schedule = args.schedule
     }
 
-    get isEnabled() {
+    get isEnabled() : boolean {
         const date = new Date();
-		if (!this?.schedule?.length
-            || !this?.schedule[date.getDay()]?.length
-        )
+		if (!this?.schedule?.length || !this?.schedule[date.getDay()]?.length)
         return !0;
 		const [_start, _end] = [this.schedule[date.getDay()][0].split(":"), this.schedule[date.getDay()][1].split(":")];
 		const [openTime, closeTime] = [new Date(date.getFullYear(), date.getMonth(), date.getDate() < 10 ? 0 + date.getDate() : date.getDate(), +_start[0], +_start[1]), new Date(date.getFullYear(), date.getMonth(), date.getDate() < 10 ? 0 + date.getDate() : date.getDate(), +_end[0], +_end[1])];
@@ -28,7 +26,7 @@ export class WhatsappAgent {
 		return !!0;
     }
 
-    render() {
+    render() : DocumentFragment {
 		const agent = document.createRange().createContextualFragment(`<a href="#" data-phone="${striptags(this.phone)}" data-title="${striptags(this.name)}" data-message="${striptags(this.message)}" class="wa-w_a_a js-owaa" title="${striptags(this.name)} ${striptags(this.phone)}">
 			<span class="wa-w_a_a_i"><span class="wa-w-i wa-w-i-cc"></span></span>
 			<span class="wa-w_a_a_c">

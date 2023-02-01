@@ -4,5 +4,5 @@ export interface agent {
     hours : string
     cta : string
     message : string
-    schedule ?: []
+    schedule ?: string[][]
 }
