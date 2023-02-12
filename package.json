@@ -23,7 +23,7 @@
 		"@tsconfig/recommended": "^1.0.2",
 		"@types/jest": "^28.0.0",
 		"@webpack-cli/generators": "^3.0.1",
-		"eslint": "^8.33.0",
+		"eslint": "^8.34.0",
 		"grunt-contrib-clean": "^2.0.1",
 		"grunt-contrib-copy": "^1.0.0",
 		"grunt-contrib-cssmin": "^4.0.0",
