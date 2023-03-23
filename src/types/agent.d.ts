@@ -1,8 +1,8 @@
 export interface agent {
-    name : string,
-    phone : string,
-    hours : string
-    cta : string
-    message : string
-    schedule ?: string[][]
+	name: string;
+	phone: string;
+	hours: string;
+	cta: string;
+	message: string;
+	schedule?: string[][];
 }

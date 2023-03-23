@@ -1,4 +1,4 @@
-import { describe, expect, test } from "@jest/globals";
+import { describe, expect, it, test } from "@jest/globals";
 import { WhatsappWidget } from "../src/ts/whatsappWidget";
 import { agent } from "../src/types/agent";
 

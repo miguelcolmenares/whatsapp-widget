@@ -1,3 +1,3 @@
-import {WhatsappWidget} from "./whatsappWidget";
+import { WhatsappWidget } from "./whatsappWidget";
 
-window.whatsapp  = WhatsappWidget;
+window.whatsapp = WhatsappWidget;
