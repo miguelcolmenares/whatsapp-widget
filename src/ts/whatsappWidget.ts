@@ -6,8 +6,8 @@ export class WhatsappWidget {
 	public agents: agent[];
 	public description: string;
 	public title: string;
-	private package: string = "{{package}}";
-	private url: string = "{{url}}";
+	private package = "{{package}}";
+	private url = "{{url}}";
 	private $widget!: HTMLElement;
 	constructor(args: { title: string; description: string; agents: agent[] }) {
 		this.agents = args.agents || [];
@@ -29,7 +29,7 @@ export class WhatsappWidget {
 	}
 
 	#activeAgents(): number {
-		let agentsActive: number = 0;
+		let agentsActive = 0;
 		this.agents.forEach(agent => {
 			const _agent = new WhatsappAgent(agent);
 			_agent.isEnabled ? agentsActive++ : "";

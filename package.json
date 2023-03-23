@@ -1,6 +1,6 @@
 {
 	"name": "whatsapp-widget",
-	"version": "3.3.2",
+	"version": "3.3.3",
 	"description": "Whatsapp widget",
 	"private": true,
 	"cdn": "https://cdn.jsdelivr.net/gh/miguelcolmenares/whatsapp-widget",
