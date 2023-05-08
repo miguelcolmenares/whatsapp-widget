@@ -53,7 +53,7 @@
 		"typescript": "^5.0.4",
 		"striptags": "^3.2.0",
 		"webpack": "^5.82.0",
-		"webpack-cli": "^5.0.2"
+		"webpack-cli": "^5.1.0"
 	},
 	"engines": {
 		"node": ">=16.0.0",
