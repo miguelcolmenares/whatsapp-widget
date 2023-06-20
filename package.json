@@ -23,7 +23,7 @@
 	"devDependencies": {
 		"@tsconfig/recommended": "^1.0.2",
 		"@types/jest": "^28.1.8",
-		"@typescript-eslint/eslint-plugin": "^5.59.11",
+		"@typescript-eslint/eslint-plugin": "^5.60.0",
 		"@typescript-eslint/parser": "^5.59.11",
 		"@webpack-cli/generators": "^3.0.7",
 		"eslint": "^8.43.0",
