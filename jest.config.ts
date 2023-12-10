@@ -1,6 +1,6 @@
-import type {Config} from 'jest';
+import { Config } from "@jest/types";
 
-export default async (): Promise<Config> => {
+export default async (): Promise<Config.InitialOptions> => {
 	return {
 		preset: "ts-jest",
 		testEnvironment: "jsdom",
@@ -8,5 +8,10 @@ export default async (): Promise<Config> => {
 			"^.+\\.ts?$": "ts-jest",
 		},
 		transformIgnorePatterns: ["<rootDir>/node_modules/"],
+		globals: {
+			"ts-jest": {
+				tsconfig: "tsconfig.json", // Ruta al archivo tsconfig.json
+			},
+		},
 	};
 };
