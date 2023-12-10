@@ -10,29 +10,29 @@ const args : {
     agents : [],
     description : "Test description",
     title : "Test Title"
-}
+};
 
 const emptyDescriptionArgs = {
     ...args,
     description : ""
-}
+};
 
 const emptyTitleArgs = {
     ...args,
     title : ""
-}
+};
 
 const emptyAgentsArgs = {
     ...args,
     agents : []
-}
+};
 
 it("works", () => {
     expect(typeof args).toBe("object");
     expect(typeof args.agents).toBe("object");
     expect(typeof args.description).toBe("string");
     expect(typeof args.title).toBe("string");
-})
+});
 
 describe("WhatsappWidget", () => {
     const whatsappWidget = new WhatsappWidget(args);
@@ -50,6 +50,24 @@ describe("WhatsappWidget", () => {
     test("defines agents", () => {
         expect(typeof whatsappWidget.agents).toBe("object");
     });
+
+    test("renders correctly with active agents", () => {
+		const activeAgent: agent = {
+			name: "Active Agent",
+			phone: "123456789",
+			hours: "9:00 - 17:00",
+			cta: "Chat Now",
+			message: "Hello!",
+		};
+
+		const widgetWithActiveAgent = new WhatsappWidget({
+			title: "Test Title",
+			description: "Test description",
+			agents: [activeAgent],
+		});
+
+		expect(widgetWithActiveAgent.render()).toMatchSnapshot();
+	});
 
     test("empty description get default description", () => {
         expect(emptyDescriptionWidget.description).toBe("Chatea con nosotros por Whatsapp");

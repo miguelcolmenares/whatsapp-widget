@@ -40,10 +40,14 @@ export class WhatsappWidget {
 	#agents(): HTMLElement {
 		const agentsContainer = document.createElement("section");
 		agentsContainer.classList.add("wa-w_a");
+
 		this.agents.forEach(agent => {
 			const _agent = new WhatsappAgent(agent);
-			_agent.isEnabled ? agentsContainer.append(new WhatsappAgent(agent).render()) : "";
+			if (_agent.isEnabled) {
+				agentsContainer.append(_agent.render());
+			}
 		});
+
 		return agentsContainer;
 	}
 
@@ -57,8 +61,8 @@ export class WhatsappWidget {
 	}
 
 	#click(): void {
-		if ("dataLayer" in window) {
-			window.dataLayer?.push({
+		if (window.dataLayer) {
+			window.dataLayer.push({
 				event: "ga_event",
 				category: "Widget WhatsApp",
 				action: "Click WhatsApp",
@@ -77,16 +81,16 @@ export class WhatsappWidget {
 		phone: string | undefined;
 		title: string | undefined;
 	}): void {
-		if ("dataLayer" in window) {
-			window.dataLayer?.push({
+		if (window.dataLayer) {
+			window.dataLayer.push({
 				event: "ga_event",
 				category: "Widget WhatsApp",
 				action: "Click WhatsApp",
-				label: title,
+				label: title || "Unknown",
 			});
 		}
-		const text: string = message.length ? `?text=${striptags(message)}` : "";
-		window.open(`https://wa.me/${phone.replace(/ /g, "").replace("+", "")}${striptags(text)}`, "_blank");
+		const text: string = message ? `?text=${striptags(message)}` : "";
+		window.open(`https://wa.me/${phone?.replace(/ /g, "").replace("+", "")}${striptags(text)}`, "_blank");
 	}
 
 	#header(): DocumentFragment {
@@ -112,6 +116,7 @@ export class WhatsappWidget {
 			};
 
 			link.onerror = () => {
+				console.error(`Error loading stylesheet: ${url}`);
 				reject(new Error(`Error loading stylesheet: ${url}`));
 			};
 

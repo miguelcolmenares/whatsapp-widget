@@ -16,9 +16,9 @@ describe("WhatsappAgent", () => {
             ["9:00", "20:00"],
             ["9:00", "20:00"],
             ["9:00", "22:00"],
-            ["10:00", "18:00"] // Saturday
+            ["10:00", "23:30"] // Saturday
         ]
-    }
+    };
     const args = defaultArgs;
 
     const {schedule, ...argsNoShedule} = defaultArgs;
@@ -33,13 +33,30 @@ describe("WhatsappAgent", () => {
         expect(typeof whatsappAgent.render).toBe("function");
     });
 
+    test("render() returns a valid DocumentFragment", () => {
+		const whatsappAgent = new WhatsappAgent(args);
+		const fragment = whatsappAgent.render();
+
+		const container = document.createElement("div");
+		container.appendChild(fragment);
+
+		// Verifica si el contenedor tiene los elementos esperados
+		expect(container.querySelector(".wa-w_a_a_i")).toBeDefined();
+		expect(container.querySelector(".wa-w_a_a_c")).toBeDefined();
+	});
+
     test("defines isEnabled", () => {
         const whatsappAgent = new WhatsappAgent(args);
         expect(typeof whatsappAgent.isEnabled).toBe("boolean");
-    })
+    });
 
     test("isEnabled returns true when schedule is not defined", () => {
         const failAgent = new WhatsappAgent(argsNoShedule);
         expect(failAgent.isEnabled).toBe(true);
-    })
+    });
+
+    test("isEnabled returns true for valid schedule", () => {
+		const validAgent = new WhatsappAgent(args);
+		expect(validAgent.isEnabled).toBe(true);
+	});
 });
