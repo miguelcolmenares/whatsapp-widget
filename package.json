@@ -22,7 +22,7 @@
 	"homepage": "https://github.com/miguelcolmenares/whatsapp-widget#readme",
 	"devDependencies": {
 		"@tsconfig/recommended": "^1.0.3",
-		"@types/jest": "^28.1.8",
+		"@types/jest": "^29.5.11",
 		"@typescript-eslint/eslint-plugin": "^5.61.0",
 		"@typescript-eslint/parser": "^5.62.0",
 		"@webpack-cli/generators": "^3.0.7",
