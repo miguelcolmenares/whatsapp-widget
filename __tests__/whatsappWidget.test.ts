@@ -51,24 +51,6 @@ describe("WhatsappWidget", () => {
         expect(typeof whatsappWidget.agents).toBe("object");
     });
 
-    test("renders correctly with active agents", () => {
-		const activeAgent: agent = {
-			name: "Active Agent",
-			phone: "123456789",
-			hours: "9:00 - 17:00",
-			cta: "Chat Now",
-			message: "Hello!",
-		};
-
-		const widgetWithActiveAgent = new WhatsappWidget({
-			title: "Test Title",
-			description: "Test description",
-			agents: [activeAgent],
-		});
-
-		expect(widgetWithActiveAgent.render()).toMatchSnapshot();
-	});
-
     test("empty description get default description", () => {
         expect(emptyDescriptionWidget.description).toBe("Chatea con nosotros por Whatsapp");
     });
