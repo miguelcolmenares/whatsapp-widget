@@ -1,6 +1,6 @@
 import { describe, expect, it, test } from "@jest/globals";
 import { WhatsappWidget } from "../src/ts/whatsappWidget";
-import { agent } from "../src/types/agent";
+import { type agent } from "../src/types/agent";
 
 const args : {
     agents : agent[],

@@ -1,6 +1,6 @@
 import { describe, expect, test } from "@jest/globals";
 import { WhatsappAgent } from "../src/ts/whatsappAgent";
-import { agent } from "../src/types/agent";
+import { type agent } from "../src/types/agent";
 
 describe("WhatsappAgent", () => {
     const defaultArgs : agent = {
