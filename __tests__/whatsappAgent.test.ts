@@ -21,7 +21,21 @@ describe("WhatsappAgent", () => {
     };
     const args = defaultArgs;
 
-    const {schedule, ...argsNoShedule} = defaultArgs;
+    const argsNoShedule = {...defaultArgs};
+    delete argsNoShedule.schedule;
+
+    const scheduleAllwaysOpen = [
+		["0:00", "23:59"],
+		["0:00", "23:59"],
+		["0:00", "23:59"],
+		["0:00", "23:59"],
+		["0:00", "23:59"],
+		["0:00", "23:59"],
+		["0:00", "23:59"] // Saturday
+	];
+
+    const argsAllwaysOpen = {...defaultArgs};
+    argsAllwaysOpen.schedule = scheduleAllwaysOpen;
 
     test("constructor method", () => {
         const whatsappAgent = new WhatsappAgent(args);
@@ -56,7 +70,7 @@ describe("WhatsappAgent", () => {
     });
 
     test("isEnabled returns true for valid schedule", () => {
-		const validAgent = new WhatsappAgent(args);
+		const validAgent = new WhatsappAgent(argsAllwaysOpen);
 		expect(validAgent.isEnabled).toBe(true);
 	});
 });
