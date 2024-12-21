@@ -1,6 +1,5 @@
 import { agent } from "./agent";
 export declare class WhatsappWidget {
-	#private;
 	agents: agent[];
 	description: string;
 	title: string;

@@ -32,7 +32,9 @@ export class WhatsappWidget {
 		let agentsActive = 0;
 		this.agents.forEach(agent => {
 			const _agent = new WhatsappAgent(agent);
-			_agent.isEnabled ? agentsActive++ : "";
+			if (_agent.isEnabled) {
+				agentsActive++;
+			}
 		});
 		return agentsActive;
 	}
@@ -139,7 +141,7 @@ export class WhatsappWidget {
 
 		//agent click
 		const $whatsappAgents = widget.querySelectorAll(".js-owaa") as NodeListOf<HTMLElement>;
-		$whatsappAgents &&
+		if ($whatsappAgents) {
 			$whatsappAgents.forEach($agent => {
 				$agent.addEventListener("click", e => {
 					e.preventDefault();
@@ -151,6 +153,7 @@ export class WhatsappWidget {
 					});
 				});
 			});
+		}
 
 		return (this.widget = widget);
 	}
