@@ -21,7 +21,7 @@
 	},
 	"homepage": "https://github.com/miguelcolmenares/whatsapp-widget#readme",
 	"devDependencies": {
-		"@eslint/eslintrc": "^3.2.0",
+		"@eslint/eslintrc": "^3.3.0",
 		"@eslint/js": "^9.19.0",
 		"@tsconfig/recommended": "^1.0.8",
 		"@types/jest": "^29.5.14",
