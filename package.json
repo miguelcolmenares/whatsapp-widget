@@ -27,7 +27,7 @@
 		"@types/jest": "^29.5.14",
 		"@typescript-eslint/eslint-plugin": "^8.18.1",
 		"@webpack-cli/generators": "^3.0.7",
-		"eslint": "^9.25.1",
+		"eslint": "^9.26.0",
 		"globals": "^16.1.0",
 		"grunt": "^1.6.1",
 		"grunt-cli": "^1.5.0",
