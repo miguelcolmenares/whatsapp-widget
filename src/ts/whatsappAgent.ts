@@ -6,7 +6,7 @@ export class WhatsappAgent {
 	public message: string;
 	public name: string;
 	public phone: string;
-	public schedule?: string[][];
+	public schedule?: (string[] | null)[];
 	constructor(args: agent) {
 		this.cta = args.cta;
 		this.hours = args.hours;
@@ -18,8 +18,16 @@ export class WhatsappAgent {
 
 	get isEnabled(): boolean {
 		const date = new Date();
-		if (!this?.schedule?.length || !this?.schedule[date.getDay()]?.length) return !0;
-		const [_start, _end] = [this.schedule[date.getDay()][0].split(":"), this.schedule[date.getDay()][1].split(":")];
+		const dayIndex = date.getDay();
+
+		// If no schedule is defined, agent is always available
+		if (!this?.schedule?.length) return true;
+
+		// If current day has no schedule or is null, agent is not available
+		const daySchedule = this.schedule[dayIndex];
+		if (!daySchedule || daySchedule.length < 2) return false;
+
+		const [_start, _end] = [daySchedule[0].split(":"), daySchedule[1].split(":")];
 		const [openTime, closeTime] = [
 			new Date(
 				date.getFullYear(),
@@ -36,8 +44,8 @@ export class WhatsappAgent {
 				+_end[1],
 			),
 		];
-		if (date.getTime() >= openTime.getTime() && date.getTime() <= closeTime.getTime()) return !0;
-		return !!0;
+
+		return date.getTime() >= openTime.getTime() && date.getTime() <= closeTime.getTime();
 	}
 
 	render(): DocumentFragment {
