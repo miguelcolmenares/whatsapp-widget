@@ -522,13 +522,13 @@
                 const scheduleCode = agent.schedule && agent.schedule.length > 0 ?
                     ',\n                    schedule: ' + JSON.stringify(agent.schedule, null, 24).replace(/\n/g, '\n                    ') : '';
 
-                const messageCode = agent.message ? ',\n                    message: "' + agent.message.replace(/"/g, '\\"') + '"' : '';
+                const messageCode = agent.message ? ',\n                    message: "' + agent.message.replace(/\\/g, "\\\\").replace(/"/g, '\\"') + '"' : '';
 
                 return '{' +
-                    '\n                    name: "' + agent.name.replace(/"/g, '\\"') + '",' +
-                    '\n                    phone: "' + agent.phone.replace(/"/g, '\\"') + '",' +
-                    '\n                    hours: "' + agent.hours.replace(/"/g, '\\"') + '",' +
-                    '\n                    cta: "' + agent.cta.replace(/"/g, '\\"') + '"' + messageCode + scheduleCode +
+                    '\n                    name: "' + agent.name.replace(/\\/g, "\\\\").replace(/"/g, '\\"') + '",' +
+                    '\n                    phone: "' + agent.phone.replace(/\\/g, "\\\\").replace(/"/g, '\\"') + '",' +
+                    '\n                    hours: "' + agent.hours.replace(/\\/g, "\\\\").replace(/"/g, '\\"') + '",' +
+                    '\n                    cta: "' + agent.cta.replace(/\\/g, "\\\\").replace(/"/g, '\\"') + '"' + messageCode + scheduleCode +
                     '\n                }';
             }).join(',\n                ');
 
@@ -544,8 +544,8 @@
                 '    \n' +
                 '    window.addEventListener(\'load\', function () {\n' +
                 '        new whatsapp({\n' +
-                '            title: \'' + widgetConfig.title.replace(/'/g, "\\'") + '\',\n' +
-                '            description: \'' + widgetConfig.description.replace(/'/g, "\\'") + '\',\n' +
+                '            title: \'' + widgetConfig.title.replace(/\\/g, "\\\\").replace(/'/g, "\\'") + '\',\n' +
+                '            description: \'' + widgetConfig.description.replace(/\\/g, "\\\\").replace(/'/g, "\\'") + '\',\n' +
                 '            agents: [\n' +
                 '                ' + agentsCode + '\n' +
                 '            ]\n' +
