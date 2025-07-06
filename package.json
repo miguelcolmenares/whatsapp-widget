@@ -35,7 +35,7 @@
 		"grunt-contrib-copy": "^1.0.0",
 		"grunt-contrib-cssmin": "^5.0.0",
 		"grunt-contrib-less": "^3.0.0",
-		"jest": "^30.0.3",
+		"jest": "^30.0.4",
 		"jest-environment-jsdom": "^30.0.4",
 		"less": "^4.3.0",
 		"load-grunt-tasks": "^5.1.0",
