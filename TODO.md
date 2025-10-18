@@ -333,6 +333,6 @@ Este TODO está abierto a sugerencias y contribuciones. Para proponer nuevas mej
 
 ---
 
-**Última actualización**: 2025-10-18
-**Versión actual**: 3.3.7
+**Última actualización**: 18 de Octubre, 2025  
+**Versión actual**: 3.3.7  
 **Mantenido por**: Miguel Colmenares

@@ -1,6 +1,6 @@
 # Análisis del Repositorio WhatsApp Widget - Resumen Ejecutivo
 
-**Fecha**: Octubre 2024  
+**Fecha**: 18 de Octubre, 2025  
 **Versión Analizada**: 3.3.7  
 **Analizado por**: GitHub Copilot
 
@@ -253,9 +253,11 @@ Historial de cambios siguiendo Keep a Changelog format
 ### Community
 | Métrica | Actual | 6 meses | 12 meses |
 |---------|--------|---------|----------|
-| Contributors | 1 | 3-5 | 10+ |
-| GitHub Stars | - | 100+ | 500+ |
-| npm Downloads/mo | - | 1k+ | 10k+ |
+| Contributors | 2 | 3-5 | 10+ |
+| GitHub Stars | N/A* | 100+ | 500+ |
+| npm Downloads/mo | N/A* | 1k+ | 10k+ |
+
+*Métricas actuales no disponibles públicamente para repositorios sin publicar en registros públicos
 
 ---
 

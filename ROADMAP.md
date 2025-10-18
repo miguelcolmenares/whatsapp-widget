@@ -341,6 +341,6 @@ Este roadmap será revisado y actualizado:
 
 ---
 
-**Última actualización**: Octubre 2024  
-**Próxima revisión**: Enero 2025  
+**Última actualización**: 18 de Octubre, 2025  
+**Próxima revisión**: Enero 2026  
 **Mantenido por**: Miguel Colmenares & Community
