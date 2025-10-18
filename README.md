@@ -1,9 +1,32 @@
-# Whatsapp widget
+# WhatsApp Widget
+
 [![GitHub Actions Status Badge](https://github.com/miguelcolmenares/whatsapp-widget/workflows/CodeQL/badge.svg)](https://github.com/miguelcolmenares/whatsapp-widget/actions/workflows/codeql-analysis.yml)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/miguelcolmenares/whatsapp-widget)
 [![](https://data.jsdelivr.com/v1/package/gh/miguelcolmenares/whatsapp-widget/badge?style=rounded)](https://www.jsdelivr.com/package/gh/miguelcolmenares/whatsapp-widget)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 
-> Add a floating widget to open WhatsApp
+> Add a floating widget to open WhatsApp with multi-agent support and business hours scheduling
+
+## 📚 Documentation
+
+- **[Getting Started](#getting-started)** - Quick start guide
+- **[Configuration Options](#widget-options)** - All available options
+- **[Contributing](CONTRIBUTING.md)** - How to contribute to the project
+- **[Roadmap](ROADMAP.md)** - Development plans for 2025
+- **[Changelog](CHANGELOG.md)** - Version history and changes
+- **[TODO](TODO.md)** - Planned improvements and features
+- **[Quick Wins](QUICK_WINS.md)** - High-impact, quick improvements
+
+## ✨ Features
+
+- 🚀 **Easy Integration** - Simple script tag, no dependencies
+- 👥 **Multi-Agent Support** - Multiple support agents with individual configurations
+- ⏰ **Business Hours** - Automatic agent availability based on schedule
+- 📱 **Responsive Design** - Works seamlessly on desktop and mobile
+- 🎨 **Customizable** - Customize title, description, and agent details
+- 📊 **Google Analytics** - Built-in tracking support
+- 🔒 **Secure** - Sanitized inputs to prevent XSS attacks
+- ⚡ **Lightweight** - Only 6.18 KiB minified
 
 ## Getting Started
 
@@ -88,3 +111,60 @@ new whatsapp({
     }]
 })
 ```
+
+## 🤝 Contributing
+
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
+
+### Quick Start for Contributors
+
+```bash
+# Clone the repository
+git clone https://github.com/miguelcolmenares/whatsapp-widget.git
+cd whatsapp-widget
+
+# Install dependencies
+npm install
+
+# Run tests
+npm test
+
+# Build the project
+npm run build
+
+# Lint and format
+npm run lint
+npm run prettier
+```
+
+### Ways to Contribute
+
+- 🐛 [Report bugs](https://github.com/miguelcolmenares/whatsapp-widget/issues/new?template=bug_report.md)
+- 💡 [Suggest features](https://github.com/miguelcolmenares/whatsapp-widget/issues/new?template=feature_request.md)
+- 📝 Improve documentation
+- 🧪 Add tests
+- 🎨 Improve design
+- ✨ Add new features
+
+Check out our [TODO.md](TODO.md) and [QUICK_WINS.md](QUICK_WINS.md) for ideas on what to work on!
+
+## 📄 License
+
+This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
+
+## 👤 Author
+
+**Miguel Colmenares**
+- Email: me@miguelcolmenares.com
+- GitHub: [@miguelcolmenares](https://github.com/miguelcolmenares)
+
+## 🙏 Acknowledgments
+
+Thanks to all contributors who have helped make this project better!
+
+## 📈 Project Stats
+
+![GitHub stars](https://img.shields.io/github/stars/miguelcolmenares/whatsapp-widget?style=social)
+![GitHub forks](https://img.shields.io/github/forks/miguelcolmenares/whatsapp-widget?style=social)
+![GitHub issues](https://img.shields.io/github/issues/miguelcolmenares/whatsapp-widget)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/miguelcolmenares/whatsapp-widget)
