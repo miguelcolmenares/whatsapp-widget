@@ -1,0 +1,29 @@
+name: Auto Build & Deploy
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  auto-build:
+    runs-on: ubuntu-latest
+    
+    # Required permissions for committing build files
+    permissions:
+      contents: write  # Allows the action to commit and push changes
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Auto Build & Commit
+        uses: miguelcolmenares/npm-auto-build@v1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          build-dir: 'dist'
+          commit-message: 'chore: update build files [skip ci]'
+          git-user-name: 'WhatsApp Widget Bot'
+          git-user-email: 'github-actions[bot]@users.noreply.github.com'
+          node-version: '20'

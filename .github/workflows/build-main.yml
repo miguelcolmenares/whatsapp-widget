@@ -1,29 +1,29 @@
-# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
+# This workflow will test build and run tests on pull requests
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
-name: Build - Main
+name: Test Build - PR
 
 on:
-  push:
-    branches: [ main ]
   pull_request:
     branches: [ main ]
 
 jobs:
-  build:
-
+  test-build:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [20.x]
-
     steps:
-    - uses: actions/checkout@v5
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v6.0.0
+    - name: Checkout
+      uses: actions/checkout@v5
+    
+    - name: Test Build & Run Tests
+      uses: miguelcolmenares/npm-auto-build@v1
       with:
-        node-version: ${{ matrix.node-version }}
-    - run: npm ci
-    - run: npm run build
-    - run: npx jest --coverage
+        build-only: true  # Only build and test, don't commit
+        command: 'build'
+        build-dir: 'dist'
+        node-version: '20'
+    
+    - name: Run Tests
+      run: |
+        npm ci
+        npx jest --coverage
