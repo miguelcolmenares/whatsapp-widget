@@ -16,7 +16,7 @@ jobs:
       uses: actions/checkout@v5
     
     - name: Test Build & Run Tests
-      uses: miguelcolmenares/npm-auto-build@v1
+      uses: miguelcolmenares/npm-auto-build@v1.1.0
       with:
         build-only: true  # Only build and test, don't commit
         command: 'build'
