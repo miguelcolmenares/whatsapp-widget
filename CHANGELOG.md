@@ -23,6 +23,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - build-dev.yml workflow (no longer needed)
 - dist/ directory from version control (now auto-generated)
 
+### Technical Details
+- Auto-build action will trigger on this commit to test functionality
+- Generated files will be automatically committed to dist/ folder
+
 ## [3.3.7] - 2025-06-29
 
 ### Added
