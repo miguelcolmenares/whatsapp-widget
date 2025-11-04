@@ -8,9 +8,10 @@ jobs:
   auto-build:
     runs-on: ubuntu-latest
     
-    # Required permissions for committing build files
+    # Required permissions for committing build files and creating PRs
     permissions:
-      contents: write  # Allows the action to commit and push changes
+      contents: write      # Allows the action to commit and push changes
+      pull-requests: write # Allows the action to create pull requests
     
     steps:
       - name: Checkout
@@ -27,3 +28,4 @@ jobs:
           git-user-name: 'WhatsApp Widget Bot'
           git-user-email: 'github-actions[bot]@users.noreply.github.com'
           node-version: '20'
+          create-pr: true  # Creates PR instead of direct push for protected branches
