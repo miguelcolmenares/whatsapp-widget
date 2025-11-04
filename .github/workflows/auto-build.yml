@@ -19,9 +19,10 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Auto Build & Commit
+      - name: Auto Build & Create PR
         uses: miguelcolmenares/npm-auto-build@v2
         with:
+          command: 'build'
           github-token: ${{ secrets.GITHUB_TOKEN }}
           build-dir: 'dist'
           commit-message: 'chore: update build files [skip ci]'
