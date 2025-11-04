@@ -18,6 +18,7 @@ jobs:
     - name: Test Build & Run Tests
       uses: miguelcolmenares/npm-auto-build@v1
       with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
         build-only: true  # Only build and test, don't commit
         command: 'build'
         build-dir: 'dist'

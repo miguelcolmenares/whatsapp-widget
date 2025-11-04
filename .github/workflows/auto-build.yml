@@ -19,7 +19,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Auto Build & Commit
-        uses: miguelcolmenares/npm-auto-build@v1.1.0
+        uses: miguelcolmenares/npm-auto-build@v1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           build-dir: 'dist'
