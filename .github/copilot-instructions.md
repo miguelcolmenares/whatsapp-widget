@@ -79,3 +79,9 @@ Instantiation requires agents array with `name`, `phone`, `hours`, `cta`, `messa
 - LESS changes require Grunt rebuild to see CSS updates
 - TypeScript changes need Webpack rebuild for browser testing
 - Tests run in jsdom - no browser required for development
+
+## GitHub CLI (gh) Usage
+When using `gh` commands in the terminal, always disable the pager to prevent the terminal from hanging:
+- **Preferred**: Use `PAGER=cat gh ...` (e.g., `PAGER=cat gh run list`)
+- **Alternative**: Pipe to cat: `gh ... | cat` (e.g., `gh run list | cat`)
+- This prevents interactive pager mode that waits for user input
