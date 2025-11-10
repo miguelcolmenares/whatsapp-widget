@@ -19,7 +19,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Auto Build & Create PR
+      - name: Auto Build & Commit
         uses: miguelcolmenares/npm-auto-build@v2
         with:
           command: 'build'
@@ -29,4 +29,3 @@ jobs:
           git-user-name: 'WhatsApp Widget Bot'
           git-user-email: 'github-actions[bot]@users.noreply.github.com'
           node-version: '20'
-          create-pr: true  # Creates PR instead of direct push for protected branches
