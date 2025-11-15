@@ -1,0 +1,30 @@
+name: Build Docs & Widget Demo
+
+on:
+  push:
+    branches: [ docs ]
+
+jobs:
+  auto-build:
+    runs-on: ubuntu-latest
+    
+    # Required permissions for committing build files
+    permissions:
+      contents: write
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Auto Build & Commit
+        uses: miguelcolmenares/npm-auto-build@v2
+        with:
+          command: 'build'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          build-dir: 'dist'
+          commit-message: 'chore: update build files for GitHub Pages [skip ci]'
+          git-user-name: 'WhatsApp Widget Bot'
+          git-user-email: 'github-actions[bot]@users.noreply.github.com'
+          node-version: '20'
