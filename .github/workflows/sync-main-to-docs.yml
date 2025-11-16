@@ -27,7 +27,24 @@ jobs:
         run: |
           git fetch origin docs:docs
           git checkout docs
-          git merge origin/main -m "chore: sync main changes to docs branch [skip ci]"
+          
+          # Save the docs-specific index.html
+          cp index.html index.html.backup
+          
+          # Merge main into docs
+          git merge origin/main -m "chore: sync main changes to docs branch [skip ci]" || true
+          
+          # Restore the docs index.html if it was overwritten
+          if [ -f index.html.backup ]; then
+            mv index.html.backup index.html
+            git add index.html
+            git commit --amend --no-edit || git commit -m "chore: restore docs index.html [skip ci]"
+          fi
+          
           git push origin docs
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Trigger docs build
+        run: |
+          # The build-docs.yml workflow will be triggered automatically by the push to docs branch
