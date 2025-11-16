@@ -5,13 +5,13 @@ export default async (): Promise<Config.InitialOptions> => {
 		preset: "ts-jest",
 		testEnvironment: "jsdom",
 		transform: {
-			"^.+\\.ts?$": "ts-jest",
+			"^.+\\.ts?$": [
+				"ts-jest",
+				{
+					tsconfig: "tsconfig.json",
+				},
+			],
 		},
 		transformIgnorePatterns: ["<rootDir>/node_modules/"],
-		globals: {
-			"ts-jest": {
-				tsconfig: "tsconfig.json", // Ruta al archivo tsconfig.json
-			},
-		},
 	};
 };
