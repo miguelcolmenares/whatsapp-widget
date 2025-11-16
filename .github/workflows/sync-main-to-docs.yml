@@ -1,0 +1,33 @@
+name: Sync main to docs
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  sync-to-docs:
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: write
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0  # Fetch all history for all branches
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Configure Git
+        run: |
+          git config user.name "WhatsApp Widget Bot"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+      
+      - name: Merge main into docs
+        run: |
+          git fetch origin docs:docs
+          git checkout docs
+          git merge origin/main -m "chore: sync main changes to docs branch [skip ci]"
+          git push origin docs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
