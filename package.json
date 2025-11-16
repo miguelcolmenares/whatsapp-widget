@@ -39,15 +39,13 @@
 		"postcss-less": "^6.0.0",
 		"prettier": "^3.6.2",
 		"striptags": "^3.2.0",
+		"terser": "^5.44.1",
 		"ts-jest": "^29.4.5",
 		"ts-node": "^10.9.2",
 		"typescript": "^5.9.3",
 		"vite": "^7.2.2",
 		"vite-plugin-dts": "^4.5.4",
 		"vite-plugin-static-copy": "^3.1.4"
-	},
-	"resolutions": {
-		"axios": ">=1.7.9"
 	},
 	"overrides": {
 		"js-yaml": "^4.1.1"
