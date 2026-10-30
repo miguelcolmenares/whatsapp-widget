@@ -43,12 +43,12 @@
 		"ts-jest": "^29.4.6",
 		"ts-node": "^10.9.2",
 		"typescript": "^5.9.3",
-		"vite": "^7.3.1",
+		"vite": "^7.3.7",
 		"vite-plugin-dts": "^4.5.4",
 		"vite-plugin-static-copy": "^3.2.0"
 	},
 	"overrides": {
-		"js-yaml": "^4.1.1"
+		"js-yaml": "^4.3.2"
 	},
 	"engines": {
 		"node": ">=20",
