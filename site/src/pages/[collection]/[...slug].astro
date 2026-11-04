@@ -1,0 +1,51 @@
+---
+import type { Document } from "../../domain";
+import { loadSite } from "../../infrastructure";
+import CollectionIndex from "../../presentation/layouts/CollectionIndex.astro";
+import DocPage from "../../presentation/layouts/DocPage.astro";
+
+// A collection can have a page layout of its own: a file named after its id in layouts/collections/. It takes the
+// props of DocPage and renders it, with more in the slot. A site without such a folder uses DocPage for every page.
+const layouts = import.meta.glob<{ default: typeof DocPage }>("../../presentation/layouts/collections/*.astro", { eager: true });
+
+// One route for every configured collection: /docs/, /docs/getting-started/, /tutorials/, /examples/basic/ ...
+export async function getStaticPaths() {
+  const site = loadSite();
+  const paths = [];
+  for (const collection of site.config.collections) {
+    const documents = site.documents.filter((document) => document.collection === collection.id);
+    if (documents.length === 0) continue;
+    paths.push({ params: { collection: collection.id, slug: undefined }, props: { collection, documents } });
+    for (const doc of documents) {
+      paths.push({ params: { collection: collection.id, slug: doc.slug }, props: { collection, documents, doc, ...(await site.render(doc)) } });
+    }
+  }
+  return paths;
+}
+
+const { collection, documents, doc, html, headings } = Astro.props as {
+  collection: { id: string; label: string; lede?: string };
+  documents: Document[];
+  doc?: Document;
+  html?: string;
+  headings?: { depth: number; slug: string; text: string }[];
+};
+const { href } = loadSite();
+const Layout = (collection && layouts[`../../presentation/layouts/collections/${collection.id}.astro`]?.default) || DocPage;
+---
+
+{
+  doc && html !== undefined ? (
+    <Layout
+      doc={doc}
+      html={html}
+      headings={headings ?? []}
+      siblings={documents}
+      collectionLabel={collection.label}
+      collectionHref={href(`${collection.id}/`)}
+      homeHref={href("")}
+    />
+  ) : (
+    <CollectionIndex title={collection.label} lede={collection.lede} documents={documents} />
+  )
+}

@@ -10,9 +10,12 @@
 		"build:cleanup": "rm -f dist/css/whatsapp-widget-styles.js",
 		"build:js": "vite build",
 		"build:css": "BUILD_MODE=css vite build",
+		"site:widget": "rm -rf site/public/dist && cp -R dist site/public/dist",
+		"site:build": "npm run build && npm run site:widget && npm --prefix site run build",
 		"lint": "npx eslint src/ --quiet --fix",
 		"prettier": "prettier --write src/",
-		"test": "npx jest --coverage --verbose"
+		"test": "npx jest --coverage --verbose",
+		"test:e2e": "playwright test -c e2e/playwright.config.ts"
 	},
 	"repository": {
 		"type": "git",
@@ -25,8 +28,10 @@
 	},
 	"homepage": "https://github.com/miguelcolmenares/whatsapp-widget#readme",
 	"devDependencies": {
+		"@axe-core/playwright": "^4.14.0",
 		"@eslint/eslintrc": "^3.3.3",
 		"@eslint/js": "^9.39.2",
+		"@playwright/test": "^1.64.1",
 		"@tsconfig/recommended": "^1.0.13",
 		"@types/jest": "^30.0.0",
 		"@typescript-eslint/eslint-plugin": "^8.46.4",

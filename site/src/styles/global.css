@@ -1,0 +1,155 @@
+@import "tailwindcss";
+@import "@fontsource-variable/geist";
+@import "@fontsource-variable/geist-mono";
+@import "./tokens.css";
+@import "./prose.css";
+@import "./code.css";
+
+/*
+ * Fallback faces for the web fonts. A page is drawn with these until Geist arrives, and each is a local font
+ * scaled and shifted to Geist's metrics, so text takes the same room and the swap moves as little as it can.
+ *
+ * How the values were found, so they can be found again when the fonts or the fallback change:
+ *   ascent, descent and line gap come from the font file (the `hhea` table, read with `@capsizecss/unpack`):
+ *   Geist and Geist Mono both have ascent 1005, descent 295, line gap 0 per 1000 em.
+ *   size-adjust is measured, not taken from the average character width of the file: it is the width of the same
+ *   text in Geist divided by its width in the fallback, in a browser, over the prose of docs/ (9,524 characters)
+ *   for the sans faces and over 259 lines of TypeScript for the mono face:
+ *     Geist 400 / Arial 400 = 1.029          Geist 600 / Arial Bold 700 = 0.9986
+ *     Geist Mono 400 / Courier New 400 = 0.9998
+ *   ascent-override = 1.005 / size-adjust, descent-override = 0.295 / size-adjust.
+ * For the sans face, 1.029 was also checked against line breaks: over 164 paragraphs of that prose in boxes from 280
+ * to 760 px, the share that breaks into a different number of lines than in Geist is lowest, about 3%, between 1.0275
+ * and 1.03 (it is 12% at 1.000 and 8% at 1.0475, the value the average character width of the file would give).
+ * A fallback matches the average, not every line, so a line that sits within a percent of the edge still wraps once
+ * more or less when the font arrives.
+ * e2e/specs/vitals.spec.ts loads pages with the fonts 500 ms late and fails above a layout shift of 0.01.
+ */
+@font-face {
+  font-family: "Geist Fallback";
+  font-weight: 100 599;
+  src: local("Arial"), local("Liberation Sans"), local("Helvetica Neue"), local("Helvetica");
+  size-adjust: 102.9%;
+  ascent-override: 97.67%;
+  descent-override: 28.67%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: "Geist Fallback";
+  font-weight: 600 900;
+  src:
+    local("Arial Bold"), local("Arial-BoldMT"), local("Liberation Sans Bold"),
+    local("Helvetica Bold");
+  size-adjust: 99.86%;
+  ascent-override: 100.64%;
+  descent-override: 29.54%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: "Geist Mono Fallback";
+  src: local("Courier New"), local("Liberation Mono"), local("Courier");
+  size-adjust: 99.98%;
+  ascent-override: 100.52%;
+  descent-override: 29.51%;
+  line-gap-override: 0%;
+}
+
+/* The `dark:` variant applies inside the dark theme, which is the `data-theme` attribute on <html>. */
+@custom-variant dark (&:is([data-theme="dark"] *));
+
+@theme inline {
+  /* shadcn semantic colors, mapped onto the sitekit tokens */
+  --color-background: var(--sk-bg);
+  --color-foreground: var(--sk-fg);
+  --color-card: var(--sk-surface);
+  --color-card-foreground: var(--sk-fg);
+  --color-popover: var(--sk-surface-2);
+  --color-popover-foreground: var(--sk-fg);
+  --color-primary: var(--sk-fg-bright);
+  --color-primary-foreground: var(--sk-bg);
+  --color-secondary: var(--sk-surface-2);
+  --color-secondary-foreground: var(--sk-fg);
+  --color-muted: var(--sk-surface-2);
+  --color-muted-foreground: var(--sk-fg-muted);
+  --color-accent: var(--sk-surface-3);
+  --color-accent-foreground: var(--sk-fg-bright);
+  --color-destructive: var(--sk-danger);
+  --color-border: var(--sk-border);
+  --color-input: var(--sk-border-strong);
+  --color-ring: var(--sk-accent-strong);
+
+  /* sitekit scale */
+  --color-bg-subtle: var(--sk-bg-subtle);
+  --color-surface: var(--sk-surface);
+  --color-surface-2: var(--sk-surface-2);
+  --color-surface-3: var(--sk-surface-3);
+  --color-border-strong: var(--sk-border-strong);
+  --color-border-hover: var(--sk-border-hover);
+  --color-fg-bright: var(--sk-fg-bright);
+  --color-fg-muted: var(--sk-fg-muted);
+  --color-fg-dim: var(--sk-fg-dim);
+  --color-fg-faint: var(--sk-fg-faint);
+  --color-brand: var(--sk-accent);
+  --color-brand-strong: var(--sk-accent-strong);
+  --color-success: var(--sk-success);
+  --color-warn: var(--sk-warn);
+
+  --radius-sm: var(--sk-radius-sm);
+  --radius-md: var(--sk-radius-md);
+  --radius-lg: var(--sk-radius-lg);
+  --radius-xl: var(--sk-radius-xl);
+
+  --font-sans: var(--sk-font-sans);
+  --font-mono: var(--sk-font-mono);
+
+  --container-site: var(--sk-layout-maxw);
+  --container-prose: var(--sk-layout-maxw-prose);
+  --ease-site: var(--sk-motion-ease);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html {
+    color-scheme: dark;
+    scroll-padding-top: calc(var(--sk-layout-nav-h) + 1rem);
+  }
+  html[data-theme="light"] {
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: light) {
+    html:not([data-theme="dark"]) {
+      color-scheme: light;
+    }
+  }
+  body {
+    @apply bg-background font-sans text-foreground antialiased;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-brand;
+  }
+  ::selection {
+    background: color-mix(in srgb, var(--sk-accent-strong) 45%, transparent);
+  }
+}
+
+/* The theme switch shows the icon of the theme it switches to: a sun in dark, a moon in light. */
+html[data-theme="light"] .theme-icon-sun,
+html:not([data-theme="light"]) .theme-icon-moon {
+  display: none;
+}
+
+/* Reduce motion for everyone who asks for it. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

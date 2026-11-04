@@ -1,0 +1,72 @@
+---
+import type { TagOption } from "../../../domain/filter";
+
+interface Props {
+  /** One button per tag, from `collectTags`. */
+  tags: TagOption[];
+  /** How many cards the page has, for the first status line. */
+  total: number;
+}
+const { tags, total } = Astro.props;
+
+const button =
+  "inline-flex min-h-11 min-w-11 max-w-full items-center justify-center rounded-md border border-border-strong px-4 py-2 text-center text-sm [overflow-wrap:anywhere] transition-colors duration-200";
+---
+
+<!--
+  Hidden until the inline script below shows it, so a visitor without JavaScript sees every card and no dead
+  controls. The script sits right after the bar, so the bar is there in the first paint and nothing moves.
+-->
+<div data-catalog-filter hidden class="mb-10">
+  <div class="flex flex-col gap-4">
+    <div class="flex max-w-md flex-col gap-2">
+      <label for="catalog-filter-text" class="text-sm text-fg-muted">Filter by text</label>
+      <input
+        id="catalog-filter-text"
+        data-filter-input
+        type="search"
+        autocomplete="off"
+        autocapitalize="off"
+        spellcheck="false"
+        class="h-11 w-full rounded-md border border-border-strong bg-background px-3 text-base text-fg-bright placeholder:text-fg-dim"
+      />
+    </div>
+    {
+      tags.length > 0 && (
+        <div role="group" aria-label="Filter by tag" class="flex flex-wrap gap-2">
+          {tags.map((tag) => (
+            <button
+              type="button"
+              data-filter-tag={tag.key}
+              aria-pressed="false"
+              class={`${button} bg-surface text-fg-muted aria-[pressed=false]:hover:bg-surface-2 aria-[pressed=false]:hover:text-fg-bright aria-pressed:border-primary aria-pressed:bg-primary aria-pressed:text-primary-foreground`}
+            >
+              {tag.label}
+            </button>
+          ))}
+        </div>
+      )
+    }
+    <div class="flex min-h-11 flex-wrap items-center gap-x-4 gap-y-1">
+      <p data-filter-status role="status" aria-live="polite" class="text-sm text-fg-muted">{total} of {total} shown.</p>
+      <button
+        type="button"
+        data-filter-clear
+        hidden
+        class={`${button} bg-background text-fg-bright hover:bg-surface-2`}
+      >
+        Clear filter
+      </button>
+    </div>
+  </div>
+</div>
+<script is:inline>
+  document.currentScript.previousElementSibling.hidden = false;
+</script>
+
+<script>
+  import { attachCatalogFilter } from "../../filter/catalogFilter";
+
+  const root = document.querySelector<HTMLElement>("[data-catalog-filter]");
+  if (root) attachCatalogFilter(root);
+</script>

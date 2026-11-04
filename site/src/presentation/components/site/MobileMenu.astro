@@ -1,0 +1,89 @@
+---
+import { X } from "lucide-react";
+import { Icon } from "./Icon";
+
+interface Props {
+  links: readonly { label: string; href: string }[];
+  action?: { label: string; href: string };
+  /** The repository button of the header, which has no room in the bar on a phone. */
+  repository?: { href: string; name: string; icon: string };
+}
+const { links, action, repository } = Astro.props;
+---
+
+{/*
+  The navigation for a phone, shown below the `md` breakpoint. It is a native modal dialog and a few lines of
+  script, not a React component: the browser traps focus inside it, closes it with Escape, hides the page behind it
+  from assistive technology and returns focus to the button, and the page does not download a framework for it.
+  The layout renders it after the header, the way it renders the search dialog. The button that opens it, any
+  element with `data-mobile-menu-open`, is in the header.
+*/}
+<dialog
+  data-mobile-menu
+  aria-labelledby="mobile-menu-title"
+  aria-modal="true"
+  class="fixed inset-y-0 right-0 left-auto m-0 h-dvh max-h-none w-72 max-w-[calc(100vw-3rem)] flex-col gap-4 border-0 border-l border-border bg-background p-0 text-fg backdrop:bg-black/50 open:flex md:hidden"
+>
+  <div class="flex items-center justify-between p-4 pr-2">
+    <h2 id="mobile-menu-title" class="font-semibold text-fg-bright">Menu</h2>
+    <button
+      type="button"
+      data-mobile-menu-close
+      aria-label="Close menu"
+      class="inline-flex size-11 items-center justify-center rounded-md text-fg-muted hover:bg-surface-2 hover:text-fg-bright"
+    >
+      <X className="size-5" aria-hidden="true" />
+    </button>
+  </div>
+  <nav aria-label="Mobile" class="flex flex-col gap-1 overflow-y-auto px-4 pb-4">
+    {
+      links.map((link) => (
+        <a href={link.href} class="rounded-md px-3 py-2.5 text-fg-muted hover:bg-surface-2 hover:text-fg-bright">
+          {link.label}
+        </a>
+      ))
+    }
+    {
+      repository && (
+        <a
+          href={repository.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          data-repository-button
+          class="inline-flex min-h-11 items-center gap-2 rounded-md px-3 text-fg-muted hover:bg-surface-2 hover:text-fg-bright"
+        >
+          <Icon name={repository.icon} className="size-5" />
+          {repository.name}
+        </a>
+      )
+    }
+    {
+      action && (
+        <a href={action.href} class="mt-3 rounded-md bg-primary px-3 py-2.5 text-center font-medium text-primary-foreground">
+          {action.label}
+        </a>
+      )
+    }
+  </nav>
+</dialog>
+
+<script>
+  // Opens the menu, and closes it from its button, a click on the dark area behind it, or a link. Escape is the browser's.
+  const dialog = document.querySelector<HTMLDialogElement>("[data-mobile-menu]");
+  if (dialog) {
+    for (const opener of document.querySelectorAll("[data-mobile-menu-open]")) {
+      opener.addEventListener("click", () => dialog.showModal());
+    }
+    dialog.addEventListener("click", (event) => {
+      const target = event.target;
+      // The panel fills the dialog, so a click on the dialog itself is a click on the backdrop.
+      if (target === dialog || (target instanceof Element && target.closest("[data-mobile-menu-close], a"))) {
+        dialog.close();
+      }
+    });
+    // The menu is for a phone: a window made wider while it is open (a rotated tablet) does not keep it on top.
+    window.matchMedia("(min-width: 768px)").addEventListener("change", (query) => {
+      if (query.matches && dialog.open) dialog.close();
+    });
+  }
+</script>

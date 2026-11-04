@@ -1,0 +1,108 @@
+---
+import { Callout } from "../../presentation/components/site/Callout";
+import CtaBand from "../../presentation/components/site/CtaBand.astro";
+import { CommandBox } from "../../presentation/components/site/CommandBox";
+import { CommandTable } from "../../presentation/components/site/CommandTable";
+import { FeatureGrid } from "../../presentation/components/site/FeatureGrid";
+import { FlowDiagram } from "../../presentation/components/site/FlowDiagram";
+import { CardGrid, ItemCard } from "../../presentation/components/site/ItemCard";
+import { ReferenceTable } from "../../presentation/components/site/ReferenceTable";
+import { SectionHeader } from "../../presentation/components/site/SectionHeader";
+import { StatRow } from "../../presentation/components/site/StatRow";
+import { ToneBadge } from "../../presentation/components/site/ToneBadge";
+import BaseLayout from "../../presentation/layouts/BaseLayout.astro";
+
+// Every component in every state, for visual tests. It is only built when asked for:
+// SITEKIT_GALLERY=1 astro build
+export function getStaticPaths() {
+  return process.env.SITEKIT_GALLERY ? [{ params: { slug: undefined } }] : [];
+}
+---
+
+<BaseLayout title="Gallery">
+  <div class="mx-auto max-w-site space-y-20 px-5 py-14">
+    <section data-gallery="badges">
+      <SectionHeader eyebrow="Badges" title="ToneBadge" />
+      <div class="flex flex-wrap gap-2">
+        <ToneBadge>neutral</ToneBadge>
+        <ToneBadge tone="brand" dot>brand</ToneBadge>
+        <ToneBadge tone="success" dot>success</ToneBadge>
+        <ToneBadge tone="warn" dot>warn</ToneBadge>
+      </div>
+    </section>
+    <section data-gallery="command">
+      <SectionHeader eyebrow="Command" title="CommandBox" />
+      <CommandBox command="npx docs-sitekit init" client:load />
+    </section>
+    <section data-gallery="cards">
+      <SectionHeader eyebrow="Cards" title="ItemCard and CardGrid" />
+      <CardGrid>
+        <ItemCard href="#" title="getting-started" description="Create a documentation site in a few minutes." badge="Docs" tone="brand" hint="Read" />
+        <ItemCard href="#" title="design-tokens" description="One file drives every color, radius and font." badge="Design" hint="Read" />
+        <ItemCard href="#" title="deploying" description="Publish to GitHub Pages with a publish check." badge="Ship" tone="success" hint="Read" />
+        <ItemCard href="#" title="content" description="How a markdown file becomes a page." hint="Read" />
+      </CardGrid>
+    </section>
+    <section data-gallery="features">
+      <SectionHeader eyebrow="Features" title="FeatureGrid" />
+      <FeatureGrid
+        features={[
+          { icon: "layers", eyebrow: "Design", title: "Tokens you own", text: "One source of truth for the look." },
+          { icon: "shield-check", eyebrow: "Safety", title: "A closed contract", text: "Unknown keys fail the build." },
+          { icon: "brand:github", eyebrow: "Brands", title: "Logos without a request", text: "Inline SVG, drawn in the text color." },
+        ]}
+      />
+    </section>
+    <section data-gallery="stats">
+      <SectionHeader eyebrow="Stats" title="StatRow" />
+      <StatRow
+        stats={[
+          { value: "22+", label: "Node", note: "Astro 7 needs 22.23.4 or newer" },
+          { value: "0", label: "Runtime requests", note: "Every number comes from props" },
+          { value: "1,234,567,890,123", label: "A long value" },
+        ]}
+      />
+    </section>
+    <section data-gallery="reference">
+      <SectionHeader eyebrow="Reference" title="ReferenceTable" />
+      <ReferenceTable
+        label="Keys of the search group"
+        rows={[
+          { name: "search.enabled", type: "boolean", default: "true", allowed: "true, false", text: "Turn search on. Off, the site has no search button, no dialog and no index." },
+          { name: "search.averyveryveryveryverylongkeynamethatmustnotwidenthepage", type: "string", text: "A long name stays on one line inside the scrolling region." },
+        ]}
+      />
+    </section>
+    <section data-gallery="flow">
+      <SectionHeader eyebrow="Flow" title="FlowDiagram and CommandTable" />
+      <FlowDiagram
+        steps={[
+          { label: "Define", title: "Idea", detail: "Refine", command: "/spec" },
+          { label: "Plan", title: "Spec", detail: "PRD", command: "/plan" },
+          { label: "Build", title: "Code", detail: "Impl", command: "/build" },
+          { label: "Verify", title: "Test", detail: "Debug", command: "/test" },
+          { label: "Ship", title: "Go", detail: "Live", command: "/ship" },
+        ]}
+      />
+      <div class="mt-6">
+        <CommandTable
+          rows={[
+            { command: "/spec", text: "Define what to build" },
+            { command: "/plan", text: "Plan how to build it" },
+            { command: "/build", text: "Build incrementally" },
+            { command: "/test", text: "Prove it works" },
+          ]}
+        />
+      </div>
+    </section>
+    <section data-gallery="callouts" class="space-y-3">
+      <SectionHeader eyebrow="Callouts" title="Callout" />
+      <Callout kind="note">A note for the reader.</Callout>
+      <Callout kind="tip">A tip that saves time.</Callout>
+      <Callout kind="important">Something the reader needs to know.</Callout>
+      <Callout kind="warning">Something that can go wrong.</Callout>
+      <Callout kind="caution">Something that can cause harm.</Callout>
+    </section>
+  </div>
+  <CtaBand title="Start using it" command="npx docs-sitekit init" primary={{ label: "Get started", href: "#" }} secondary={{ label: "GitHub", href: "#" }} />
+</BaseLayout>

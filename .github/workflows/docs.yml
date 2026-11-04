@@ -1,0 +1,79 @@
+name: Docs
+
+on:
+  push:
+    branches: [main]
+    paths:
+      [
+        "site/**",
+        "docs/**",
+        "src/**",
+        "vite.config.ts",
+        "package.json",
+        "package-lock.json",
+        "README.md",
+        "CHANGELOG.md",
+        ".github/workflows/docs.yml",
+      ]
+  pull_request:
+    paths:
+      [
+        "site/**",
+        "docs/**",
+        "src/**",
+        "vite.config.ts",
+        "package.json",
+        "package-lock.json",
+        "README.md",
+        "CHANGELOG.md",
+        ".github/workflows/docs.yml",
+      ]
+  # A release changes the changelog and the version the site shows, so the site is rebuilt for it.
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build docs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # The date of the last change of a page comes from the history of its file.
+          # A shallow clone would give every page the date of the last commit. Needed when lastUpdated is on.
+          fetch-depth: 0
+      # The preview of the configurator runs the widget of this branch, so the widget is built first and copied into the site.
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npm run site:widget
+      # Installs the site, builds it, checks it, and uploads the Pages artifact.
+      - uses: miguelcolmenares/docs-sitekit@v0.2.2
+        with:
+          version: 0.2.2
+
+  deploy:
+    name: Deploy to GitHub Pages
+    if: github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
