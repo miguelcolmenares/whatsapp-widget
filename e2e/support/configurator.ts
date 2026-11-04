@@ -1,6 +1,6 @@
 import type { Locator, Page } from "@playwright/test";
 
-/** The placeholder of each field of an agent card, which is all the markup gives to find it by. */
+/** The placeholder of each field of an agent card. The page before the move had no labels, and the texts are kept. */
 const FIELD = {
 	name: "Agent name e.g. Customer Service",
 	phone: "WhatsApp phone number",
@@ -30,7 +30,7 @@ export async function setTime(page: Page, agent: number, day: number, which: "op
 	await input.blur();
 }
 
-export const addAgent = (page: Page) => page.getByRole("button", { name: /Add Agent/ }).click();
+export const addAgent = (page: Page) => page.getByRole("button", { name: /Add agent/i }).click();
 
 /** The integration code the page shows, as plain text. */
 export const generatedCode = async (page: Page): Promise<string> => (await page.locator("#code-output").textContent()) ?? "";

@@ -1,647 +1,512 @@
 ---
-const canonical = new URL(Astro.url.pathname, Astro.site).href;
+import { buttonVariants } from "../presentation/components/ui/button";
+import BaseLayout from "../presentation/layouts/BaseLayout.astro";
+import { DAY_NAMES, DEFAULT_CONFIG, buildCode } from "../presentation/tools/widgetCode";
+
+// The page is sent with the default choices already in place, so the code reads without JavaScript.
+const config = DEFAULT_CONFIG;
+const outline = `${buttonVariants({ variant: "outline" })} min-h-11`;
 ---
-<!doctype html>
-<html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WhatsApp Widget Configurator</title>
-    <meta name="description" content="Set the title, the description and the agents of the WhatsApp widget, see it working, and copy the code for your page.">
-    <link rel="canonical" href={canonical}>
-    <style is:global>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<BaseLayout
+  title="Configurator"
+  description="Set the title, the description and the agents of the WhatsApp widget, see it working on this page, and copy the code for your own."
+>
+  <div class="mx-auto max-w-site px-5 py-14">
+    <h1 class="text-3xl font-semibold text-fg-bright">Widget configurator</h1>
+    <p class="mt-3 max-w-prose text-fg-muted">
+      Set the texts and the agents. The code on the right follows what you type, and the widget in the corner of this
+      page is the preview: open it to see what a visitor sees. Then copy the code to the end of your page. See{" "}
+      <a href="../docs/getting-started/">Getting started</a> and the <a href="../docs/options/">options</a> for what each
+      field does.
+    </p>
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background-color: #f5f5f5;
-            color: #333;
-            line-height: 1.6;
-        }
+    <div class="tool" data-tool>
+      <div class="form">
+        <section aria-labelledby="widget-heading">
+          <h2 id="widget-heading">Widget</h2>
+          <div class="field">
+            <label for="widget-title">Title</label>
+            <input type="text" id="widget-title" placeholder="Widget title" value={config.title} autocomplete="off" />
+          </div>
+          <div class="field">
+            <label for="widget-description">Description</label>
+            <textarea id="widget-description" rows="3" placeholder="Widget description" autocomplete="off">{config.description}</textarea>
+          </div>
+        </section>
 
-        .header {
-            background: linear-gradient(135deg, #0F7A6E 0%, #075E54 100%);
-            color: white;
-            padding: 2rem 0;
-            text-align: center;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
+        <section aria-labelledby="agents-heading">
+          <h2 id="agents-heading">Agents</h2>
+          <noscript><p class="note">The form needs JavaScript. The code shown is the default one.</p></noscript>
+          <div id="agents-container" class="agents"></div>
+          <button type="button" class={`${outline} add-agent`} data-add-agent>Add agent</button>
+        </section>
+      </div>
 
-        .header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .header a {
-            color: white;
-        }
-
-        .header p {
-            font-size: 1.1rem;
-            opacity: 0.9;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-        }
-
-        .container > * {
-            min-width: 0;
-        }
-
-        .config-panel,
-        .code-panel {
-            background: white;
-            border-radius: 12px;
-            padding: 2rem;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            height: fit-content;
-        }
-
-        .panel-title {
-            font-size: 1.5rem;
-            margin-bottom: 1.5rem;
-            color: #0F7A6E;
-            border-bottom: 2px solid #e9ecef;
-            padding-bottom: 0.5rem;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: #555;
-        }
-
-        .form-group input,
-        .form-group textarea {
-            width: 100%;
-            padding: 0.75rem;
-            border: 2px solid #e9ecef;
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: border-color 0.3s ease;
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: #25D366;
-        }
-
-        .agents-section {
-            margin-top: 2rem;
-            padding-top: 2rem;
-            border-top: 2px solid #e9ecef;
-        }
-
-        .agent-card {
-            background: #f8f9fa;
-            border: 1px solid #dee2e6;
-            border-radius: 8px;
-            padding: 1.5rem;
-            margin-bottom: 1rem;
-            position: relative;
-        }
-
-        .agent-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-
-        .agent-title {
-            font-weight: 600;
-            color: #0F7A6E;
-            flex: 1;
-        }
-
-        .remove-agent {
-            background: #dc3545;
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: background-color 0.3s ease;
-        }
-
-        .remove-agent:hover {
-            background: #c82333;
-        }
-
-        .schedule-section {
-            margin-top: 1rem;
-            padding-top: 1rem;
-            border-top: 1px solid #dee2e6;
-        }
-
-        .day-toggle {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0.5rem 0;
-            border-bottom: 1px solid #eee;
-        }
-
-        .day-toggle:last-child {
-            border-bottom: none;
-        }
-
-        .day-name {
-            font-weight: 500;
-            min-width: 100px;
-        }
-
-        .toggle-switch {
-            position: relative;
-            width: 50px;
-            height: 25px;
-            background-color: #ccc;
-            border-radius: 25px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .toggle-switch.active {
-            background-color: #25D366;
-        }
-
-        .toggle-switch::after {
-            content: '';
-            position: absolute;
-            width: 21px;
-            height: 21px;
-            border-radius: 50%;
-            background-color: white;
-            top: 2px;
-            left: 2px;
-            transition: transform 0.3s ease;
-        }
-
-        .toggle-switch.active::after {
-            transform: translateX(25px);
-        }
-
-        .time-inputs {
-            display: none;
-            gap: 1rem;
-            margin-left: 1rem;
-        }
-
-        .time-inputs.active {
-            display: flex;
-        }
-
-        .time-inputs input {
-            width: 80px;
-            padding: 0.5rem;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-
-        .btn {
-            background: #25D366;
-            color: white;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: 600;
-            transition: background-color 0.3s ease;
-            width: 100%;
-            margin-top: 1rem;
-        }
-
-        .btn:hover {
-            background: #128C7E;
-        }
-
-        .btn-secondary {
-            background: #6c757d;
-        }
-
-        .btn-secondary:hover {
-            background: #5a6268;
-        }
-
-        .code-output {
-            background: #f8f9fa;
-            border: 1px solid #e9ecef;
-            border-radius: 8px;
-            padding: 1rem;
-            font-family: 'Monaco', 'Consolas', 'Courier New', monospace;
-            font-size: 0.9rem;
-            white-space: pre-wrap;
-            overflow-x: auto;
-            max-height: 400px;
-            overflow-y: auto;
-        }
-
-        .copy-btn {
-            background: #0069d9;
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            margin-top: 1rem;
-            transition: background-color 0.3s ease;
-        }
-
-        .copy-btn:hover {
-            background: #0056b3;
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                grid-template-columns: 1fr;
-                gap: 1rem;
-                margin: 1rem auto;
-            }
-
-            .header h1 {
-                font-size: 2rem;
-            }
-
-            .day-toggle {
-                flex-wrap: wrap;
-                gap: 0.5rem;
-            }
-
-            .time-inputs {
-                flex-wrap: wrap;
-                margin-left: 0;
-            }
-
-            .config-panel,
-            .code-panel {
-                padding: 1rem;
-            }
-        }
-    </style>
-</head>
-
-<body>
-    <main>
-    <header class="header">
-        <h1>🔧 WhatsApp Widget Configurator</h1>
-        <p>Customize your WhatsApp widget and get the code to integrate it into your website</p>
-        <p><a href="../">Read the documentation</a></p>
-    </header>
-
-    <div class="container">
-        <div class="config-panel">
-            <h2 class="panel-title">⚙️ Widget Configuration</h2>
-
-            <div class="form-group">
-                <label for="widget-title">Widget Title</label>
-                <input type="text" id="widget-title" placeholder="Widget title" value="¿Necesitas ayuda?">
-            </div>
-
-            <div class="form-group">
-                <label for="widget-description">Widget Description</label>
-                <textarea id="widget-description" rows="3"
-                    placeholder="Widget description">Chatea con nosotros por WhatsApp</textarea>
-            </div>
-
-            <div class="agents-section">
-                <h3 class="panel-title">👥 Support Agents</h3>
-                <div id="agents-container">
-                    <!-- Los agentes se agregarán dinámicamente aquí -->
-                </div>
-                <button class="btn btn-secondary" onclick="addAgent()">➕ Add Agent</button>
-            </div>
+      <section class="output" aria-labelledby="code-heading">
+        <h2 id="code-heading">Integration code</h2>
+        <p class="note">Copy and paste this code at the end of your page:</p>
+        <pre id="code-output" class="code" role="region" aria-label="Code to copy" tabindex="0">{buildCode(config)}</pre>
+        <div class="copy-row">
+          <button type="button" class={`${outline} copy-btn`} data-copy>Copy code</button>
+          <p class="status" role="status" data-copy-status></p>
         </div>
-
-        <div class="code-panel">
-            <h2 class="panel-title">📋 Integration Code</h2>
-            <p style="margin-bottom: 1rem; color: #666;">Copy and paste this code into your website:</p>
-            <div class="code-output" id="code-output" role="region" aria-label="Integration code" tabindex="0"></div>
-            <button class="copy-btn" onclick="copyCode()">📋 Copy Code</button>
-        </div>
+      </section>
     </div>
-    </main>
+  </div>
 
-    <script is:inline>
-        // Global widget configuration
-        let widgetConfig = {
-            title: '¿Necesitas ayuda?',
-            description: 'Chatea con nosotros por WhatsApp',
-            agents: [{
-                name: 'Servicio al cliente',
-                phone: '+57 320 1234567',
-                hours: 'Disponible 9am - 6pm',
-                cta: 'Haz clic para iniciar chat',
-                message: 'Hola, me gustaría obtener más información',
-                schedule: [
-                    ['9:00', '18:00'], // Sunday
-                    ['9:00', '20:00'], // Monday
-                    ['9:00', '20:00'], // Tuesday
-                    ['9:00', '20:00'], // Wednesday
-                    ['9:00', '20:00'], // Thursday
-                    ['9:00', '22:00'], // Friday
-                    ['10:00', '18:00'] // Saturday
-                ]
-            }]
-        };
+  <!-- One agent card. The script copies it for each agent and sets the ids, the names and the values. -->
+  <template id="agent-template">
+    <article class="agent-card">
+      <div class="agent-head">
+        <h3 class="agent-title" data-agent-title></h3>
+        <button type="button" class={outline} data-remove-agent>Remove</button>
+      </div>
 
-        const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+      <div class="field">
+        <label data-for="name">Agent name</label>
+        <input type="text" data-field="name" placeholder="Agent name e.g. Customer Service" autocomplete="off" />
+      </div>
+      <div class="field">
+        <label data-for="phone">WhatsApp phone</label>
+        <input type="text" data-field="phone" placeholder="WhatsApp phone number" autocomplete="off" />
+      </div>
+      <div class="field">
+        <label data-for="hours">Working hours</label>
+        <input type="text" data-field="hours" placeholder="Working hours" autocomplete="off" />
+      </div>
+      <div class="field">
+        <label data-for="cta">Button text</label>
+        <input type="text" data-field="cta" placeholder="Click button text" autocomplete="off" />
+      </div>
+      <div class="field">
+        <label data-for="message">Initial chat message</label>
+        <textarea data-field="message" rows="2" placeholder="Message to start the chat" autocomplete="off"></textarea>
+      </div>
 
-        // Initialize the page
-        document.addEventListener('DOMContentLoaded', function () {
-            renderAgents();
-            updateCode();
-
-            // Event listeners for main fields
-            document.getElementById('widget-title').addEventListener('input', updateWidgetTitle);
-            document.getElementById('widget-description').addEventListener('input', updateWidgetDescription);
-        });
-
-        function updateWidgetTitle() {
-            widgetConfig.title = document.getElementById('widget-title').value;
-            updateCode();
-            updateWidgetPreview();
+      <fieldset class="schedule">
+        <legend>Daily schedule</legend>
+        {
+          DAY_NAMES.map((day) => (
+            <div class="day" data-day>
+              <span class="day-name" data-day-name>{day}</span>
+              <input type="checkbox" role="switch" class="switch" data-switch />
+              <div class="time-inputs" data-times>
+                <input type="time" data-time="open" />
+                <span aria-hidden="true">to</span>
+                <input type="time" data-time="close" />
+              </div>
+            </div>
+          ))
         }
+      </fieldset>
+    </article>
+  </template>
+</BaseLayout>
 
-        function updateWidgetDescription() {
-            widgetConfig.description = document.getElementById('widget-description').value;
-            updateCode();
-            updateWidgetPreview();
-        }
+<style>
+  .tool {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+  @media (min-width: 64rem) {
+    .tool {
+      grid-template-columns: minmax(0, 28rem) minmax(0, 1fr);
+      align-items: start;
+    }
+    .output {
+      position: sticky;
+      top: calc(var(--sk-layout-nav-h) + 1.5rem);
+    }
+  }
+  .form,
+  .agents {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem;
+    min-width: 0;
+  }
+  .agents {
+    margin-bottom: 1.5rem;
+  }
+  .output {
+    min-width: 0;
+  }
+  h2 {
+    margin-bottom: 0.75rem;
+    color: var(--sk-fg-bright);
+    font-size: 1.125rem;
+    font-weight: 600;
+  }
+  .note {
+    margin-bottom: 0.75rem;
+    color: var(--sk-fg-muted);
+    font-size: 0.875rem;
+  }
+  .field {
+    display: grid;
+    gap: 0.375rem;
+    margin-bottom: 1rem;
+  }
+  label,
+  legend {
+    color: var(--sk-fg);
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+  input:not([type="checkbox"]),
+  textarea {
+    width: 100%;
+    min-height: 2.75rem;
+    padding: 0.625rem 0.75rem;
+    color: var(--sk-fg-bright);
+    background: var(--sk-surface);
+    border: 1px solid var(--sk-border-strong);
+    border-radius: var(--sk-radius-md);
+    font: inherit;
+  }
+  textarea {
+    resize: vertical;
+  }
+  input:focus-visible,
+  textarea:focus-visible,
+  pre:focus-visible {
+    outline: 2px solid var(--sk-accent);
+    outline-offset: 2px;
+  }
 
-        function renderAgents() {
-            const container = document.getElementById('agents-container');
-            container.innerHTML = '';
+  /* An agent */
+  .agent-card {
+    padding: 1.25rem;
+    background: var(--sk-bg-subtle);
+    border: 1px solid var(--sk-border);
+    border-radius: var(--sk-radius-lg);
+  }
+  .agent-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+  .agent-head [hidden] {
+    display: none;
+  }
+  .agent-title {
+    color: var(--sk-fg-bright);
+    font-size: 1rem;
+    font-weight: 600;
+  }
 
-            widgetConfig.agents.forEach((agent, index) => {
-                const agentCard = document.createElement('div');
-                agentCard.className = 'agent-card';
-                agentCard.innerHTML = `
-                    <div class="agent-header">
-                        <div class="agent-title">👤 Agent ${index + 1}</div>
-                        ${widgetConfig.agents.length > 1 ? `<button class="remove-agent" onclick="removeAgent(${index})">🗑️ Remove</button>` : ''}
-                    </div>
+  /* The week */
+  .schedule {
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+  .schedule legend {
+    margin-bottom: 0.25rem;
+    padding: 0;
+  }
+  .day {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 0.75rem;
+    min-height: 2.75rem;
+    padding: 0.25rem 0;
+    border-bottom: 1px solid var(--sk-border);
+  }
+  .day:last-child {
+    border-bottom: 0;
+  }
+  .day-name {
+    flex: 1 1 6rem;
+    color: var(--sk-fg);
+    font-size: 0.875rem;
+  }
+  .time-inputs {
+    display: none;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--sk-fg-muted);
+    font-size: 0.875rem;
+  }
+  .time-inputs[data-on] {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .time-inputs input {
+    width: 8.25rem;
+    padding-inline: 0.5rem;
+  }
+  .switch {
+    appearance: none;
+    flex: none;
+    position: relative;
+    width: 2.75rem;
+    height: 1.75rem;
+    margin: 0;
+    background: var(--sk-surface-3);
+    border: 1px solid var(--sk-border-strong);
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background-color 150ms var(--sk-motion-ease);
+  }
+  .switch::after {
+    content: "";
+    position: absolute;
+    top: 0.1875rem;
+    left: 0.1875rem;
+    width: 1.1875rem;
+    height: 1.1875rem;
+    background: var(--sk-fg-bright);
+    border-radius: 50%;
+    transition: transform 150ms var(--sk-motion-ease);
+  }
+  .switch:checked {
+    background: var(--sk-accent-strong);
+    border-color: var(--sk-accent-strong);
+  }
+  .switch:checked::after {
+    background: var(--sk-accent-contrast);
+    transform: translateX(1rem);
+  }
+  .switch:focus-visible {
+    outline: 2px solid var(--sk-accent);
+    outline-offset: 2px;
+  }
 
-                    <div class="form-group">
-                        <label>Agent Name</label>
-                        <input type="text" placeholder="Agent name e.g. Customer Service" 
-                            value="${agent.name}" onchange="updateAgent(${index}, 'name', this.value)">
-                    </div>
+  /* The code */
+  .code {
+    max-height: 32rem;
+    overflow: auto;
+    padding: 1rem;
+    color: var(--sk-fg);
+    background: var(--sk-surface);
+    border: 1px solid var(--sk-border);
+    border-radius: var(--sk-radius-md);
+    font-family: var(--sk-font-mono);
+    font-size: 0.8125rem;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+  .copy-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 0.75rem;
+  }
+  .status {
+    min-height: 1.5rem;
+    color: var(--sk-success);
+    font-size: 0.875rem;
+  }
+</style>
 
-                    <div class="form-group">
-                        <label>WhatsApp Phone</label>
-                        <input type="text" placeholder="WhatsApp phone number" 
-                            value="${agent.phone}" onchange="updateAgent(${index}, 'phone', this.value)">
-                    </div>
+<script>
+  import {
+    DAY_NAMES,
+    DEFAULT_CONFIG,
+    buildCode,
+    newAgent,
+    timeValue,
+    worksOn,
+    type AgentConfig,
+    type WidgetConfig,
+  } from "../presentation/tools/widgetCode";
 
-                    <div class="form-group">
-                        <label>Working Hours</label>
-                        <input type="text" placeholder="Working hours" 
-                            value="${agent.hours}" onchange="updateAgent(${index}, 'hours', this.value)">
-                    </div>
+  type TextField = "name" | "phone" | "hours" | "cta" | "message";
 
-                    <div class="form-group">
-                        <label>Button Text</label>
-                        <input type="text" placeholder="Click button text" 
-                            value="${agent.cta}" onchange="updateAgent(${index}, 'cta', this.value)">
-                    </div>
+  /** What the form holds. The page was sent with the default one. */
+  const config: WidgetConfig = structuredClone(DEFAULT_CONFIG);
 
-                    <div class="form-group">
-                        <label>Initial Chat Message</label>
-                        <textarea rows="2" placeholder="Message to start the chat" 
-                            onchange="updateAgent(${index}, 'message', this.value)">${agent.message || ''}</textarea>
-                    </div>
+  const byId = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
+  const query = <T extends HTMLElement>(root: ParentNode, selector: string) => root.querySelector(selector) as T;
 
-                    <div class="schedule-section">
-                        <h4 style="margin-bottom: 1rem; color: #0F7A6E;">📅 Daily Schedule</h4>
-                        ${renderSchedule(agent, index)}
-                    </div>
-                `;
-                container.appendChild(agentCard);
-            });
-        }
+  const title = byId<HTMLInputElement>("widget-title");
+  const description = byId<HTMLTextAreaElement>("widget-description");
+  const container = byId<HTMLElement>("agents-container");
+  const output = byId<HTMLElement>("code-output");
+  const template = byId<HTMLTemplateElement>("agent-template");
+  const copyButton = query<HTMLButtonElement>(document, "[data-copy]");
+  const copyStatus = query<HTMLElement>(document, "[data-copy-status]");
 
-        function renderSchedule(agent, agentIndex) {
-            let scheduleHTML = '';
+  // The preview ---------------------------------------------------------------------------------------------------
 
-            dayNames.forEach((day, dayIndex) => {
-                const hasSchedule = agent.schedule && agent.schedule[dayIndex] &&
-                    agent.schedule[dayIndex][0] && agent.schedule[dayIndex][1];
-                const openTime = hasSchedule ? agent.schedule[dayIndex][0] : '09:00';
-                const closeTime = hasSchedule ? agent.schedule[dayIndex][1] : '18:00';
+  type Widget = { widget?: HTMLElement };
+  type WidgetConstructor = new (options: { title: string; description: string; agents: AgentConfig[] }) => Widget;
+  const widgetWindow = window as unknown as { whatsapp?: WidgetConstructor };
+  const WIDGET_SRC = `${import.meta.env.BASE_URL.replace(/\/?$/, "/")}dist/js/whatsapp-widget.js`;
 
-                scheduleHTML += `
-                    <div class="day-toggle">
-                        <span class="day-name">${day}</span>
-                        <div class="toggle-switch ${hasSchedule ? 'active' : ''}" 
-                            onclick="toggleDay(${agentIndex}, ${dayIndex})"></div>
-                        <div class="time-inputs ${hasSchedule ? 'active' : ''}" id="time-${agentIndex}-${dayIndex}">
-                            <input type="time" value="${openTime}" aria-label="${day} opening time"
-                                onchange="updateSchedule(${agentIndex}, ${dayIndex}, 'open', this.value)">
-                            <span>to</span>
-                            <input type="time" value="${closeTime}" aria-label="${day} closing time"
-                                onchange="updateSchedule(${agentIndex}, ${dayIndex}, 'close', this.value)">
-                        </div>
-                    </div>
-                `;
-            });
+  let widgetLoaded = false;
+  let previewTimer: number | undefined;
 
-            return scheduleHTML;
-        }
+  /** Draws the widget with what the form holds now, in place of the one that was there. */
+  function mountPreview() {
+    if (!widgetWindow.whatsapp) return;
+    document.querySelectorAll(".wa-w").forEach((element) => element.remove());
+    new widgetWindow.whatsapp({
+      title: config.title,
+      description: config.description,
+      agents: config.agents,
+    });
+  }
 
-        function addAgent() {
-            const newAgent = {
-                name: 'New Agent',
-                phone: '+57 320 0000000',
-                hours: 'Available 9am - 6pm',
-                cta: 'Click to start chat',
-                message: 'Hello, I would like to get more information',
-                schedule: []
-            };
+  /** The widget is built a moment after the last change, as a form fires many events while a person types. */
+  function schedulePreview() {
+    if (!widgetLoaded) return;
+    window.clearTimeout(previewTimer);
+    previewTimer = window.setTimeout(mountPreview, 150);
+  }
 
-            widgetConfig.agents.push(newAgent);
-            renderAgents();
-            updateCode();
-            updateWidgetPreview();
-        }
+  const script = document.createElement("script");
+  script.src = WIDGET_SRC;
+  script.addEventListener("load", () => {
+    widgetLoaded = true;
+    mountPreview();
+  });
+  document.head.append(script);
 
-        function removeAgent(index) {
-            if (widgetConfig.agents.length > 1) {
-                widgetConfig.agents.splice(index, 1);
-                renderAgents();
-                updateCode();
-                updateWidgetPreview();
-            }
-        }
+  // The code ------------------------------------------------------------------------------------------------------
 
-        function updateAgent(index, field, value) {
-            widgetConfig.agents[index][field] = value;
-            updateCode();
-            updateWidgetPreview();
-        }
+  function update() {
+    output.textContent = buildCode(config);
+    schedulePreview();
+  }
 
-        function toggleDay(agentIndex, dayIndex) {
-            if (!widgetConfig.agents[agentIndex].schedule) {
-                widgetConfig.agents[agentIndex].schedule = [];
-            }
+  title.addEventListener("input", () => {
+    config.title = title.value;
+    update();
+  });
+  description.addEventListener("input", () => {
+    config.description = description.value;
+    update();
+  });
 
-            const timeInputs = document.getElementById(`time-${agentIndex}-${dayIndex}`);
-            const toggle = timeInputs.previousElementSibling;
+  // The agents ----------------------------------------------------------------------------------------------------
 
-            if (toggle.classList.contains('active')) {
-                // Deactivate
-                toggle.classList.remove('active');
-                timeInputs.classList.remove('active');
-                widgetConfig.agents[agentIndex].schedule[dayIndex] = null;
-            } else {
-                // Activate
-                toggle.classList.add('active');
-                timeInputs.classList.add('active');
-                widgetConfig.agents[agentIndex].schedule[dayIndex] = ['09:00', '18:00'];
-            }
+  /** Builds the cards again from `config`. It runs when an agent is added or removed, never while someone types. */
+  function renderAgents() {
+    container.replaceChildren();
+    config.agents.forEach((agent, index) => container.append(card(agent, index)));
+  }
 
-            updateCode();
-            updateWidgetPreview();
-        }
+  function card(agent: AgentConfig, index: number): DocumentFragment {
+    const fragment = template.content.cloneNode(true) as DocumentFragment;
+    const root = query<HTMLElement>(fragment, ".agent-card");
+    query(root, "[data-agent-title]").textContent = `Agent ${index + 1}`;
 
-        function updateSchedule(agentIndex, dayIndex, type, value) {
-            if (!widgetConfig.agents[agentIndex].schedule) {
-                widgetConfig.agents[agentIndex].schedule = [];
-            }
-            if (!widgetConfig.agents[agentIndex].schedule[dayIndex]) {
-                widgetConfig.agents[agentIndex].schedule[dayIndex] = ['09:00', '18:00'];
-            }
+    const remove = query<HTMLButtonElement>(root, "[data-remove-agent]");
+    remove.setAttribute("aria-label", `Remove agent ${index + 1}`);
+    remove.hidden = config.agents.length < 2;
+    remove.addEventListener("click", () => {
+      if (config.agents.length < 2) return;
+      config.agents.splice(index, 1);
+      renderAgents();
+      update();
+    });
 
-            if (type === 'open') {
-                widgetConfig.agents[agentIndex].schedule[dayIndex][0] = value;
-            } else {
-                widgetConfig.agents[agentIndex].schedule[dayIndex][1] = value;
-            }
+    for (const name of ["name", "phone", "hours", "cta", "message"] as TextField[]) {
+      const field = query<HTMLInputElement | HTMLTextAreaElement>(root, `[data-field="${name}"]`);
+      const id = `agent-${index}-${name}`;
+      field.id = id;
+      query(root, `[data-for="${name}"]`).setAttribute("for", id);
+      field.value = agent[name];
+      field.addEventListener("input", () => {
+        agent[name] = field.value;
+        update();
+      });
+    }
 
-            updateCode();
-            updateWidgetPreview();
-        }
+    root.querySelectorAll<HTMLElement>("[data-day]").forEach((row, day) => dayRow(agent, index, row, day));
+    return fragment;
+  }
 
-        function updateCode() {
-            const codeOutput = document.getElementById('code-output');
-            const agentsCode = widgetConfig.agents.map(agent => {
-                const scheduleCode = agent.schedule && agent.schedule.length > 0 ?
-                    ',\n                    schedule: ' + JSON.stringify(agent.schedule, null, 24).replace(/\n/g, '\n                    ') : '';
+  /** One day of the week: the switch, and the two times that show when the switch is on. */
+  function dayRow(agent: AgentConfig, agentIndex: number, row: HTMLElement, day: number) {
+    const name = DAY_NAMES[day]!;
+    const nameElement = query<HTMLElement>(row, "[data-day-name]");
+    const toggle = query<HTMLInputElement>(row, "[data-switch]");
+    const times = query<HTMLElement>(row, "[data-times]");
+    const [open, close] = row.querySelectorAll<HTMLInputElement>("[data-time]") as unknown as [
+      HTMLInputElement,
+      HTMLInputElement,
+    ];
 
-                const messageCode = agent.message ? ',\n                    message: "' + agent.message.replace(/\\/g, "\\\\").replace(/"/g, '\\"') + '"' : '';
+    nameElement.id = `day-${agentIndex}-${day}`;
+    toggle.setAttribute("aria-labelledby", nameElement.id);
+    times.id = `time-${agentIndex}-${day}`;
+    open.setAttribute("aria-label", `${name} opening time`);
+    close.setAttribute("aria-label", `${name} closing time`);
 
-                return '{' +
-                    '\n                    name: "' + agent.name.replace(/\\/g, "\\\\").replace(/"/g, '\\"') + '",' +
-                    '\n                    phone: "' + agent.phone.replace(/\\/g, "\\\\").replace(/"/g, '\\"') + '",' +
-                    '\n                    hours: "' + agent.hours.replace(/\\/g, "\\\\").replace(/"/g, '\\"') + '",' +
-                    '\n                    cta: "' + agent.cta.replace(/\\/g, "\\\\").replace(/"/g, '\\"') + '"' + messageCode + scheduleCode +
-                    '\n                }';
-            }).join(',\n                ');
+    const show = (on: boolean) => {
+      toggle.checked = on;
+      times.toggleAttribute("data-on", on);
+    };
+    const entry = agent.schedule[day];
+    show(worksOn(agent, day));
+    open.value = timeValue(entry?.[0] ?? "09:00");
+    close.value = timeValue(entry?.[1] ?? "18:00");
 
-            const code = '<script type="text/javascript">\n' +
-                '    !function (w, h, a, t, s, p) {\n' +
-                '        w.whatsapp || (\n' +
-                '            s = h.createElement(a),\n' +
-                '            s.src = t,\n' +
-                '            p = h.getElementsByTagName(a)[0],\n' +
-                '            p.parentNode.insertBefore(s, p)\n' +
-                '        )\n' +
-                '    }(window, document, "script", "https://cdn.jsdelivr.net/gh/miguelcolmenares/whatsapp-widget/dist/js/whatsapp-widget.js");\n' +
-                '    \n' +
-                '    window.addEventListener(\'load\', function () {\n' +
-                '        new whatsapp({\n' +
-                '            title: \'' + widgetConfig.title.replace(/\\/g, "\\\\").replace(/'/g, "\\'") + '\',\n' +
-                '            description: \'' + widgetConfig.description.replace(/\\/g, "\\\\").replace(/'/g, "\\'") + '\',\n' +
-                '            agents: [\n' +
-                '                ' + agentsCode + '\n' +
-                '            ]\n' +
-                '        });\n' +
-                '    });\n' +
-                '<\/script>';
+    toggle.addEventListener("change", () => {
+      if (toggle.checked) {
+        agent.schedule[day] = ["09:00", "18:00"];
+        open.value = "09:00";
+        close.value = "18:00";
+      } else {
+        agent.schedule[day] = null;
+      }
+      show(toggle.checked);
+      update();
+    });
 
-            codeOutput.textContent = code;
-        }
+    const setTime = (position: 0 | 1, input: HTMLInputElement) => {
+      const current = agent.schedule[day] ?? ["09:00", "18:00"];
+      current[position] = input.value;
+      agent.schedule[day] = current;
+      update();
+    };
+    open.addEventListener("input", () => setTime(0, open));
+    close.addEventListener("input", () => setTime(1, close));
+  }
 
-        function copyCode() {
-            const codeOutput = document.getElementById('code-output');
-            const textArea = document.createElement('textarea');
-            textArea.value = codeOutput.textContent;
-            document.body.appendChild(textArea);
-            textArea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textArea);
+  query<HTMLButtonElement>(document, "[data-add-agent]").addEventListener("click", () => {
+    config.agents.push(newAgent());
+    renderAgents();
+    update();
+  });
 
-            const copyBtn = document.querySelector('.copy-btn');
-            const originalText = copyBtn.textContent;
-            copyBtn.textContent = '✅ Copied!';
-            setTimeout(() => {
-                copyBtn.textContent = originalText;
-            }, 2000);
-        }
+  // Copy ----------------------------------------------------------------------------------------------------------
 
-        // Function to update the widget preview in real-time
-        function updateWidgetPreview() {
-            // Only update if the widget is already loaded
-            if (typeof window.whatsapp !== 'undefined' && widgetInstance) {
-                // Small delay to ensure DOM updates are complete
-                setTimeout(() => {
-                    initializeWidget();
-                }, 100);
-            }
-        }
-    </script>
+  async function copyText(text: string) {
+    try {
+      await navigator.clipboard.writeText(text);
+      return true;
+    } catch {
+      // A page that is not served over HTTPS has no clipboard API; the older command still works from a click.
+      const area = document.createElement("textarea");
+      area.value = text;
+      document.body.append(area);
+      area.select();
+      const done = document.execCommand("copy");
+      area.remove();
+      return done;
+    }
+  }
 
-    <!-- Widget Preview Script -->
-    <script is:inline>
-        !function (w, h, a, t, s, p) {
-            w.whatsapp || (
-                s = h.createElement(a),
-                s.src = t,
-                p = h.getElementsByTagName(a)[0],
-                p.parentNode.insertBefore(s, p)
-            )
-        }(window, document, "script", "../dist/js/whatsapp-widget.js");
+  let copyTimer: number | undefined;
+  copyButton.addEventListener("click", async () => {
+    const copied = await copyText(output.textContent ?? "");
+    copyStatus.textContent = copied ? "Copied" : "Could not copy. Select the code and copy it.";
+    window.clearTimeout(copyTimer);
+    copyTimer = window.setTimeout(() => (copyStatus.textContent = ""), 2000);
+  });
 
-        // Initialize widget with default config
-        let widgetInstance = null;
-
-        window.addEventListener('load', function () {
-            initializeWidget();
-        });
-
-        function initializeWidget() {
-            // Remove existing widget if present
-            if (widgetInstance && widgetInstance.widget) {
-                widgetInstance.widget.remove();
-            }
-
-            widgetInstance = new whatsapp({
-                title: widgetConfig.title,
-                description: widgetConfig.description,
-                agents: widgetConfig.agents
-            });
-        }
-    </script>
-</body>
-
-</html>
+  renderAgents();
+</script>
