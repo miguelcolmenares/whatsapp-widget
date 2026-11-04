@@ -95,7 +95,9 @@ export default defineConfig(() => {
         targets: [
           {
             src: "src/fonts/*",
-            dest: "../fonts"
+            dest: "../fonts",
+            // vite-plugin-static-copy 4 keeps the folder structure, the fonts go flat into dist/fonts
+            rename: { stripBase: true }
           }
         ]
       })
