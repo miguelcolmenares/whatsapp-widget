@@ -54,7 +54,9 @@
 		"vite-plugin-static-copy": "^3.2.0"
 	},
 	"overrides": {
-		"js-yaml": "^4.3.2"
+		"js-yaml": "^4.3.2",
+		"minimatch@^9.0.0": "^11.0.1",
+		"minimatch@^10.0.0": "^11.0.1"
 	},
 	"engines": {
 		"node": ">=20",
