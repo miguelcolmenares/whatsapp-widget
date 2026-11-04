@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - The configurator uses the layout and the design tokens of the site, a label for every field, switches for the days of the week that the keyboard can use, a code box the keyboard can reach, and no sideways scroll on a phone
+- The documentation site and the configurator are published from `main` with the Docs workflow (the Pages source is GitHub Actions), no longer from the `docs` branch, and the Sync main to docs workflow is removed
 - Build workflow now runs automatically on push to main branch
 - PR testing workflow modified to use build-only mode (no commits)
 - Renamed workflow from "Build - Main" to "Test Build - PR" for PRs
