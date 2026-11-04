@@ -27,6 +27,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Auto-build action will trigger on this commit to test functionality
 - Generated files will be automatically committed to dist/ folder
 
+### Fixed
+- The Vite build left `{{package}}` and `{{url}}` in `dist/js/whatsapp-widget.js`, so the widget asked for `{{url}}/dist/css/{{package}}.css` and was never drawn. The build replaces them again, as the Webpack build did, and the build workflow fails if one is left. This affected the code on `main`, the `docs` branch and `@main` on the CDN, not the latest release.
+
 ## [3.3.7] - 2025-06-29
 
 ### Added
