@@ -1,10 +1,28 @@
-import { defineConfig, UserConfig } from "vite";
+import { defineConfig, Plugin, UserConfig } from "vite";
 import { resolve } from "path";
 import { viteStaticCopy } from "vite-plugin-static-copy";
 import fs from "fs";
 
 // Load package.json to get version and CDN info
 const packageJson = JSON.parse(fs.readFileSync("./package.json", "utf-8"));
+
+// The sources carry `{{package}}` and `{{url}}` where the widget needs its own name and its CDN address (the stylesheet is
+// loaded from there). The Webpack build replaced them with string-replace-loader; this does the same in the Vite build.
+const sourceTokens: Record<string, string> = {
+  "{{package}}": packageJson.name,
+  "{{url}}": packageJson.cdn,
+};
+
+const replaceSourceTokens = (): Plugin => ({
+  name: "replace-source-tokens",
+  enforce: "pre",
+  transform(code, id) {
+    if (!id.endsWith(".ts")) return null;
+    let replaced = code;
+    for (const [token, value] of Object.entries(sourceTokens)) replaced = replaced.split(token).join(value);
+    return replaced === code ? null : { code: replaced, map: null };
+  },
+});
 
 // Check if we're building CSS or JS based on environment variable
 const buildMode = process.env.BUILD_MODE || "js";
@@ -72,6 +90,7 @@ export default defineConfig(() => {
       },
     },
     plugins: [
+      replaceSourceTokens(),
       viteStaticCopy({
         targets: [
           {

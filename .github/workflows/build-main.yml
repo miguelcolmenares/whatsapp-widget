@@ -27,5 +27,9 @@ jobs:
     - name: Build
       run: npm run build
     
+    - name: Check the build left no placeholders
+      # The sources carry {{package}} and {{url}}, replaced at build time. A build that leaves them in makes the
+      # widget ask for {{url}}/dist/css/{{package}}.css and never draw.
+      run: "! grep -n '{{' dist/js/whatsapp-widget.js"
     - name: Run Tests
       run: npm test
