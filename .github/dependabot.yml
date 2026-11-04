@@ -21,3 +21,8 @@ updates:
     directory: "/site"
     schedule:
       interval: "weekly"
+    ignore:
+      # astro check refuses TypeScript 7 ("does not currently support TypeScript 7.0",
+      # and @astrojs/check peers ^5 || ^6). Revisit when Astro supports 7.1+.
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
