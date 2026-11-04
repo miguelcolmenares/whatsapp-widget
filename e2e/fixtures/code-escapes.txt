@@ -1,0 +1,56 @@
+<script type="text/javascript">
+    !function (w, h, a, t, s, p) {
+        w.whatsapp || (
+            s = h.createElement(a),
+            s.src = t,
+            p = h.getElementsByTagName(a)[0],
+            p.parentNode.insertBefore(s, p)
+        )
+    }(window, document, "script", "https://cdn.jsdelivr.net/gh/miguelcolmenares/whatsapp-widget/dist/js/whatsapp-widget.js");
+    
+    window.addEventListener('load', function () {
+        new whatsapp({
+            title: 'It\'s "Help" \\ now',
+            description: 'Chat with us \\ on \'WhatsApp\'',
+            agents: [
+                {
+                    name: "Ana \"Support\" \\ Sales",
+                    phone: "+57 300 111 2233",
+                    hours: "Mon\\Fri \"9 to 5\"",
+                    cta: "Click \"here\" \\ now",
+                    message: "Hi \\ \"there\", it's me",
+                    schedule: [
+                              [
+                                        "9:00",
+                                        "18:00"
+                              ],
+                              [
+                                        "9:00",
+                                        "20:00"
+                              ],
+                              [
+                                        "9:00",
+                                        "20:00"
+                              ],
+                              [
+                                        "9:00",
+                                        "20:00"
+                              ],
+                              [
+                                        "9:00",
+                                        "20:00"
+                              ],
+                              [
+                                        "9:00",
+                                        "22:00"
+                              ],
+                              [
+                                        "10:00",
+                                        "18:00"
+                              ]
+                    ]
+                }
+            ]
+        });
+    });
+</script>

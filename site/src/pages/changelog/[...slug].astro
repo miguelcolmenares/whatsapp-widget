@@ -1,0 +1,16 @@
+---
+import { loadSite } from "../../infrastructure";
+import DocPage from "../../presentation/layouts/DocPage.astro";
+
+export async function getStaticPaths() {
+  const site = loadSite();
+  const doc = site.documents.find((document) => document.collection === "changelog");
+  if (!doc) return [];
+  return [{ params: { slug: undefined }, props: { doc, ...(await site.render(doc)) } }];
+}
+
+const { doc, html, headings } = Astro.props;
+const { href } = loadSite();
+---
+
+<DocPage doc={doc} html={html} headings={headings} siblings={[doc]} collectionLabel="Changelog" collectionHref={href("changelog/")} homeHref={href("")} />

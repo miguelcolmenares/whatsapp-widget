@@ -15,3 +15,9 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
+
+  # The documentation site has its own package.json
+  - package-ecosystem: "npm"
+    directory: "/site"
+    schedule:
+      interval: "weekly"

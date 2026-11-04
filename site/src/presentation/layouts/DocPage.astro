@@ -1,0 +1,149 @@
+---
+import type { Document } from "../../domain";
+import { ArrowLeft, ArrowRight } from "lucide-react";
+import { loadSite } from "../../infrastructure";
+import { Breadcrumbs } from "../components/site/Breadcrumbs";
+import { PageInfo } from "../components/site/PageInfo";
+import { SideCard } from "../components/site/SideCard";
+import BaseLayout from "./BaseLayout.astro";
+
+interface Props {
+  doc: Document;
+  html: string;
+  headings: { depth: number; slug: string; text: string }[];
+  siblings: Document[];
+  collectionLabel: string;
+  collectionHref: string;
+  homeHref: string;
+}
+const { doc, html, headings, siblings, collectionLabel, collectionHref, homeHref } = Astro.props;
+const index = siblings.findIndex((sibling) => sibling.route === doc.route);
+const previous = index > 0 ? siblings[index - 1] : undefined;
+const next = index >= 0 && index < siblings.length - 1 ? siblings[index + 1] : undefined;
+const { editUrl, updated } = loadSite().pageMeta(doc);
+const toc = headings.filter((heading) => heading.depth === 2 || heading.depth === 3);
+// A page with a card in its frontmatter is a detail page: the card sits beside the text, in the place of the
+// table of contents, and above the text on a phone. Without a card nothing here changes.
+const card = doc.card;
+---
+
+<BaseLayout title={doc.title} description={doc.description || undefined}>
+  <div
+    class:list={[
+      "mx-auto grid max-w-site grid-cols-1 gap-10 px-5 py-10",
+      card ? "xl:grid-cols-[220px_minmax(0,1fr)]" : "lg:grid-cols-[220px_minmax(0,1fr)_200px]",
+    ]}
+  >
+    <aside class:list={["hidden", card ? "xl:block" : "lg:block"]}>
+      <nav aria-label={collectionLabel} class="sticky top-24">
+        <p class="mb-3 font-mono text-[11px] tracking-[0.14em] text-fg-dim uppercase">{collectionLabel}</p>
+        <ul class="space-y-1">
+          {
+            siblings.map((sibling, position) => (
+              <li>
+                {sibling.group && sibling.group.name !== siblings[position - 1]?.group?.name && (
+                  <p class="mt-4 mb-1 px-3 font-mono text-[11px] tracking-[0.14em] text-fg-dim uppercase">{sibling.group.name}</p>
+                )}
+                <a
+                  href={sibling.route}
+                  aria-current={sibling.route === doc.route ? "page" : undefined}
+                  class="block rounded-md px-3 py-1.5 text-sm text-fg-muted transition-colors hover:text-fg-bright aria-[current=page]:bg-surface-2 aria-[current=page]:text-fg-bright"
+                >
+                  {sibling.title}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+    </aside>
+
+    <article
+      class:list={[
+        "min-w-0",
+        card
+          ? "lg:grid lg:grid-cols-[minmax(0,1fr)_16rem] lg:gap-x-10 lg:[&>:not(aside)]:col-start-1"
+          : "max-w-prose",
+      ]}
+    >
+      <Breadcrumbs items={[{ label: "Home", href: homeHref }, { label: collectionLabel, href: collectionHref }, { label: doc.title }]} />
+      <h1 class="mt-6 text-balance text-[clamp(2rem,5vw,3rem)] leading-[1.08] font-semibold tracking-[-0.035em] text-fg-bright">{doc.title}</h1>
+      {doc.description && doc.descriptionSource === "frontmatter" && <p class="mt-4 text-lg leading-relaxed text-fg-muted">{doc.description}</p>}
+      {
+        card && (
+          <>
+            <SideCard
+              rows={card.rows}
+              links={card.links}
+              tags={card.tags}
+              className="mt-8 lg:col-start-2 lg:row-span-6 lg:row-start-1 lg:mt-0"
+            />
+            <script is:inline>
+              (function () {
+                var card = document.currentScript.previousElementSibling;
+                var toggle = card && card.querySelector("[data-side-card-toggle]");
+                if (toggle) {
+                  card.dataset.js = "";
+                  toggle.hidden = false;
+                }
+              })();
+            </script>
+          </>
+        )
+      }
+      <slot />
+      <div class="prose-site mt-10" set:html={html} data-prose />
+      <PageInfo editUrl={editUrl} updated={updated} />
+      <nav aria-label="Previous and next" class="mt-16 grid grid-cols-1 gap-4 border-t border-border pt-8 sm:grid-cols-2">
+        {
+          previous ? (
+            <a href={previous.route} class="group rounded-lg border border-border p-4 transition-colors hover:border-border-hover">
+              <span class="flex items-center gap-1.5 text-xs text-fg-dim"><ArrowLeft className="size-3.5" aria-hidden="true" /> Previous</span>
+              <span class="mt-1 block font-medium text-fg-bright">{previous.title}</span>
+            </a>
+          ) : (
+            <span />
+          )
+        }
+        {
+          next && (
+            <a href={next.route} class="group rounded-lg border border-border p-4 text-right transition-colors hover:border-border-hover">
+              <span class="flex items-center justify-end gap-1.5 text-xs text-fg-dim">Next <ArrowRight className="size-3.5" aria-hidden="true" /></span>
+              <span class="mt-1 block font-medium text-fg-bright">{next.title}</span>
+            </a>
+          )
+        }
+      </nav>
+    </article>
+
+    {
+      !card && (
+        <aside class="hidden lg:block">
+          {
+            toc.length > 0 && (
+              <nav aria-label="On this page" class="sticky top-24">
+                <p class="mb-3 font-mono text-[11px] tracking-[0.14em] text-fg-dim uppercase">On this page</p>
+                <ul class="space-y-1.5 text-sm">
+                  {toc.map((heading) => (
+                    <li class={heading.depth === 3 ? "pl-3" : ""}>
+                      <a href={`#${heading.slug}`} class="text-fg-muted hover:text-fg-bright">{heading.text}</a>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+            )
+          }
+        </aside>
+      )
+    }
+  </div>
+</BaseLayout>
+
+<script>
+  // The copy buttons are in the HTML, hidden. This shows them and copies the code on a click.
+  import "../code/copyCode";
+  import { attachSideCard } from "../sideCard/sideCard";
+
+  const card = document.querySelector<HTMLElement>("[data-side-card]");
+  if (card) attachSideCard(card);
+</script>

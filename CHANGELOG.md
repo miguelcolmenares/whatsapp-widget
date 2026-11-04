@@ -8,12 +8,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- A documentation site built with docs-sitekit (`site/` and `docs/`): getting started, options, agents and schedules, and the files and the CDN
+- The configurator is a page of that site, at `/configurator/`, and generates the same code as before
+- Playwright tests (`e2e/`) of the site and the configurator: the generated code against the text of the previous page, escaping, agents and schedules, the copy button, the preview widget, accessibility, and no sideways scroll from 320 px
 - Automated build system using GitHub Actions
 - npm-auto-build action for automatic build generation and commit
 - Build-only testing mode for Pull Requests
 - dist/ directory added to .gitignore for cleaner repository
 
 ### Changed
+- The configurator has names for its time fields, landmarks, a code box the keyboard can reach, colors with enough contrast, and no sideways scroll on a phone
 - Build workflow now runs automatically on push to main branch
 - PR testing workflow modified to use build-only mode (no commits)
 - Renamed workflow from "Build - Main" to "Test Build - PR" for PRs

@@ -1,0 +1,100 @@
+{
+  "site": {
+    "name": "WhatsApp Widget",
+    "description": "Add a floating widget to open WhatsApp",
+    "url": "https://miguelcolmenares.com",
+    "base": "/whatsapp-widget/",
+    "repository": "https://github.com/miguelcolmenares/whatsapp-widget",
+    "license": "Apache-2.0"
+  },
+  "hero": {
+    "title": "WhatsApp Widget",
+    "lede": "Add a floating widget to open WhatsApp",
+    "primary": {
+      "label": "Get started",
+      "href": "/docs/getting-started/"
+    },
+    "secondary": {
+      "label": "Open the configurator",
+      "href": "/configurator/"
+    }
+  },
+  "features": [
+    {
+      "icon": "code",
+      "eyebrow": "Install",
+      "title": "One script, no build step",
+      "text": "Add one snippet at the end of the page. It loads the widget and its styles from the CDN."
+    },
+    {
+      "icon": "message-circle",
+      "eyebrow": "Agents",
+      "title": "Several people, one button",
+      "text": "Each agent has a name, a phone number, a label for the hours and a call to action. A click opens the chat in WhatsApp, with a first message if you set one."
+    },
+    {
+      "icon": "clock",
+      "eyebrow": "Schedules",
+      "title": "Only the agents who are available",
+      "text": "A schedule for each day of the week. An agent outside its hours is not shown, and with nobody available the widget is not drawn."
+    },
+    {
+      "icon": "settings",
+      "eyebrow": "Configurator",
+      "title": "Try it before you paste it",
+      "text": "Set the texts and the agents, see the widget working, and copy the code for your page."
+    }
+  ],
+  "stats": [],
+  "nav": [
+    {
+      "label": "Configurator",
+      "href": "/configurator/"
+    }
+  ],
+  "footer": {
+    "links": []
+  },
+  "theme": {
+    "default": "dark"
+  },
+  "sources": {
+    "root": "..",
+    "changelog": "../CHANGELOG.md"
+  },
+  "collections": [
+    {
+      "id": "docs",
+      "label": "Docs",
+      "dir": "../docs",
+      "groups": []
+    }
+  ],
+  "deploy": {
+    "target": "github-pages",
+    "acknowledgePublicPages": false
+  },
+  "search": {
+    "enabled": true
+  },
+  "anonymize": {
+    "excludePaths": [],
+    "replace": {},
+    "denyPatterns": [],
+    "allow": []
+  },
+  "check": {},
+  "vars": {},
+  "llms": {
+    "enabled": true,
+    "optional": [],
+    "markdownPages": false
+  },
+  "editLink": {
+    "enabled": true,
+    "branch": "main"
+  },
+  "lastUpdated": {
+    "enabled": true
+  }
+}

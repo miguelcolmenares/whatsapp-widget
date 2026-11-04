@@ -13,5 +13,7 @@ export default async (): Promise<Config.InitialOptions> => {
 			],
 		},
 		transformIgnorePatterns: ["<rootDir>/node_modules/"],
+		// The Playwright specs in e2e/ and the documentation site have their own runner.
+		testPathIgnorePatterns: ["/node_modules/", "<rootDir>/e2e/", "<rootDir>/site/"],
 	};
 };

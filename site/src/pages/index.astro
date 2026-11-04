@@ -1,0 +1,86 @@
+---
+import { loadSite } from "../infrastructure";
+import CtaBand from "../presentation/components/site/CtaBand.astro";
+import { FeatureGrid } from "../presentation/components/site/FeatureGrid";
+import Hero from "../presentation/components/site/Hero.astro";
+import { CardGrid, ItemCard } from "../presentation/components/site/ItemCard";
+import { SectionHeader } from "../presentation/components/site/SectionHeader";
+import { StatRow } from "../presentation/components/site/StatRow";
+import BaseLayout from "../presentation/layouts/BaseLayout.astro";
+
+const site = loadSite();
+const { config, href } = site;
+// One section per collection that has pages: the first six, with the link to the rest.
+const sections = config.collections
+  .map((collection) => ({
+    ...collection,
+    title: collection.lede ? `${collection.label}` : collection.label,
+    documents: site.documents.filter((document) => document.collection === collection.id).slice(0, 6),
+  }))
+  .filter((section) => section.documents.length > 0);
+// A link in the config that starts with "/" is a path on this site, so it gets the base.
+const resolve = (link: { label: string; href: string }) => ({ ...link, href: link.href.startsWith("/") ? href(link.href) : link.href });
+---
+
+<BaseLayout>
+  <Hero
+    badge={config.hero.badge}
+    title={config.hero.title}
+    lede={config.hero.lede}
+    command={config.site.installCommand}
+    primary={resolve(config.hero.primary)}
+    secondary={config.hero.secondary && resolve(config.hero.secondary)}
+  />
+
+  {
+    config.stats.length > 0 && (
+      <section data-stats class="mx-auto max-w-site px-5 pt-14">
+        <StatRow stats={config.stats} />
+      </section>
+    )
+  }
+
+  {
+    config.features.length > 0 && (
+      <section class="mx-auto max-w-site px-5 py-20">
+        <SectionHeader eyebrow="01 · Why" title={`Why ${config.site.name}`} />
+        <FeatureGrid features={config.features} brands={site.customBrands} />
+      </section>
+    )
+  }
+
+  {
+    sections.map((section, index) => (
+      <section class="mx-auto max-w-site border-t border-border px-5 py-20">
+        <SectionHeader
+          eyebrow={`${String(index + (config.features.length > 0 ? 2 : 1)).padStart(2, "0")} · ${section.label}`}
+          title={section.title}
+          lede={section.lede}
+        >
+          <a href={href(`${section.id}/`)} class="inline-flex min-h-11 items-center text-sm text-fg-muted hover:text-fg-bright">
+            All {section.label.toLowerCase()} →
+          </a>
+        </SectionHeader>
+        <CardGrid>
+          {section.documents.map((document) => (
+            <ItemCard
+              href={document.route}
+              title={document.title}
+              description={document.description}
+              badge={document.group?.name}
+              tone={document.group?.tone}
+              hint="Read"
+            />
+          ))}
+        </CardGrid>
+      </section>
+    ))
+  }
+
+  <CtaBand
+    title={`Start using ${config.site.name}`}
+    command={config.site.installCommand}
+    primary={resolve(config.hero.primary)}
+    secondary={config.site.repository ? { label: "View on GitHub", href: config.site.repository } : undefined}
+  />
+</BaseLayout>

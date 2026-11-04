@@ -1,0 +1,116 @@
+/* Code blocks: a title bar, highlighted and diff lines, and the copy button. The block is a `.code-block` that holds
+   the `pre`, written by the transformers in infrastructure/codeBlocks.ts. Its colors are the code tokens, so the
+   contrast tests cover them. */
+.prose-site .code-block {
+  position: relative;
+  margin: 1rem 0;
+  min-width: 0;
+  overflow: hidden;
+  background: var(--sk-surface);
+  border: 1px solid var(--sk-border);
+  border-radius: var(--sk-radius-lg);
+}
+.prose-site .code-block pre {
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent !important;
+  /* Without a title the copy button sits in this top band, so it never covers the first line of code. */
+  padding: 3rem 0 1rem;
+}
+.prose-site .code-block[data-titled] pre {
+  padding-top: 1rem;
+}
+.prose-site .code-block pre:focus-visible {
+  outline-offset: -2px;
+}
+
+/* The title bar. Its right side is kept clear for the copy button. */
+.prose-site .code-title {
+  display: flex;
+  align-items: center;
+  min-height: 3rem;
+  padding: 0.5rem 5rem 0.5rem 1.1rem;
+  border-bottom: 1px solid var(--sk-border);
+  background: var(--sk-surface-2);
+  color: var(--sk-fg-muted);
+  font: 500 0.8125rem/1.4 var(--sk-font-mono);
+  overflow-wrap: anywhere;
+}
+
+/* Every line is a block of the width of the longest line, so a highlight or a diff tone reaches both edges while the
+   block scrolls. The padding of the block moved to the lines; a line of a plain block sits where it always did. */
+.prose-site .code-block pre code {
+  display: grid;
+  min-width: 100%;
+  width: max-content;
+}
+.prose-site .code-block .line {
+  position: relative;
+  min-height: 1lh;
+  padding: 0 1.1rem 0 calc(1.1rem - 3px);
+  border-left: 3px solid transparent;
+}
+.prose-site .code-block .line[data-highlighted] {
+  background: var(--sk-code-highlight);
+  border-left: 3px solid var(--sk-accent-strong);
+}
+.prose-site .code-block .line[data-diff="add"] {
+  background: var(--sk-code-add);
+  border-left: 3px solid var(--sk-success);
+}
+.prose-site .code-block .line[data-diff="remove"] {
+  background: var(--sk-code-remove);
+  border-left: 3px solid var(--sk-danger);
+}
+/* A line marked in a comment shows its sign in the gutter, so the tone is not the only cue. In a `diff` block the sign is
+   already in the text. The sign is drawn by the style, so it is never copied. */
+.prose-site .code-block .line[data-sign]::before {
+  position: absolute;
+  left: 0.1rem;
+  font-weight: 700;
+}
+.prose-site .code-block .line[data-sign][data-diff="add"]::before {
+  content: "+";
+  color: var(--sk-success);
+}
+.prose-site .code-block .line[data-sign][data-diff="remove"]::before {
+  content: "-";
+  color: var(--sk-danger);
+}
+
+/* The copy button. The server writes it hidden, and the page script shows it. */
+.prose-site .copy-code {
+  position: absolute;
+  top: 0.25rem;
+  right: 0.5rem;
+  min-width: 4.5rem;
+  min-height: 2.75rem;
+  border: 1px solid var(--sk-border-strong);
+  background: var(--sk-surface-3);
+  color: var(--sk-fg-muted);
+  border-radius: var(--sk-radius-sm);
+  padding: 0.25rem 0.7rem;
+  font: 500 12px var(--sk-font-mono);
+  cursor: pointer;
+}
+.prose-site .copy-code[hidden] {
+  display: none;
+}
+.prose-site .copy-code:hover {
+  color: var(--sk-fg-bright);
+  border-color: var(--sk-border-hover);
+}
+.prose-site .copy-code:focus-visible {
+  outline: 2px solid var(--sk-accent);
+  outline-offset: 1px;
+}
+/* The message after a copy: in the page for a screen reader, not on the screen. */
+.prose-site .code-status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

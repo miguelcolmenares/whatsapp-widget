@@ -1,0 +1,45 @@
+name: E2E
+
+# Playwright tests of the documentation site and the configurator, on the site as it is built. They need the widget of
+# the branch (the preview runs it), so the widget is built and copied into the site first.
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+    paths:
+      [
+        "site/**",
+        "docs/**",
+        "e2e/**",
+        "src/**",
+        "vite.config.ts",
+        "package.json",
+        "package-lock.json",
+        ".github/workflows/e2e.yml",
+      ]
+
+permissions:
+  contents: read
+
+jobs:
+  e2e:
+    name: Configurator and site
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # The site shows the date of the last change of each page, read from the history of its file.
+          fetch-depth: 0
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            site/package-lock.json
+      - run: npm ci
+      - run: npm ci --prefix site
+      - run: npm run site:build
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e

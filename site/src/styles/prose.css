@@ -1,0 +1,215 @@
+/* Styles for rendered markdown. Everything is scoped to .prose-site. */
+.prose-site {
+  color: var(--sk-fg);
+  font-size: 1rem;
+  line-height: 1.75;
+}
+.prose-site > :first-child {
+  margin-top: 0;
+}
+.prose-site h2,
+.prose-site h3,
+.prose-site h4 {
+  color: var(--sk-fg-bright);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.25;
+  margin-top: 2.5rem;
+  margin-bottom: 0.75rem;
+}
+.prose-site h2 {
+  font-size: 1.65rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--sk-border);
+}
+.prose-site h3 {
+  font-size: 1.25rem;
+}
+.prose-site h4 {
+  font-size: 1.05rem;
+}
+.prose-site p,
+.prose-site ul,
+.prose-site ol,
+.prose-site table,
+.prose-site pre,
+.prose-site blockquote {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+.prose-site ul {
+  list-style: disc;
+  padding-left: 1.4rem;
+}
+.prose-site ol {
+  list-style: decimal;
+  padding-left: 1.4rem;
+}
+.prose-site li {
+  margin: 0.35rem 0;
+}
+.prose-site li::marker {
+  color: var(--sk-fg-faint);
+}
+.prose-site a {
+  color: var(--sk-accent);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--sk-accent) 40%, transparent);
+  text-underline-offset: 3px;
+}
+.prose-site a:hover {
+  text-decoration-color: currentColor;
+}
+.prose-site strong {
+  color: var(--sk-fg-bright);
+  font-weight: 600;
+}
+.prose-site code {
+  font-family: var(--sk-font-mono);
+  font-size: 0.875em;
+}
+.prose-site :not(pre) > code {
+  background: var(--sk-surface-2);
+  border: 1px solid var(--sk-border);
+  border-radius: 6px;
+  padding: 0.1em 0.4em;
+  color: var(--sk-fg-bright);
+}
+.prose-site pre {
+  overflow-x: auto;
+  background: var(--sk-surface) !important;
+  border: 1px solid var(--sk-border);
+  border-radius: var(--sk-radius-lg);
+  padding: 1rem 1.1rem;
+  font-size: 0.85rem;
+  line-height: 1.65;
+}
+.prose-site pre code {
+  font-size: 1em;
+  background: none;
+  border: 0;
+  padding: 0;
+  color: inherit;
+}
+/* Highlighted tokens take their color from the Shiki variable of the active theme. */
+.prose-site pre code span {
+  color: var(--shiki-dark);
+  font-style: var(--shiki-dark-font-style, normal);
+  font-weight: var(--shiki-dark-font-weight, normal);
+}
+:root[data-theme="light"] .prose-site pre code span {
+  color: var(--shiki-light);
+  font-style: var(--shiki-light-font-style, normal);
+  font-weight: var(--shiki-light-font-weight, normal);
+}
+/* A page without the attribute (no JavaScript, theme.default "system") follows the OS. */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) .prose-site pre code span {
+    color: var(--shiki-light);
+    font-style: var(--shiki-light-font-style, normal);
+    font-weight: var(--shiki-light-font-weight, normal);
+  }
+}
+.prose-site blockquote {
+  border-left: 2px solid var(--sk-accent-strong);
+  padding: 0.25rem 1rem;
+  color: var(--sk-fg-muted);
+  background: var(--sk-bg-subtle);
+  border-radius: 0 var(--sk-radius-md) var(--sk-radius-md) 0;
+}
+.prose-site table {
+  display: block;
+  overflow-x: auto;
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+.prose-site th,
+.prose-site td {
+  border: 1px solid var(--sk-border);
+  padding: 0.55rem 0.8rem;
+  text-align: left;
+  vertical-align: top;
+}
+.prose-site th {
+  background: var(--sk-surface);
+  color: var(--sk-fg-bright);
+  font-weight: 600;
+}
+.prose-site hr {
+  border: 0;
+  border-top: 1px solid var(--sk-border);
+  margin: 2.5rem 0;
+}
+.prose-site img {
+  max-width: 100%;
+  border-radius: var(--sk-radius-md);
+}
+.prose-site pre:focus-visible,
+.prose-site table:focus-visible {
+  outline: 2px solid var(--sk-accent);
+  outline-offset: 2px;
+}
+/* Long unbroken words and inline code wrap instead of pushing the page sideways. */
+.prose-site :not(pre) > code,
+.prose-site p,
+.prose-site li {
+  overflow-wrap: anywhere;
+}
+
+/* Callouts written as `> [!NOTE]` in markdown. They look like the Callout component, with the tone in a
+   custom property that the kind sets from the tone tokens. The label is always visible, so the tone is
+   never carried by color alone. */
+.prose-site .callout {
+  --callout-tone: var(--sk-accent);
+  display: flex;
+  gap: 0.75rem;
+  margin: 1rem 0;
+  padding: 0.875rem 1rem;
+  border: 1px solid var(--sk-border);
+  border-left: 3px solid var(--callout-tone);
+  border-radius: var(--sk-radius-lg);
+  background: var(--sk-bg-subtle);
+  color: var(--sk-fg);
+  font-size: 0.875rem;
+  line-height: 1.625;
+}
+.prose-site .callout-tip {
+  --callout-tone: var(--sk-success);
+}
+.prose-site .callout-important {
+  --callout-tone: var(--sk-fg-bright);
+}
+.prose-site .callout-warning {
+  --callout-tone: var(--sk-warn);
+}
+.prose-site .callout-caution {
+  --callout-tone: var(--sk-danger);
+}
+.prose-site .callout-icon {
+  flex: none;
+  width: 1rem;
+  height: 1rem;
+  margin-top: 0.125rem;
+  color: var(--callout-tone);
+}
+.prose-site .callout-body {
+  min-width: 0;
+  flex: 1;
+}
+.prose-site .callout-label {
+  margin: 0 0 0.25rem;
+  color: var(--callout-tone);
+  font: 400 11px/1.625 var(--sk-font-mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.prose-site .callout-label + * {
+  margin-top: 0;
+}
+.prose-site .callout-body > :last-child {
+  margin-bottom: 0;
+}
+.prose-site .callout :not(pre) > code {
+  font-size: 0.875em;
+}

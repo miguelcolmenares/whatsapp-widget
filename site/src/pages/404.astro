@@ -1,0 +1,16 @@
+---
+import { loadSite } from "../infrastructure";
+import BaseLayout from "../presentation/layouts/BaseLayout.astro";
+import { buttonVariants } from "../presentation/components/ui/button";
+
+const { href } = loadSite();
+---
+
+<BaseLayout title="Page not found">
+  <div class="mx-auto flex max-w-site flex-col items-center px-5 py-32 text-center">
+    <p class="font-mono text-sm text-brand">404</p>
+    <h1 class="mt-3 text-4xl font-semibold tracking-tight text-fg-bright">Page not found</h1>
+    <p class="mt-3 text-fg-muted">The page you asked for does not exist or has moved.</p>
+    <a href={href("")} class={`${buttonVariants()} mt-8`}>Back to the home page</a>
+  </div>
+</BaseLayout>
