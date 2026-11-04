@@ -48,8 +48,16 @@
   "stats": [],
   "nav": [
     {
+      "label": "Docs",
+      "href": "/docs/"
+    },
+    {
       "label": "Configurator",
       "href": "/configurator/"
+    },
+    {
+      "label": "Changelog",
+      "href": "/changelog/"
     }
   ],
   "footer": {

@@ -81,11 +81,11 @@ test.describe("the copy button", () => {
 
 	test("copies the code and says so for two seconds", async ({ page }) => {
 		await page.goto(PAGE);
-		const button = page.locator(".copy-btn");
-		await button.click();
-		await expect(button).toHaveText("✅ Copied!");
+		await page.locator(".copy-btn").click();
+		const status = page.getByRole("status").filter({ hasText: "Copied" });
+		await expect(status).toBeVisible();
 		expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(await generatedCode(page));
-		await expect(button).toHaveText("📋 Copy Code", { timeout: 5000 });
+		await expect(page.locator("[data-copy-status]")).toHaveText("", { timeout: 5000 });
 	});
 });
 
@@ -109,6 +109,8 @@ test.describe("the preview widget", () => {
 		await expect(page.locator(".wa-w_h_t")).toHaveText("Talk to us");
 		await setAgentField(page, 0, "name", "Ana");
 		await expect(page.locator(".wa-w_a_a .a_t")).toHaveText("Ana");
+		// Each change replaces the widget, it does not add another one.
+		await expect(page.locator(".wa-w")).toHaveCount(1);
 	});
 
 	test("is not drawn when no agent is open", async ({ page }) => {
