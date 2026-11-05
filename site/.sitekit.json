@@ -1,5 +1,5 @@
 {
-  "sitekit": "0.2.3",
+  "sitekit": "0.2.4",
   "files": {
     "astro.config.ts": "57ceb17041033aefae4b3cd0e185e64657799928cd6d9d7e2e652edd1238783c",
     "components.json": "9d8ce8a3a2605014d8bc778cad4c3e6b91bc9ef55fd03af041d8e0df84cdc80e",
@@ -21,7 +21,7 @@
     "src/domain/brands/index.ts": "d8b3023fa8bd2df678226c3141a5975598ccbf19e5a161e2a5cffc02a9cc3fac",
     "src/domain/callouts.ts": "c8b11cea30e445da671a1edac20fe06f16d9aaee776910d1d195d8f3cfc5d877",
     "src/domain/codeBlocks.ts": "c181cb83174e1a85baae9036a617a87649375c3fe36f48407a4c3adaa757cbfb",
-    "src/domain/config.ts": "a25525d0fe07f8943bd8cf69f53d33adb0d383c6026842f0f2d411f145ad09b6",
+    "src/domain/config.ts": "769ea763c82156f2957756f389529f044609bfda2d78fd6d8ba49830a9960408",
     "src/domain/describe.ts": "b185ecda8bd46582d39a772f7b46218a5c02f34517ef97211ba53a089e2d1878",
     "src/domain/document.ts": "bf791c8c1460d21b862bfa4894445f7ec2b75446caf416c94486cb17a2f81de6",
     "src/domain/editLink.ts": "d94d6c02db77a59d5b9ab1c01944dd5f4c65a6dba9f3f446c445cd1cde2b7c2f",
@@ -32,7 +32,7 @@
     "src/domain/glob.ts": "de67543be5fa734e9c0e38de3b2ed256e860d4ce345aa4d82d47a4f518158e98",
     "src/domain/groups.ts": "35fef178a4ab20bf9f3220210b96e40379251b7d3375aeee9689cd233d0bc5c4",
     "src/domain/headings.ts": "ab80cff1a345bcdfeaa47bca34a9528e61e19b7ac379c8ec1095ed96eb04283e",
-    "src/domain/index.ts": "2504e199b0e7eaaff51e081371faec44f020baa9b9e03e6353b6c6a82145dbe1",
+    "src/domain/index.ts": "5fb3ef0265371b98c8e5e49e383362c931980dc606aaa181d0f2bb31ffbda1f9",
     "src/domain/lastUpdated.ts": "01fb2ed30a48cb554bbe2a9c01b0c0aa00047f0dd39011de6a93867f2cbb8a44",
     "src/domain/links.ts": "fb798643c06e8fa45018f386ec7ae961d9112d831c1de1c3df2a661150547ca5",
     "src/domain/llms.ts": "b3f3bf0208b77042a1a54bb334c295ac2d29b53a7445a7c66b9644735d90b613",
@@ -98,7 +98,7 @@
     "src/presentation/components/ui/tabs.tsx": "14d198cf040a196c7ff71fde5f95445afd7a132f54d27c980a0bc4e7d4c84adf",
     "src/presentation/components/ui/tooltip.tsx": "85aa413b88f2907477685cffea1ea98c5eb30ff3d3b48f07d52556b24034ddef",
     "src/presentation/filter/catalogFilter.ts": "269b85c78f4e9763f4584f0c7c474d03b12a266e427bf97a19ae7d0dda3e73eb",
-    "src/presentation/layouts/BaseLayout.astro": "355f0b79c0583515ee56c3709e2d9a6c9c6e64adf4b5b7eedcaa588d0b120132",
+    "src/presentation/layouts/BaseLayout.astro": "6efe0255a6c190c666616d2fdac4872efdee8d336a3a71b08a9c4a87fd96a623",
     "src/presentation/layouts/CollectionIndex.astro": "98529a8f9bf16c39cb5e2e569d67a6562f7efb845ee137846b833006b294eae6",
     "src/presentation/layouts/DocPage.astro": "746f07af2dced70727085f1290bad71b182c084348c358a0ec6ca18f44d727bb",
     "src/presentation/search/SearchDialog.astro": "5f324a677a30a71caa7d9a96d14ccb57b4cd4e921550429f650e097afc1d2a97",
@@ -109,6 +109,7 @@
     "src/styles/global.css": "b7597cd74ea5065e1b36854b18133db906c35a503b346185b333695df05141c9",
     "src/styles/prose.css": "05585ab5ed7ff13e29e4beaaa7fe91ad561cc7d625398d989cf92ae29fde0358",
     "src/styles/tokens.css": "5f5e790ddea2a3b85285d8e63cb56795d836545d6f2ae8c2b1d22b8faac17fe8",
-    "tsconfig.json": "8143da63a22c6b3d6bdf676bbec8c94ab232c595e407d9336e33e456471bc52f"
+    "tsconfig.json": "8143da63a22c6b3d6bdf676bbec8c94ab232c595e407d9336e33e456471bc52f",
+    "src/domain/socialImage.ts": "ffca96499028fddcc61a63bd07b1f56b302726d46bf68e518eb30cf173932476"
   }
 }
