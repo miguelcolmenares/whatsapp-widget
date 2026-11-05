@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - dist/ directory added to .gitignore for cleaner repository
 
 ### Changed
+- The documentation site is built with docs-sitekit 0.2.3 (was 0.2.2), so its search button and doc layout pass the accessibility checks without the exemptions for docs-sitekit issue #69, and its footer names the kit without the copyright sign
 - The configurator uses the layout and the design tokens of the site, a label for every field, switches for the days of the week that the keyboard can use, a code box the keyboard can reach, and no sideways scroll on a phone
 - The documentation site and the configurator are published from `main` with the Docs workflow (the Pages source is GitHub Actions), no longer from the `docs` branch, and the Sync main to docs workflow is removed
 - Build workflow now runs automatically on push to main branch

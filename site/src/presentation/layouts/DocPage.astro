@@ -34,7 +34,7 @@ const card = doc.card;
       card ? "xl:grid-cols-[220px_minmax(0,1fr)]" : "lg:grid-cols-[220px_minmax(0,1fr)_200px]",
     ]}
   >
-    <aside class:list={["hidden", card ? "xl:block" : "lg:block"]}>
+    <div class:list={["hidden", card ? "xl:block" : "lg:block"]}>
       <nav aria-label={collectionLabel} class="sticky top-24">
         <p class="mb-3 font-mono text-[11px] tracking-[0.14em] text-fg-dim uppercase">{collectionLabel}</p>
         <ul class="space-y-1">
@@ -56,7 +56,7 @@ const card = doc.card;
           }
         </ul>
       </nav>
-    </aside>
+    </div>
 
     <article
       class:list={[
@@ -118,7 +118,7 @@ const card = doc.card;
 
     {
       !card && (
-        <aside class="hidden lg:block">
+        <div class="hidden lg:block">
           {
             toc.length > 0 && (
               <nav aria-label="On this page" class="sticky top-24">
@@ -133,7 +133,7 @@ const card = doc.card;
               </nav>
             )
           }
-        </aside>
+        </div>
       )
     }
   </div>

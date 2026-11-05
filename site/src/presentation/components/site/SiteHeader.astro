@@ -68,12 +68,11 @@ const isCurrent = (href: string) => Boolean(current) && (current === href || (hr
           <button
             type="button"
             data-search-open
-            aria-label="Search"
             aria-keyshortcuts="Control+K Meta+K"
             class="inline-flex h-11 min-w-11 items-center justify-center gap-2 rounded-md px-2.5 text-sm text-fg-muted transition-colors hover:bg-surface-2 hover:text-fg-bright"
           >
             <Search className="size-4" aria-hidden="true" />
-            <span class="hidden sm:inline">Search</span>
+            <span class="sr-only sm:not-sr-only">Search</span>
             <kbd
               data-search-key
               aria-hidden="true"

@@ -53,10 +53,6 @@ test.describe("nothing leaves the site", () => {
 });
 
 test.describe("accessibility", () => {
-	// Every page has the header and the layout of the kit, and at desktop width they have two findings that belong to
-	// docs-sitekit and are not fixed in this site (miguelcolmenares/docs-sitekit#69). All the other rules apply.
-	const KIT_ISSUES = ["label-content-name-mismatch", "landmark-unique"];
-
 	for (const path of PAGES) {
 		for (const width of [375, 1280]) {
 			test(`${path} has no violations at ${width} px`, async ({ page }) => {
@@ -67,10 +63,8 @@ test.describe("accessibility", () => {
 				// The preview widget is drawn by the code in src/ts, which this change does not touch. It puts a header and a
 				// section straight into the body, outside any landmark, and that is for the widget to fix. Its header is a
 				// second banner next to the one of the site, so that rule is left out on this page.
-				const axe = new AxeBuilder({ page }).disableRules(
-					configurator ? [...KIT_ISSUES, "landmark-no-duplicate-banner"] : KIT_ISSUES,
-				);
-				if (configurator) axe.exclude(".wa-w");
+				const axe = new AxeBuilder({ page });
+				if (configurator) axe.disableRules(["landmark-no-duplicate-banner"]).exclude(".wa-w");
 				const { violations } = await axe.analyze();
 				expect(
 					violations.map(v => `${v.id} (${v.impact}): ${v.nodes.map(n => n.target.join(" ")).join(" | ")}`),
@@ -130,7 +124,7 @@ test.describe("the configurator is a page of the site", () => {
 			await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
 			await expect(page.locator(".wa-w")).toBeAttached();
 			const { violations } = await new AxeBuilder({ page })
-				.disableRules(["label-content-name-mismatch", "landmark-unique", "landmark-no-duplicate-banner"])
+				.disableRules(["landmark-no-duplicate-banner"])
 				.exclude(".wa-w")
 				.analyze();
 			expect(violations.map(v => `${v.id} (${v.impact}): ${v.nodes.map(n => n.target.join(" ")).join(" | ")}`)).toEqual([]);

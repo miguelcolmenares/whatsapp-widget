@@ -59,9 +59,9 @@ jobs:
       - run: npm run build
       - run: npm run site:widget
       # Installs the site, builds it, checks it, and uploads the Pages artifact.
-      - uses: miguelcolmenares/docs-sitekit@v0.2.2
+      - uses: miguelcolmenares/docs-sitekit@v0.2.3
         with:
-          version: 0.2.2
+          version: 0.2.3
 
   deploy:
     name: Deploy to GitHub Pages
