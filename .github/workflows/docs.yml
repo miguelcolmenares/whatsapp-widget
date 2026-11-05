@@ -58,6 +58,13 @@ jobs:
       - run: npm ci
       - run: npm run build
       - run: npm run site:widget
+      # The picture a shared link shows (site.image). It is drawn in the job, so no image is committed.
+      - uses: miguelcolmenares/social-card-action@8927027164b0022e3ba12c0736ce575d547fe4ce # v0.1.0
+        with:
+          path: site/public/social.png
+          name: "WhatsApp Widget"
+          description: "Add a floating widget to open WhatsApp"
+          host: "miguelcolmenares.com/whatsapp-widget"
       # Installs the site, builds it, checks it, and uploads the Pages artifact.
       - uses: miguelcolmenares/docs-sitekit@v0.2.4
         with:

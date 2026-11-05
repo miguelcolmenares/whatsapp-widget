@@ -4,3 +4,6 @@ coverage
 dist/
 test-results/
 playwright-report/
+
+# Drawn by the docs workflow with social-card-action
+site/public/social.png

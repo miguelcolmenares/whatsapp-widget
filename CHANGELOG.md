@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - dist/ directory added to .gitignore for cleaner repository
 
 ### Changed
--- The documentation site is upgraded to docs-sitekit 0.2.4, and a shared link to it now shows a picture: `site.image` names `site/public/social.png`, a 1200 by 630 card drawn with [social-card-action](https://github.com/miguelcolmenares/social-card-action), so the pages have `og:image`, `twitter:image` and a large Twitter card.
+-- The documentation site is upgraded to docs-sitekit 0.2.4, and a shared link to it now shows a picture: `site.image` names `/social.png`, a 1200 by 630 card that the docs workflow draws with [social-card-action](https://github.com/miguelcolmenares/social-card-action), so the pages have `og:image`, `twitter:image` and a large Twitter card.
  The documentation site is built with docs-sitekit 0.2.3 (was 0.2.2), so its search button and doc layout pass the accessibility checks without the exemptions for docs-sitekit issue #69, and its footer names the kit without the copyright sign
 - The configurator uses the layout and the design tokens of the site, a label for every field, switches for the days of the week that the keyboard can use, a code box the keyboard can reach, and no sideways scroll on a phone
 - The documentation site and the configurator are published from `main` with the Docs workflow (the Pages source is GitHub Actions), no longer from the `docs` branch, and the Sync main to docs workflow is removed
