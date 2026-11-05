@@ -9,7 +9,9 @@ const MARKDOWN_INDEX = "index.html.md";
  * for example `https://user.github.io` and `/repo/docs/a/` give `https://user.github.io/repo/docs/a/`.
  */
 export function absoluteUrl(origin: string, path: string): string {
-  return `${origin.replace(/\/+$/, "")}${path}`;
+  let end = origin.length;
+  while (end > 0 && origin[end - 1] === "/") end--;
+  return `${origin.slice(0, end)}${path}`;
 }
 
 /** Address of the llms.txt file of a site. */

@@ -84,7 +84,7 @@ export function SiteFooter({
         </div>
         <div className="mt-12 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-6 text-xs text-fg-dim">
           <span>
-            © {new Date().getFullYear()} {name}
+            {name}
             {license ? ` · ${license} licensed` : ""}
             {version && (
               <>
