@@ -5,7 +5,8 @@
     "url": "https://miguelcolmenares.com",
     "base": "/whatsapp-widget/",
     "repository": "https://github.com/miguelcolmenares/whatsapp-widget",
-    "license": "Apache-2.0"
+    "license": "Apache-2.0",
+    "image": "/social.png"
   },
   "hero": {
     "title": "WhatsApp Widget",
