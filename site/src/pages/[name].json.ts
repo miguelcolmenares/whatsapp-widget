@@ -1,6 +1,6 @@
 import type { APIRoute } from "astro";
-import { buildSearchIndex } from "../application";
-import { loadSite } from "../infrastructure";
+import { buildSearchIndex } from "@/application";
+import { loadSite } from "@/infrastructure";
 
 /** The one file this route makes: `search-index.json`. The route exists only when search is on. */
 const FILE = "search-index";

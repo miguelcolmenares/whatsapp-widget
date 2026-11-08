@@ -1,6 +1,6 @@
-import { buildLlmsText } from "../application";
-import { absoluteUrl, LLMS_FILE, markdownPath, renderMarkdownPage } from "../domain";
-import { loadSite } from "../infrastructure";
+import { buildLlmsText } from "@/application";
+import { absoluteUrl, LLMS_FILE, markdownPath, renderMarkdownPage } from "@/domain";
+import { loadSite } from "@/infrastructure";
 
 /**
  * Text files the build writes next to the pages, from the site content: llms.txt, and with

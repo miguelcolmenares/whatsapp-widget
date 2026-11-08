@@ -1,5 +1,5 @@
 import type { ReusableIssue } from "./reusable";
-import type { SideCard } from "./sideCard";
+import type { SideCard } from "./side-card";
 
 /** The four tones a group badge can have. They match the `ToneBadge` component. */
 export type Tone = "neutral" | "brand" | "success" | "warn";

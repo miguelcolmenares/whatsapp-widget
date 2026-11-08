@@ -66,9 +66,9 @@ jobs:
           description: "Add a floating widget to open WhatsApp"
           host: "miguelcolmenares.com/whatsapp-widget"
       # Installs the site, builds it, checks it, and uploads the Pages artifact.
-      - uses: miguelcolmenares/docs-sitekit@v0.2.4
+      - uses: miguelcolmenares/docs-sitekit@v0.3.0
         with:
-          version: 0.2.4
+          version: 0.3.0
 
   deploy:
     name: Deploy to GitHub Pages

@@ -1,5 +1,5 @@
 import { plainText } from "./describe";
-import { proseLines } from "./markdownScan";
+import { proseLines } from "./markdown-scan";
 
 /** A heading found in markdown, before its anchor is decided. */
 export interface HeadingLine {

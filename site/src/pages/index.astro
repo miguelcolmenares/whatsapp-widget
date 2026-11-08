@@ -1,15 +1,19 @@
 ---
-import { loadSite } from "../infrastructure";
-import CtaBand from "../presentation/components/site/CtaBand.astro";
-import { FeatureGrid } from "../presentation/components/site/FeatureGrid";
-import Hero from "../presentation/components/site/Hero.astro";
-import { CardGrid, ItemCard } from "../presentation/components/site/ItemCard";
-import { SectionHeader } from "../presentation/components/site/SectionHeader";
-import { StatRow } from "../presentation/components/site/StatRow";
-import BaseLayout from "../presentation/layouts/BaseLayout.astro";
+import { loadSite } from "@/infrastructure";
+import CtaBand from "@/presentation/components/site/cta-band.astro";
+import { FeatureGrid } from "@/presentation/components/site/feature-grid";
+import Hero from "@/presentation/components/site/hero.astro";
+import { CardGrid, ItemCard } from "@/presentation/components/site/item-card";
+import { SectionHeader } from "@/presentation/components/site/section-header";
+import SourceToHtml from "@/presentation/components/site/source-to-html.astro";
+import { StatRow } from "@/presentation/components/site/stat-row";
+import { buttonVariants } from "@/presentation/components/ui/button";
+import BaseLayout from "@/presentation/layouts/base-layout.astro";
 
 const site = loadSite();
 const { config, href } = site;
+// The Markdown sample of the home page, rendered by the pipeline of a page. Without `demo` in the config there is none.
+const demo = await site.renderDemo();
 // One section per collection that has pages: the first six, with the link to the rest.
 const sections = config.collections
   .map((collection) => ({
@@ -36,6 +40,30 @@ const resolve = (link: { label: string; href: string }) => ({ ...link, href: lin
     config.stats.length > 0 && (
       <section data-stats class="mx-auto max-w-site px-5 pt-14">
         <StatRow stats={config.stats} />
+      </section>
+    )
+  }
+
+  {
+    demo && (
+      <section class="mx-auto max-w-site px-5 py-20">
+        <SectionHeader
+          eyebrow="How it works"
+          title="A Markdown file becomes a page"
+          lede="The code that builds this site builds the samples below. It reads the file, rewrites its links, highlights the code and writes plain HTML."
+        />
+        <div class="mt-10">
+          <SourceToHtml samples={demo} />
+        </div>
+        <p class="mt-6 text-sm leading-relaxed text-fg-muted">
+          Every page of your site goes through these steps.{" "}
+          <a href={href("docs/content/")} class="inline-flex min-h-11 items-center text-fg-bright underline underline-offset-4">
+            How the pages are built
+          </a>
+        </p>
+        <div class="mt-10">
+          <a href={resolve(config.hero.primary).href} class={buttonVariants({ size: "lg" })}>{config.hero.primary.label}</a>
+        </div>
       </section>
     )
   }

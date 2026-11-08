@@ -1,0 +1,66 @@
+---
+import { collectTags, filterText, tagKey } from "@/domain";
+import type { Document } from "@/domain";
+import CatalogFilter from "@/presentation/components/site/catalog-filter.astro";
+import { CardGrid, ItemCard } from "@/presentation/components/site/item-card";
+import { SectionHeader } from "@/presentation/components/site/section-header";
+import BaseLayout from "./base-layout.astro";
+
+interface Props {
+  title: string;
+  lede?: string;
+  documents: Document[];
+}
+const { title, lede, documents } = Astro.props;
+
+// Pages in a group are shown under the group's name. Without groups there is one list.
+const sections: { name: string | null; documents: Document[] }[] = [];
+for (const document of documents) {
+  const name = document.group?.name ?? null;
+  const last = sections[sections.length - 1];
+  if (last && last.name === name) last.documents.push(document);
+  else sections.push({ name, documents: [document] });
+}
+
+// The filter bar is for a page whose pages have tags. A catalog without tags looks and works as before.
+const tags = collectTags(documents);
+const filterable = tags.length > 0;
+---
+
+<BaseLayout title={title} description={lede}>
+  <div class="mx-auto max-w-site px-5 py-14">
+    <SectionHeader as="h1" title={title} lede={lede} />
+    {filterable && <CatalogFilter tags={tags} total={documents.length} />}
+    <div class="space-y-12">
+      {
+        sections.map((section) => (
+          <section
+            aria-labelledby={section.name ? `group-${section.name}` : undefined}
+            data-filter-group={filterable ? "" : undefined}
+          >
+            {section.name && (
+              <h2 id={`group-${section.name}`} class="mb-4 font-mono text-xs tracking-[0.14em] text-fg-dim uppercase">
+                {section.name}
+              </h2>
+            )}
+            <CardGrid>
+              {section.documents.map((document) => (
+                <ItemCard
+                  href={document.route}
+                  title={document.title}
+                  description={document.description}
+                  badge={document.group?.name}
+                  tone={document.group?.tone}
+                  hint="Read"
+                  data-filter-item={filterable ? "" : undefined}
+                  data-filter-tags={filterable ? JSON.stringify(document.tags.map(tagKey)) : undefined}
+                  data-filter-text={filterable ? filterText(document) : undefined}
+                />
+              ))}
+            </CardGrid>
+          </section>
+        ))
+      }
+    </div>
+  </div>
+</BaseLayout>

@@ -1,4 +1,4 @@
 export * from "./brand";
-export * from "./brandData";
+export * from "./brand-data";
 export * from "./icons";
-export * from "./customSvg";
+export * from "./custom-svg";

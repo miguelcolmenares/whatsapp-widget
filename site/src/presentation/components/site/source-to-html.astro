@@ -1,0 +1,112 @@
+---
+import { SourceToHtmlTabs } from "./source-to-html-tabs";
+
+/** One sample, as the build renders it: the source, the preview and the HTML of the page it builds. */
+interface Sample {
+  /** The name on its button. */
+  label: string;
+  /** The path the sample stands for, the title of its source block. */
+  title: string;
+  /** The Markdown source, highlighted as a code block. */
+  source: string;
+  /** The page the sample builds, as it is shown in the preview. */
+  preview: string;
+  /** The HTML the sample builds, highlighted as a code block. */
+  html: string;
+}
+
+interface Props {
+  /**
+   * Two to four samples. Each one is rendered at build time by the pipeline of a page, so the preview and the HTML are
+   * what the kit writes for that file.
+   */
+  samples: Sample[];
+  /**
+   * The start of the ids of the tabs and the panels. A page with two of these gives each one its own.
+   *
+   * @defaultValue "source-to-html"
+   */
+  scope?: string;
+}
+
+const { samples, scope = "source-to-html" } = Astro.props;
+const panelClass = "min-w-0 max-h-[30rem] overflow-auto rounded-lg border border-border bg-surface p-4";
+---
+
+<div data-source-to-html class="min-w-0">
+  <!-- Runs before the first paint: the panels are stacked without it, and one on top of the other with it. -->
+  <script is:inline>
+    document.currentScript.parentElement.dataset.js = "";
+  </script>
+  <SourceToHtmlTabs client:visible labels={samples.map((sample) => sample.label)} scope={scope} />
+  <div class="mt-4 grid gap-6 lg:grid-cols-2">
+    <div class="st-stack min-w-0">
+      {
+        samples.map((sample, index) => (
+          <div
+            data-st-panel="source"
+            data-sample={index}
+            data-active={index === 0 ? "" : undefined}
+            role="region"
+            aria-label={`Markdown source of ${sample.label}, ${sample.title}`}
+            tabindex="0"
+            class={`${panelClass} prose-site`}
+            set:html={sample.source}
+          />
+        ))
+      }
+    </div>
+    <div class="st-stack min-w-0">
+      {
+        samples.map((sample, index) => (
+          <>
+            <div
+              id={`${scope}-panel-${index}-preview`}
+              data-st-panel="preview"
+              data-sample={index}
+              data-active={index === 0 ? "" : undefined}
+              role="region"
+              aria-label={`Preview of ${sample.label}, the page the kit builds`}
+              tabindex="0"
+              class={`${panelClass} text-left`}
+            >
+              <div class="prose-site" set:html={sample.preview} />
+            </div>
+            <div
+              id={`${scope}-panel-${index}-html`}
+              data-st-panel="html"
+              data-sample={index}
+              role="region"
+              aria-label={`HTML of ${sample.label}`}
+              tabindex="0"
+              class={`${panelClass} prose-site`}
+              set:html={sample.html}
+            />
+          </>
+        ))
+      }
+    </div>
+  </div>
+</div>
+
+<style is:global>
+  /* The bar of the buttons is an island: without JavaScript it is not shown, because nothing would answer a press. */
+  [data-st-bar] {
+    display: none;
+  }
+  [data-js] [data-st-bar] {
+    display: flex;
+  }
+  /* With JavaScript every panel sits in the same grid cell, so the cell is as tall as the tallest panel and a change of
+     sample or view moves nothing on the page. Only the chosen panel is visible. Without it, the panels follow one another. */
+  [data-js] .st-stack {
+    display: grid;
+  }
+  [data-js] [data-st-panel] {
+    grid-area: 1 / 1;
+    visibility: hidden;
+  }
+  [data-js] [data-st-panel][data-active] {
+    visibility: visible;
+  }
+</style>

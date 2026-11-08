@@ -1,0 +1,122 @@
+---
+import { Box, Menu, Search } from "lucide-react";
+import { buttonVariants } from "@/presentation/components/ui/button";
+import { Icon } from "./icon";
+
+interface Props {
+  name: string;
+  home: string;
+  links: readonly { label: string; href: string }[];
+  /** The repository button: where it goes, its name and its icon (`brand:github` for a GitHub repository). */
+  repository?: { href: string; name: string; icon: string };
+  action?: { label: string; href: string };
+  /** Pathname of the page being shown, to mark the current link. */
+  current?: string;
+  /** Show the search button. Its dialog is rendered by the layout when search is on. */
+  search?: boolean;
+  /** The configured theme default, to name the switch before its script runs. */
+  themeDefault?: "dark" | "light" | "system";
+}
+const { name, home, links, repository, action, current, search, themeDefault = "dark" } = Astro.props;
+const isCurrent = (href: string) => Boolean(current) && (current === href || (href !== home && current!.startsWith(href)));
+---
+
+<header class="sticky top-0 z-40 h-(--sk-layout-nav-h) border-b border-border bg-background/70 backdrop-blur-md">
+  <div class="mx-auto flex h-full max-w-site items-center gap-6 px-5">
+    <a href={home} class="inline-flex items-center gap-2 font-semibold tracking-tight text-fg-bright">
+      <Box className="size-5 text-brand" aria-hidden="true" />
+      {name}
+    </a>
+    <nav aria-label="Main" class="hidden items-center gap-1 md:flex">
+      {
+        links.map((link) => (
+          <a
+            href={link.href}
+            aria-current={isCurrent(link.href) ? "page" : undefined}
+            class="rounded-md px-3 py-1.5 text-sm text-fg-muted transition-colors hover:text-fg-bright aria-[current=page]:text-fg-bright"
+          >
+            {link.label}
+          </a>
+        ))
+      }
+    </nav>
+    <div class="ml-auto flex items-center gap-2">
+      {
+        repository && (
+          <a
+            href={repository.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            data-repository-button
+            title={`${repository.name} repository`}
+            class="hidden min-h-11 items-center gap-1.5 rounded-md px-2.5 text-sm text-fg-muted transition-colors hover:bg-surface-2 hover:text-fg-bright sm:inline-flex"
+          >
+            <Icon name={repository.icon} className="size-5" />
+            {repository.name}
+          </a>
+        )
+      }
+      {
+        action && (
+          <a href={action.href} class={`${buttonVariants({ size: "sm" })} max-md:hidden`}>
+            {action.label}
+          </a>
+        )
+      }
+      {
+        search && (
+          <button
+            type="button"
+            data-search-open
+            aria-keyshortcuts="Control+K Meta+K"
+            class="inline-flex h-11 min-w-11 items-center justify-center gap-2 rounded-md px-2.5 text-sm text-fg-muted transition-colors hover:bg-surface-2 hover:text-fg-bright"
+          >
+            <Search className="size-4" aria-hidden="true" />
+            <span class="sr-only sm:not-sr-only">Search</span>
+            <kbd
+              data-search-key
+              aria-hidden="true"
+              class="hidden min-w-[4.5rem] justify-center rounded border border-border px-1.5 py-0.5 font-mono text-[11px] text-fg-dim sm:inline-flex"
+            ></kbd>
+          </button>
+        )
+      }
+      <button
+        type="button"
+        data-theme-switch
+        aria-label={themeDefault === "light" ? "Switch to dark theme" : "Switch to light theme"}
+        class="inline-flex size-11 items-center justify-center rounded-md text-fg-muted hover:bg-surface-2 hover:text-fg-bright"
+      >
+        <span class="theme-icon-sun inline-flex"><Icon name="sun" className="size-5" /></span>
+        <span class="theme-icon-moon inline-flex"><Icon name="moon" className="size-5" /></span>
+      </button>
+      <button
+        type="button"
+        data-mobile-menu-open
+        aria-label="Open menu"
+        aria-haspopup="dialog"
+        class="inline-flex size-11 items-center justify-center rounded-md text-fg-muted hover:bg-surface-2 hover:text-fg-bright md:hidden"
+      >
+        <Menu className="size-5" aria-hidden="true" />
+      </button>
+    </div>
+  </div>
+</header>
+
+<script>
+  // Shows the theme the switch will change to. The choice itself is made by the script in the page head.
+  const root = document.documentElement;
+  const buttons = document.querySelectorAll<HTMLButtonElement>("[data-theme-switch]");
+  const sync = () => {
+    const next = root.dataset.theme === "light" ? "dark" : "light";
+    buttons.forEach((button) => button.setAttribute("aria-label", `Switch to ${next} theme`));
+  };
+  buttons.forEach((button) =>
+    button.addEventListener("click", () => {
+      const next = root.dataset.theme === "light" ? "dark" : "light";
+      window.dispatchEvent(new CustomEvent("sitekit:theme", { detail: next }));
+    }),
+  );
+  window.addEventListener("themechange", sync);
+  sync();
+</script>

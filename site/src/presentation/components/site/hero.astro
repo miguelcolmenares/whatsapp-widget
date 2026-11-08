@@ -1,0 +1,57 @@
+---
+import { ArrowRight } from "lucide-react";
+import { buttonVariants } from "@/presentation/components/ui/button";
+import { CommandBox } from "./command-box";
+import { ToneBadge } from "./tone-badge";
+
+interface Props {
+  /** A short status in a badge over the headline. */
+  badge?: string;
+  /** The headline, as the `h1` of the page. */
+  title: string;
+  /** A sentence under the headline. */
+  lede: string;
+  /** A command to copy, in a `CommandBox`. */
+  command?: string;
+  /** The main action. */
+  primary: { label: string; href: string };
+  /** A second action, as an outline button. */
+  secondary?: { label: string; href: string };
+}
+const { badge, title, lede, command, primary, secondary } = Astro.props;
+---
+
+<section class="relative isolate overflow-hidden border-b border-border">
+  <div
+    aria-hidden="true"
+    class="absolute inset-0 -z-10 bg-[linear-gradient(to_right,var(--sk-border)_1px,transparent_1px),linear-gradient(to_bottom,var(--sk-border)_1px,transparent_1px)] bg-[size:56px_56px] opacity-40 [mask-image:radial-gradient(ellipse_70%_60%_at_50%_0%,#000,transparent)]"
+  >
+  </div>
+  <div aria-hidden="true" class="absolute top-[-12rem] left-1/2 -z-10 h-[28rem] w-[56rem] -translate-x-1/2 rounded-full bg-brand-strong/20 blur-[120px]"></div>
+  <div class="mx-auto flex max-w-site flex-col items-center px-5 pt-20 pb-16 text-center md:pt-28 md:pb-24">
+    {
+      badge && (
+        <ToneBadge tone="neutral" dot className="mb-8">
+          {badge}
+        </ToneBadge>
+      )
+    }
+    <h1 class="max-w-4xl text-balance text-[clamp(2.4rem,7vw,4.4rem)] leading-[1.02] font-semibold tracking-[-0.045em] text-fg-bright">{title}</h1>
+    <p class="mt-6 max-w-2xl text-pretty text-lg leading-relaxed text-fg-muted md:text-xl">{lede}</p>
+    {command && <CommandBox command={command} className="mt-9" client:visible />}
+    <div class="mt-6 flex flex-wrap items-center justify-center gap-3">
+      <a href={primary.href} class={buttonVariants({ size: "lg" })}>
+        {primary.label}
+        <ArrowRight aria-hidden="true" />
+      </a>
+      {
+        secondary && (
+          <a href={secondary.href} class={buttonVariants({ size: "lg", variant: "outline" })}>
+            {secondary.label}
+          </a>
+        )
+      }
+    </div>
+    <slot />
+  </div>
+</section>

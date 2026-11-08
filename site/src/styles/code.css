@@ -1,6 +1,6 @@
 /* Code blocks: a title bar, highlighted and diff lines, and the copy button. The block is a `.code-block` that holds
-   the `pre`, written by the transformers in infrastructure/codeBlocks.ts. Its colors are the code tokens, so the
-   contrast tests cover them. */
+   the `pre`, written by the transformers in infrastructure/code-blocks.ts. Its colors are the code tokens, so the
+   contrast tests cover them. The copy button floats in the top right corner: it takes no band of its own. */
 .prose-site .code-block {
   position: relative;
   margin: 1rem 0;
@@ -15,22 +15,18 @@
   border: 0;
   border-radius: 0;
   background: transparent !important;
-  /* Without a title the copy button sits in this top band, so it never covers the first line of code. */
-  padding: 3rem 0 1rem;
-}
-.prose-site .code-block[data-titled] pre {
-  padding-top: 1rem;
+  padding: 1rem 0;
 }
 .prose-site .code-block pre:focus-visible {
   outline-offset: -2px;
 }
 
-/* The title bar. Its right side is kept clear for the copy button. */
+/* The title bar. Its right side is kept clear for the copy button, which sits in it. */
 .prose-site .code-title {
   display: flex;
   align-items: center;
   min-height: 3rem;
-  padding: 0.5rem 5rem 0.5rem 1.1rem;
+  padding: 0.5rem 3.25rem 0.5rem 1.1rem;
   border-bottom: 1px solid var(--sk-border);
   background: var(--sk-surface-2);
   color: var(--sk-fg-muted);
@@ -45,10 +41,11 @@
   min-width: 100%;
   width: max-content;
 }
+/* The right padding of a line keeps the end of a long line clear of the copy button, which floats over the corner. */
 .prose-site .code-block .line {
   position: relative;
   min-height: 1lh;
-  padding: 0 1.1rem 0 calc(1.1rem - 3px);
+  padding: 0 3.25rem 0 calc(1.1rem - 3px);
   border-left: 3px solid transparent;
 }
 .prose-site .code-block .line[data-highlighted] {
@@ -79,27 +76,42 @@
   color: var(--sk-danger);
 }
 
-/* The copy button. The server writes it hidden, and the page script shows it. */
+/* The copy button: a 44 px square with no border and no fill at rest, so the code is what the eye reads. It shows
+   the copy icon, and the check icon while the copy is confirmed. The server writes it hidden, and the page script
+   shows it. */
 .prose-site .copy-code {
   position: absolute;
   top: 0.25rem;
-  right: 0.5rem;
-  min-width: 4.5rem;
-  min-height: 2.75rem;
-  border: 1px solid var(--sk-border-strong);
-  background: var(--sk-surface-3);
-  color: var(--sk-fg-muted);
+  right: 0.25rem;
+  display: inline-grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
   border-radius: var(--sk-radius-sm);
-  padding: 0.25rem 0.7rem;
-  font: 500 12px var(--sk-font-mono);
-  cursor: pointer;
+  background: transparent;
+  color: var(--sk-fg-muted);
+}
+.prose-site .copy-code svg {
+  display: block;
+  width: 1rem;
+  height: 1rem;
 }
 .prose-site .copy-code[hidden] {
   display: none;
 }
+.prose-site .copy-code .icon-check,
+.prose-site .copy-code[data-state="copied"] .icon-copy {
+  display: none;
+}
+.prose-site .copy-code[data-state="copied"] .icon-check {
+  display: block;
+}
 .prose-site .copy-code:hover {
+  background: var(--sk-surface-3);
   color: var(--sk-fg-bright);
-  border-color: var(--sk-border-hover);
 }
 .prose-site .copy-code:focus-visible {
   outline: 2px solid var(--sk-accent);
