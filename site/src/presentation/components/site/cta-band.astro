@@ -1,0 +1,37 @@
+---
+import { buttonVariants } from "@/presentation/components/ui/button";
+import { CommandBox } from "./command-box";
+
+interface Props {
+  /** The headline, as an `h2`. */
+  title: string;
+  /** A sentence under the headline. */
+  text?: string;
+  /** A command to copy, in a `CommandBox`. */
+  command?: string;
+  /** The main action. */
+  primary: { label: string; href: string };
+  /** A second action, as an outline button. */
+  secondary?: { label: string; href: string };
+}
+const { title, text, command, primary, secondary } = Astro.props;
+---
+
+<section class="relative isolate overflow-hidden border-t border-border">
+  <div aria-hidden="true" class="absolute bottom-[-14rem] left-1/2 -z-10 h-[24rem] w-[44rem] -translate-x-1/2 rounded-full bg-brand-strong/15 blur-[110px]"></div>
+  <div class="mx-auto flex max-w-site flex-col items-center px-5 py-20 text-center md:py-28">
+    <h2 class="max-w-2xl text-balance text-[clamp(1.9rem,4.5vw,3rem)] leading-[1.08] font-semibold tracking-[-0.035em] text-fg-bright">{title}</h2>
+    {text && <p class="mt-4 max-w-xl text-lg text-fg-muted">{text}</p>}
+    {command && <CommandBox command={command} className="mt-8" client:visible />}
+    <div class="mt-6 flex flex-wrap justify-center gap-3">
+      <a href={primary.href} class={buttonVariants({ size: "lg" })}>{primary.label}</a>
+      {
+        secondary && (
+          <a href={secondary.href} class={buttonVariants({ size: "lg", variant: "outline" })}>
+            {secondary.label}
+          </a>
+        )
+      }
+    </div>
+  </div>
+</section>

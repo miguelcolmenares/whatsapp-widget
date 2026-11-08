@@ -4,6 +4,7 @@
 @import "./tokens.css";
 @import "./prose.css";
 @import "./code.css";
+@import "./palette.css";
 
 /*
  * Fallback faces for the web fonts. A page is drawn with these until Geist arrives, and each is a local font
@@ -133,6 +134,13 @@
   }
   ::selection {
     background: color-mix(in srgb, var(--sk-accent-strong) 45%, transparent);
+  }
+  /* Tailwind 4 does not set the pointer on buttons (version 3 did), so every control that acts gets it here. */
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  [role="tab"],
+  summary {
+    cursor: pointer;
   }
 }
 

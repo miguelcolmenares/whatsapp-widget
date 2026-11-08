@@ -1,0 +1,112 @@
+/* The color palette of a page: one card per token, with its dark and its light value side by side. */
+.prose-site .color-palette {
+  position: relative;
+  margin: 1.5rem 0;
+}
+.prose-site .palette-group {
+  margin-top: 2rem;
+}
+.prose-site .palette-title {
+  margin: 0 0 0.75rem;
+  font: 500 11px var(--sk-font-mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--sk-fg-dim);
+}
+.prose-site .palette-list {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 40rem) {
+  .prose-site .palette-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 64rem) {
+  .prose-site .palette-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+.prose-site .palette-token {
+  min-width: 0;
+  margin: 0;
+  padding: 1rem;
+  border: 1px solid var(--sk-border);
+  border-radius: var(--sk-radius-md);
+  background: var(--sk-surface);
+}
+.prose-site .palette-name code {
+  font-size: 14px;
+  color: var(--sk-fg-bright);
+  background: none;
+  padding: 0;
+}
+.prose-site .palette-pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+.prose-site .palette-item {
+  min-width: 0;
+}
+.prose-site .palette-chip {
+  height: 3.5rem;
+  border: 1px solid var(--sk-border-strong);
+  border-radius: var(--sk-radius-sm);
+}
+.prose-site .palette-value {
+  display: grid;
+  gap: 0.1rem;
+  margin: 0.4rem 0 0;
+  font-size: 12px;
+  color: var(--sk-fg-muted);
+}
+/* A hex code is one unit: it never breaks in the middle, so it reads the same at 320px and on desktop. */
+.prose-site .palette-value code {
+  font-size: 12px;
+  white-space: nowrap;
+  color: var(--sk-fg);
+  background: none;
+  padding: 0;
+}
+.prose-site .palette-set {
+  color: var(--sk-fg-dim);
+}
+/* The copy button: 44px high, the same look as the copy buttons of the code blocks. */
+.prose-site .palette-copy {
+  display: block;
+  width: 100%;
+  min-height: 2.75rem;
+  margin-top: 0.25rem;
+  border: 1px solid var(--sk-border-strong);
+  border-radius: var(--sk-radius-sm);
+  background: var(--sk-surface-3);
+  color: var(--sk-fg-muted);
+  font: 500 12px var(--sk-font-mono);
+  cursor: pointer;
+}
+.prose-site .palette-copy[hidden] {
+  display: none;
+}
+.prose-site .palette-copy:hover {
+  color: var(--sk-fg-bright);
+  border-color: var(--sk-border-hover);
+}
+.prose-site .palette-copy:focus-visible {
+  outline: 2px solid var(--sk-accent);
+  outline-offset: 1px;
+}
+/* The message after a copy: in the page for a screen reader, not on the screen. */
+.prose-site .palette-status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

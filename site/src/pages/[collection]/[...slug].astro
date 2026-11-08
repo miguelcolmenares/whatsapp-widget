@@ -1,8 +1,8 @@
 ---
-import type { Document } from "../../domain";
-import { loadSite } from "../../infrastructure";
-import CollectionIndex from "../../presentation/layouts/CollectionIndex.astro";
-import DocPage from "../../presentation/layouts/DocPage.astro";
+import type { Document } from "@/domain";
+import { loadSite } from "@/infrastructure";
+import CollectionIndex from "@/presentation/layouts/collection-index.astro";
+import DocPage from "@/presentation/layouts/doc-page.astro";
 
 // A collection can have a page layout of its own: a file named after its id in layouts/collections/. It takes the
 // props of DocPage and renders it, with more in the slot. A site without such a folder uses DocPage for every page.

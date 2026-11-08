@@ -1,6 +1,6 @@
 ---
-import { loadSite } from "../../infrastructure";
-import DocPage from "../../presentation/layouts/DocPage.astro";
+import { loadSite } from "@/infrastructure";
+import DocPage from "@/presentation/layouts/doc-page.astro";
 
 export async function getStaticPaths() {
   const site = loadSite();

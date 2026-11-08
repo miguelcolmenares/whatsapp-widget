@@ -1,8 +1,8 @@
 import { z } from "zod";
 import { iconProblem } from "./brands";
 import { DEFAULT_SEVERITY, FINDING_DESCRIPTIONS, FINDING_KINDS, isFindingKind } from "./findings";
-import { EDIT_HOSTS } from "./editLink";
-import { socialImageProblem } from "./socialImage";
+import { EDIT_HOSTS } from "./edit-link";
+import { socialImageProblem } from "./social-image";
 
 const link = z.strictObject({
   label: z.string().min(1).describe("The text of the link."),
@@ -27,6 +27,24 @@ export const iconName = z
     "A lucide icon in kebab-case, such as `shield-check`, or a brand logo, such as `brand:github` or `brand:custom/my-logo`.",
   );
 
+/**
+ * A link of the footer: a link, with an icon drawn before its label, and an `external` flag that opens it in a new tab.
+ * The header menu has neither, so `nav` keeps `link`.
+ */
+const footerLink = link.extend({
+  icon: iconName
+    .optional()
+    .describe(
+      "An icon before the label: a lucide icon, `brand:<slug>` for a logo that ships, or `brand:custom/<name>` for your own logo in the `brands` folder.",
+    ),
+  external: z
+    .boolean()
+    .optional()
+    .describe(
+      "`true` opens the link in a new tab and draws an arrow after the label, for a link to another site. Left out, the link opens in the same tab.",
+    ),
+});
+
 const feature = z.strictObject({
   icon: iconName,
   eyebrow: z.string().min(1).describe("A short mono label above the title."),
@@ -38,6 +56,22 @@ const stat = z.strictObject({
   value: z.string().min(1).describe("The number or short value, shown as the large text."),
   label: z.string().min(1).describe("What the value counts."),
   note: z.string().min(1).optional().describe("A line of text under the value."),
+});
+
+/** One sample of the home page demo: a Markdown file, and the path it stands for. */
+const demoSample = z.strictObject({
+  label: z
+    .string()
+    .min(1)
+    .describe("The name of the sample on its button, such as `Heading and list`."),
+  title: z
+    .string()
+    .min(1)
+    .refine((value) => !/["\n]/.test(value), "a title has no quote and no line break")
+    .describe(
+      "The path the sample stands for, such as `docs/getting-started.md`. It is the title of the source block, and the folder of its relative links: a link is rewritten the way it would be in that file.",
+    ),
+  file: z.string().min(1).describe("The Markdown file of the sample, relative to the site folder."),
 });
 
 const tone = z.enum(["neutral", "brand", "success", "warn"]);
@@ -197,6 +231,22 @@ export const siteConfigSchema = z
       .describe(
         "Two to five numbers under the hero, each with a label. They are written by hand: the kit fetches nothing. Without any, the row is left out.",
       ),
+    /** The Markdown sample of the home page: a source, the page the kit builds from it, and its HTML. Without the key, the section is left out. */
+    demo: z
+      .strictObject({
+        samples: z
+          .array(demoSample)
+          .refine((samples) => samples.length >= 3 && samples.length <= 4, {
+            message: "demo.samples takes three or four items",
+          })
+          .describe(
+            "Three or four samples, one button each. Each is rendered by the same pipeline as a page, at build time.",
+          ),
+      })
+      .optional()
+      .describe(
+        "A Markdown sample on the home page, with its source, its preview and the HTML the kit builds from it. Without the key, the section is left out.",
+      ),
     nav: z
       .array(link)
       .default([])
@@ -206,10 +256,10 @@ export const siteConfigSchema = z
     footer: z
       .strictObject({
         links: z
-          .array(link)
+          .array(footerLink)
           .default([])
           .describe(
-            "Extra links in the Project column of the footer, after the repository and the issues. A path that starts with `/` gets the site base.",
+            "Extra links in the Project column of the footer, after the repository and the issues. A path that starts with `/` gets the site base. A link can have an `icon`, drawn before its label, and `external: true` to open in a new tab.",
           ),
       })
       .default({ links: [] })
@@ -459,12 +509,16 @@ export type SiteConfig = z.infer<typeof siteConfigSchema>;
 export type CollectionConfig = z.infer<typeof collection>;
 /** A labelled link, used in the navigation and the footer. */
 export type NavLink = z.infer<typeof link>;
+/** A link of the footer, with an optional icon. */
+export type FooterLink = z.infer<typeof footerLink>;
 /** The color theme a site starts with. */
 export type ThemeDefault = SiteConfig["theme"]["default"];
 /** One card of the home page features section. */
 export type Feature = z.infer<typeof feature>;
 /** One number of the home page stat row. */
 export type Stat = z.infer<typeof stat>;
+/** The Markdown sample of the home page, when the config has one. */
+export type DemoConfig = NonNullable<SiteConfig["demo"]>;
 
 /** Validate a parsed `sitekit.config.json`. Throws a readable error listing every problem. */
 export function parseSiteConfig(input: unknown): SiteConfig {

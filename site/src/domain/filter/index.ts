@@ -1,2 +1,2 @@
-export * from "./catalogFilter";
+export * from "./catalog-filter";
 export * from "./tags";

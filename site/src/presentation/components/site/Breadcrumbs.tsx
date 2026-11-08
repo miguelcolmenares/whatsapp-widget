@@ -6,7 +6,7 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "../ui/breadcrumb";
+} from "@/presentation/components/ui/breadcrumb";
 
 /** The trail from the home page to the current page. The last item is the page itself and has no link. */
 export function Breadcrumbs({

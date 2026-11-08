@@ -1,7 +1,7 @@
 import { Circle, icons } from "lucide-react";
 import type { LucideProps } from "lucide-react";
-import { brandGlyph, findBrand, parseIconName } from "../../../domain/brands";
-import type { BrandGlyph } from "../../../domain/brands";
+import { brandGlyph, findBrand, parseIconName } from "@/domain/brands";
+import type { BrandGlyph } from "@/domain/brands";
 
 const toPascal = (name: string) =>
   name.replace(/(^|-)([a-z0-9])/g, (_, __, char: string) => char.toUpperCase());

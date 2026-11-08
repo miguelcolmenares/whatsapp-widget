@@ -1,3 +1,3 @@
-export * from "./searchIndex";
-export * from "./searchScore";
-export * from "./searchText";
+export * from "./search-index";
+export * from "./search-score";
+export * from "./search-text";

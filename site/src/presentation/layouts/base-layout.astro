@@ -1,0 +1,158 @@
+---
+import "@/styles/global.css";
+import { llmsUrl, markdownUrl, repositoryLink, socialImageAlt, socialImageUrl, withSiteBase } from "@/domain";
+import { loadSite } from "@/infrastructure";
+import { SiteFooter } from "@/presentation/components/site/site-footer";
+import MobileMenu from "@/presentation/components/site/mobile-menu.astro";
+import SiteHeader from "@/presentation/components/site/site-header.astro";
+import SearchDialog from "@/presentation/search/search-dialog.astro";
+import tokens from "../../../design/tokens.json";
+// The two font files the first screen needs, as the URLs the stylesheet uses for them. A preload starts the download
+// with the HTML instead of after the stylesheet has been read, which is when the browser would first find them.
+import sansFont from "@fontsource-variable/geist/files/geist-latin-wght-normal.woff2?url";
+import monoFont from "@fontsource-variable/geist-mono/files/geist-mono-latin-wght-normal.woff2?url";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const site = loadSite();
+const { config, href } = site;
+// Only a site that has llms.txt points at it. A missing key means no file and no link.
+const describedBy = config.llms.enabled ? llmsUrl(config.site.url, config.site.base) : undefined;
+// A page that has a Markdown copy points at it, so a tool that reads the HTML finds the text version.
+const copy = config.llms.enabled && config.llms.markdownPages ? site.documents.find((document) => document.route === Astro.url.pathname) : undefined;
+const alternate = copy ? markdownUrl(config.site.url, copy.route) : undefined;
+const { title, description = config.site.description } = Astro.props;
+const pageTitle = title ? `${title} · ${config.site.name}` : `${config.site.name}: ${config.site.description}`;
+const canonical = new URL(Astro.url.pathname, config.site.url).toString();
+// The picture a link shows, only when the site names one with `site.image`. The kit knows no size for it, so the
+// width and the height are not given, and without a picture the card stays `summary`.
+const socialImage = config.site.image ? socialImageUrl(config.site.url, config.site.base, config.site.image) : undefined;
+const socialAlt = socialImageAlt(config.site);
+
+// The theme a page is drawn with before any script runs. `system` has no answer until a script reads the OS
+// preference, so the page then has no attribute and the CSS media query picks the light set.
+const themeDefault = config.theme.default;
+const startTheme = themeDefault === "system" ? undefined : themeDefault;
+const themeColors = { dark: tokens.color.bg, light: tokens.themes.light.color.bg };
+
+const has = (collection: string) => site.documents.some((document) => document.collection === collection);
+// One menu entry per collection that has pages, in the order of the config, then the changelog.
+const defaultNav = [
+  ...config.collections.filter((collection) => has(collection.id)).map((collection) => ({ label: collection.label, href: href(`${collection.id}/`) })),
+  ...(has("changelog") ? [{ label: "Changelog", href: href("changelog/") }] : []),
+];
+// A link of the config that is a path of this site gets the base, as the buttons of the hero do.
+// It keeps the other fields of the link, such as the icon of a footer link.
+const withBase = <T extends { href: string }>(link: T) => ({ ...link, href: withSiteBase(link.href, config.site.base) });
+const nav = config.nav.length > 0 ? config.nav.map(withBase) : defaultNav;
+const firstDoc = site.documents.find((document) => config.collections.some((collection) => collection.id === document.collection));
+const action = firstDoc ? { label: "Get started", href: firstDoc.route } : undefined;
+
+// The repository button: the host's logo when the kit has one (GitHub, GitLab), a plain icon otherwise.
+const repository = config.site.repository ? { href: config.site.repository, ...repositoryLink(config.site.repository) } : undefined;
+
+const columns = [
+  { title: "Documentation", links: defaultNav },
+  {
+    title: "Project",
+    links: [
+      ...(repository ? [{ label: repository.name, href: repository.href, external: true, icon: repository.icon }] : []),
+      ...(config.site.repository ? [{ label: "Report an issue", href: `${config.site.repository}/issues`, external: true }] : []),
+      ...config.footer.links.map(withBase),
+    ],
+  },
+].filter((column) => column.links.length > 0);
+---
+
+<!doctype html>
+<html lang="en" data-theme={startTheme}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content={themeColors[startTheme ?? "dark"]} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content={config.site.name} />
+    {socialImage && <meta property="og:image" content={socialImage} />}
+    {socialImage && <meta property="og:image:alt" content={socialAlt} />}
+    <meta name="twitter:card" content={socialImage ? "summary_large_image" : "summary"} />
+    {socialImage && <meta name="twitter:image" content={socialImage} />}
+    {socialImage && <meta name="twitter:image:alt" content={socialAlt} />}
+    <link rel="preload" href={sansFont} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={monoFont} as="font" type="font/woff2" crossorigin />
+    <link rel="icon" href={href("favicon.svg")} type="image/svg+xml" />
+    <link rel="sitemap" href={href("sitemap-index.xml")} />
+    {describedBy && <link rel="describedby" href={describedBy} />}
+    {alternate && <link rel="alternate" type="text/markdown" href={alternate} />}
+    <!-- Runs before the first paint: picks the theme from the saved choice, the default, or the OS (for system). -->
+    <script is:inline define:vars={{ defaultTheme: themeDefault, colors: themeColors }}>
+      (function () {
+        var root = document.documentElement;
+        var query = window.matchMedia("(prefers-color-scheme: light)");
+        var chosen = null;
+        function stored() {
+          try {
+            var value = localStorage.getItem("theme");
+            return value === "light" || value === "dark" ? value : null;
+          } catch (error) {
+            return null;
+          }
+        }
+        function apply() {
+          var theme =
+            chosen ||
+            stored() ||
+            (defaultTheme === "system" ? (query.matches ? "light" : "dark") : defaultTheme);
+          root.dataset.theme = theme;
+          root.style.colorScheme = theme;
+          var meta = document.querySelector('meta[name="theme-color"]');
+          if (meta) meta.setAttribute("content", colors[theme]);
+          window.dispatchEvent(new Event("themechange"));
+        }
+        // The header switch asks for a theme. The choice is kept for this page even if storage is blocked.
+        window.addEventListener("sitekit:theme", function (event) {
+          chosen = event.detail;
+          try {
+            localStorage.setItem("theme", chosen);
+          } catch (error) {
+            // Storage is blocked: the choice still holds for this page.
+          }
+          apply();
+        });
+        apply();
+        query.addEventListener("change", apply);
+      })();
+    </script>
+    <!-- A page that needs a script before its first paint (the sidebars of a docs page) puts it here. -->
+    <slot name="head" />
+  </head>
+  <body>
+    <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-md focus:bg-primary focus:px-3 focus:py-2 focus:text-primary-foreground">
+      Skip to content
+    </a>
+    <SiteHeader name={config.site.name} home={href("")} links={nav} repository={repository} action={action} current={Astro.url.pathname} search={config.search.enabled} themeDefault={themeDefault} />
+    <MobileMenu links={nav} action={action} repository={repository} />
+    {config.search.enabled && <SearchDialog />}
+    <main id="main">
+      <slot />
+    </main>
+    <SiteFooter
+      name={config.site.name}
+      description={config.site.description}
+      command={config.site.installCommand}
+      columns={columns}
+      brands={site.customBrands}
+      license={config.site.license}
+      version={site.version ? { label: `v${site.version}`, href: has("changelog") ? href("changelog/") : undefined } : undefined}
+      credit={{ prefix: "Built with", label: "docs-sitekit", href: "https://miguelcolmenares.com/docs-sitekit/" }}
+    />
+  </body>
+</html>
