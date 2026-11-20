@@ -7,6 +7,7 @@ import {
   kebab,
   normalizeTags,
   readSideCard,
+  readDemoId,
 } from "@/domain";
 import type { CollectionConfig, Document, SourceFile } from "@/domain";
 
@@ -39,6 +40,7 @@ function toDocument(file: SourceFile, base: string): Document {
   const fromContent = fromFrontmatter ? "" : extractDescription(file.content);
   // What the card's frontmatter got wrong is reported by `validateContent`, which reads it again with the lines.
   const { card } = readSideCard(file.frontmatter);
+  const demo = readDemoId(file.frontmatter.demo);
   return {
     collection: file.collection,
     path: file.path,
@@ -52,6 +54,7 @@ function toDocument(file: SourceFile, base: string): Document {
     tags: normalizeTags(file.frontmatter.tags),
     group: null,
     ...(card ? { card } : {}),
+    ...(demo ? { demo } : {}),
     body: dropLeadingTitle(file.content, title),
   };
 }

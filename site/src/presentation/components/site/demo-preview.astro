@@ -1,0 +1,47 @@
+---
+import type { RenderedDemo } from "@/infrastructure";
+import { ReferenceTable } from "@/presentation/components/site/reference-table";
+
+interface Props {
+  /** Validated example and safely highlighted source, prepared by the application at build time. */
+  demo: RenderedDemo;
+  /** The site's slash-delimited base path. */
+  base: string;
+}
+const { demo, base } = Astro.props;
+const { example, sources } = demo;
+const variants = [{ id: "", title: example.title, preview: example.preview, sources: example.sources }, ...(example.variants ?? []).map((variant) => ({ ...variant, sources: variant.sources ?? example.sources }))];
+const asset = (path: string) => `${base}demo-assets/${path.split("/").map(encodeURIComponent).join("/")}`;
+const control = "min-h-11 rounded-md border border-border bg-surface px-3 text-sm text-fg";
+---
+
+<div data-demo-preview class="mt-8 min-w-0 space-y-4 rounded-lg border border-border bg-surface p-4">
+  <h2 class="text-lg font-semibold text-fg-bright">{example.title}</h2>
+  <div class="flex flex-wrap items-end gap-4" data-demo-controls hidden>
+    {variants.length > 1 && <div class="grid gap-1 text-sm text-fg-muted"><label for={`demo-${example.id}-variant`}>Variant</label><select id={`demo-${example.id}-variant`} data-demo-variant class={control}>
+      {variants.map((variant) => <option value={variant.id} data-preview={asset(variant.preview)} data-title={variant.title}>{variant.title}</option>)}
+    </select></div>}
+    {(example.viewports?.length ?? 0) > 0 && <div class="grid gap-1 text-sm text-fg-muted"><label for={`demo-${example.id}-viewport`}>Viewport</label><select id={`demo-${example.id}-viewport`} data-demo-viewport class={control}>
+      <option value="" data-height="420">Fit container</option>
+      {example.viewports!.map((viewport) => <option value={viewport.width} data-height={viewport.height ?? 420}>{viewport.label} ({viewport.width}px)</option>)}
+    </select></div>}
+  </div>
+  <div class="overflow-x-auto" tabindex="0" role="region" aria-label={`${example.title} preview viewport`}>
+    <iframe data-demo-frame src={asset(example.preview)} title={`${example.title} preview`} sandbox="allow-scripts" loading="lazy" width="100%" height="420" class="block border border-border bg-white" />
+  </div>
+  <p class="text-sm text-fg-muted">The example runs in an isolated frame. Source files below are displayed as text.</p>
+  {variants.map((variant, index) => <div data-demo-sources={variant.id} hidden={index !== 0} class="space-y-3">
+    {variant.sources.map((source) => <details class="min-w-0 rounded-md border border-border">
+      <summary class="min-h-11 cursor-pointer px-3 py-3 text-sm font-medium text-fg-bright">{source.label ?? source.path}</summary>
+      <div class="prose-site min-w-0 px-3 pb-3" set:html={sources[source.path]} />
+    </details>)}
+  </div>)}
+  {(example.api?.length ?? 0) > 0 && <div class="space-y-3">
+    <h3 class="font-semibold text-fg-bright">API reference</h3>
+    <ReferenceTable label={`${example.title} API`} rows={example.api!.map((entry) => ({ name: entry.name, type: entry.type, text: entry.description, default: entry.default ?? (entry.required ? "required" : "-" ) }))} />
+  </div>}
+</div>
+
+<script>
+  import "@/presentation/demo-preview";
+</script>

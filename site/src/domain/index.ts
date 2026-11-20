@@ -1,3 +1,4 @@
+export * from "./analytics";
 export * from "./brands";
 export * from "./callouts";
 export * from "./color-palette";
@@ -12,6 +13,7 @@ export * from "./site-href";
 export * from "./slug";
 export * from "./social-image";
 export * from "./document";
+export * from "./demos";
 export * from "./glob";
 export * from "./groups";
 export * from "./headings";

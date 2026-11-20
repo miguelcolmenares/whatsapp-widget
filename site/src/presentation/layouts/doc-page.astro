@@ -5,6 +5,7 @@ import { loadSite } from "@/infrastructure";
 import { Breadcrumbs } from "@/presentation/components/site/breadcrumbs";
 import { PageInfo } from "@/presentation/components/site/page-info";
 import { SideCard } from "@/presentation/components/site/side-card";
+import DemoPreview from "@/presentation/components/site/demo-preview.astro";
 import BaseLayout from "./base-layout.astro";
 
 interface Props {
@@ -23,6 +24,7 @@ const next = index >= 0 && index < siblings.length - 1 ? siblings[index + 1] : u
 const site = loadSite();
 const { href } = site;
 const { editUrl, updated } = site.pageMeta(doc);
+const demo = await site.demoFor(doc);
 const toc = headings.filter((heading) => heading.depth === 2 || heading.depth === 3);
 // A page with a card in its frontmatter is a detail page: the card sits beside the text, in the place of the
 // table of contents, and above the text on a phone. Without a card nothing here changes.
@@ -133,6 +135,7 @@ const sidebarButton =
           </>
         )
       }
+      {demo && <DemoPreview demo={demo} base={site.config.site.base} />}
       <slot />
       <div class="prose-site mt-10" set:html={html} data-prose />
       <PageInfo editUrl={editUrl} updated={updated} />

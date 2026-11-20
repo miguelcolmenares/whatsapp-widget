@@ -38,6 +38,10 @@ const themeDefault = config.theme.default;
 const startTheme = themeDefault === "system" ? undefined : themeDefault;
 const themeColors = { dark: tokens.color.bg, light: tokens.themes.light.color.bg };
 
+// Analytics is off without the key. A site has one provider, so only the snippet of that provider is written.
+const gtmId = config.analytics?.provider === "gtm" ? config.analytics.id : undefined;
+const ga4Id = config.analytics?.provider === "ga4" ? config.analytics.id : undefined;
+
 const has = (collection: string) => site.documents.some((document) => document.collection === collection);
 // One menu entry per collection that has pages, in the order of the config, then the changelog.
 const defaultNav = [
@@ -92,6 +96,30 @@ const columns = [
     <link rel="sitemap" href={href("sitemap-index.xml")} />
     {describedBy && <link rel="describedby" href={describedBy} />}
     {alternate && <link rel="alternate" type="text/markdown" href={alternate} />}
+    {/* Google Tag Manager: the official head snippet, written only when analytics.provider is "gtm". */}
+    {gtmId && (
+      <script is:inline define:vars={{ gtmId }}>
+        (function (w, d, s, l, i) {
+          w[l] = w[l] || [];
+          w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+          var f = d.getElementsByTagName(s)[0], j = d.createElement(s), dl = l != "dataLayer" ? "&l=" + l : "";
+          j.async = true;
+          j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+          f.parentNode.insertBefore(j, f);
+        })(window, document, "script", "dataLayer", gtmId);
+      </script>
+    )}
+    {/* Google Analytics 4: the gtag.js snippet, written only when analytics.provider is "ga4". */}
+    {ga4Id && <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${ga4Id}`} />}
+    {ga4Id && (
+      <script is:inline define:vars={{ ga4Id }}>
+        // gtag is global, so the site's own scripts can send events with it, as the Google snippet has it.
+        window.dataLayer = window.dataLayer || [];
+        window.gtag = function () { window.dataLayer.push(arguments); };
+        window.gtag("js", new Date());
+        window.gtag("config", ga4Id);
+      </script>
+    )}
     <!-- Runs before the first paint: picks the theme from the saved choice, the default, or the OS (for system). -->
     <script is:inline define:vars={{ defaultTheme: themeDefault, colors: themeColors }}>
       (function () {
@@ -135,6 +163,12 @@ const columns = [
     <slot name="head" />
   </head>
   <body>
+    {/* Google Tag Manager (noscript): the official frame, for a visitor without JavaScript. */}
+    {gtmId && (
+      <noscript>
+        <iframe src={`https://www.googletagmanager.com/ns.html?id=${gtmId}`} height="0" width="0" style="display:none;visibility:hidden"></iframe>
+      </noscript>
+    )}
     <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-md focus:bg-primary focus:px-3 focus:py-2 focus:text-primary-foreground">
       Skip to content
     </a>

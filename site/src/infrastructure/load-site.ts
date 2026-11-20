@@ -20,6 +20,10 @@ import type { RenderedMarkdown } from "./render-markdown";
 import { readSources } from "./read-sources";
 import { readRepositoryVersion } from "./repository-version";
 import { loadSiteConfig } from "./site-config";
+import { readDemoCatalog } from "./read-demos";
+import type { DemoCatalog } from "./read-demos";
+import { renderDemo } from "./render-demo";
+import type { RenderedDemo } from "./render-demo";
 
 /** A loaded site: its config, its pages, a renderer, and the problems found on the way. */
 export interface Site {
@@ -31,6 +35,10 @@ export interface Site {
   customBrands: Record<string, BrandGlyph>;
   /** Problems found in the markdown, each with a severity, a file and a line, to print once at the end of a build. */
   findings: ContentFinding[];
+  /** Prebuilt examples and publication assets, independent of the documentation site's styling. */
+  demos: DemoCatalog;
+  /** A page's optional demo with highlighted source, prepared at build time. */
+  demoFor: (document: Document) => Promise<RenderedDemo | undefined>;
   /** Join a path to the site base: `href("docs/")` becomes `/repo/docs/`. */
   href: (path: string) => string;
   render: (document: Document) => Promise<RenderedMarkdown>;
@@ -67,6 +75,7 @@ export function loadSite(siteDir: string = process.cwd()): Site {
     existing: sources.existing,
   });
   const colorTokens = readColorTokens(siteDir);
+  const demos = readDemoCatalog(siteDir, config, built);
   const meta = buildPageMeta(config, () => readGitHistory(sources.root));
   for (const message of meta.warnings) console.warn(`[docs-sitekit] ${message}`);
 
@@ -95,6 +104,12 @@ export function loadSite(siteDir: string = process.cwd()): Site {
     documents,
     customBrands: readCustomBrands(siteDir, config),
     findings,
+    demos,
+    demoFor: (document) =>
+      renderDemo(demos, document.demo, {
+        context: contextFor(document.path),
+        base: config.site.base,
+      }),
     href: (path) => `${config.site.base}${path.replace(/^\//, "")}`,
     pageMeta: meta.of,
     linkContext: (document) => contextFor(document.path),
