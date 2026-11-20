@@ -21,13 +21,13 @@ const { name, home, links, repository, action, current, search, themeDefault = "
 const isCurrent = (href: string) => Boolean(current) && (current === href || (href !== home && current!.startsWith(href)));
 ---
 
-<header class="sticky top-0 z-40 h-(--sk-layout-nav-h) border-b border-border bg-background/70 backdrop-blur-md">
-  <div class="mx-auto flex h-full max-w-site items-center gap-6 px-5">
-    <a href={home} class="inline-flex items-center gap-2 font-semibold tracking-tight text-fg-bright">
-      <Box className="size-5 text-brand" aria-hidden="true" />
-      {name}
+<header data-site-header class="sticky top-0 z-40 border-b border-border bg-background/70 backdrop-blur-md">
+  <div data-header-row class="relative mx-auto flex max-w-site items-center gap-6 px-5">
+    <a data-header-brand href={home} class="inline-flex items-center gap-2 font-semibold tracking-tight text-fg-bright">
+      <Box className="size-5 shrink-0 text-brand" aria-hidden="true" />
+      <span>{name}</span>
     </a>
-    <nav aria-label="Main" class="hidden items-center gap-1 md:flex">
+    <nav data-header-nav aria-label="Main" class="items-center gap-1">
       {
         links.map((link) => (
           <a
@@ -40,7 +40,7 @@ const isCurrent = (href: string) => Boolean(current) && (current === href || (hr
         ))
       }
     </nav>
-    <div class="ml-auto flex items-center gap-2">
+    <div data-header-actions class="ml-auto flex shrink-0 items-center gap-2">
       {
         repository && (
           <a
@@ -48,8 +48,9 @@ const isCurrent = (href: string) => Boolean(current) && (current === href || (hr
             target="_blank"
             rel="noopener noreferrer"
             data-repository-button
+            data-header-wide-action
             title={`${repository.name} repository`}
-            class="hidden min-h-11 items-center gap-1.5 rounded-md px-2.5 text-sm text-fg-muted transition-colors hover:bg-surface-2 hover:text-fg-bright sm:inline-flex"
+            class="min-h-11 items-center gap-1.5 rounded-md px-2.5 text-sm text-fg-muted transition-colors hover:bg-surface-2 hover:text-fg-bright"
           >
             <Icon name={repository.icon} className="size-5" />
             {repository.name}
@@ -58,7 +59,7 @@ const isCurrent = (href: string) => Boolean(current) && (current === href || (hr
       }
       {
         action && (
-          <a href={action.href} class={`${buttonVariants({ size: "sm" })} max-md:hidden`}>
+          <a data-header-wide-action href={action.href} class={buttonVariants({ size: "sm" })}>
             {action.label}
           </a>
         )
@@ -72,11 +73,12 @@ const isCurrent = (href: string) => Boolean(current) && (current === href || (hr
             class="inline-flex h-11 min-w-11 items-center justify-center gap-2 rounded-md px-2.5 text-sm text-fg-muted transition-colors hover:bg-surface-2 hover:text-fg-bright"
           >
             <Search className="size-4" aria-hidden="true" />
-            <span class="sr-only sm:not-sr-only">Search</span>
+            <span data-header-search-text class="sr-only">Search</span>
             <kbd
               data-search-key
+              data-header-search-label
               aria-hidden="true"
-              class="hidden min-w-[4.5rem] justify-center rounded border border-border px-1.5 py-0.5 font-mono text-[11px] text-fg-dim sm:inline-flex"
+              class="min-w-[4.5rem] justify-center rounded border border-border px-1.5 py-0.5 font-mono text-[11px] text-fg-dim"
             ></kbd>
           </button>
         )
@@ -95,7 +97,7 @@ const isCurrent = (href: string) => Boolean(current) && (current === href || (hr
         data-mobile-menu-open
         aria-label="Open menu"
         aria-haspopup="dialog"
-        class="inline-flex size-11 items-center justify-center rounded-md text-fg-muted hover:bg-surface-2 hover:text-fg-bright md:hidden"
+        class="inline-flex size-11 shrink-0 items-center justify-center rounded-md text-fg-muted hover:bg-surface-2 hover:text-fg-bright"
       >
         <Menu className="size-5" aria-hidden="true" />
       </button>
@@ -103,7 +105,108 @@ const isCurrent = (href: string) => Boolean(current) && (current === href || (hr
   </div>
 </header>
 
+<script is:inline>
+  // Choose the first layout before paint, without waiting for the deferred interaction scripts.
+  {
+    const header = document.currentScript?.previousElementSibling;
+    const row = header?.querySelector("[data-header-row]");
+    if (header instanceof HTMLElement && row instanceof HTMLElement) {
+      header.setAttribute("data-nav-wide", "");
+      header.toggleAttribute("data-nav-wide", row.scrollWidth <= row.clientWidth);
+      const value = `${Math.ceil(header.getBoundingClientRect().height)}px`;
+      if (document.documentElement.style.getPropertyValue("--sitekit-header-height") !== value) {
+        document.documentElement.style.setProperty("--sitekit-header-height", value);
+      }
+    }
+  }
+</script>
+
+<noscript>
+  <style is:inline>
+    [data-site-header] { position: static; }
+    [data-site-header] [data-header-row] { flex-wrap: wrap; }
+    [data-site-header] [data-header-nav] { display: flex; flex-wrap: wrap; inline-size: 100%; }
+    [data-site-header] [data-header-wide-action] { display: inline-flex; white-space: normal; }
+    [data-site-header] [data-mobile-menu-open],
+    [data-site-header] [data-search-open],
+    [data-site-header] [data-theme-switch] { display: none; }
+  </style>
+</noscript>
+
+<style>
+  /* This component owns its obstruction offset, including when an older global stylesheet is customized. */
+  :global(:root) {
+    scroll-padding-top: calc(var(--sitekit-header-height, var(--sk-layout-nav-h)) + 1rem);
+  }
+  [data-header-row] {
+    flex-wrap: wrap;
+    min-block-size: var(--sk-layout-nav-h);
+    padding-block: 0.5rem;
+  }
+  [data-header-brand] {
+    min-inline-size: 0;
+    flex: 1 1 auto;
+  }
+  [data-header-brand] span {
+    min-inline-size: 0;
+    overflow-wrap: anywhere;
+  }
+  [data-header-nav],
+  [data-header-wide-action],
+  [data-header-search-label] {
+    display: none;
+  }
+  [data-header-actions] > button {
+    flex-shrink: 0;
+  }
+  [data-header-nav] > a,
+  [data-header-wide-action] {
+    min-block-size: 2.75rem;
+  }
+  [data-header-nav] > a {
+    display: inline-flex;
+    align-items: center;
+  }
+  [data-header-actions] {
+    max-inline-size: 100%;
+    flex-wrap: wrap;
+  }
+  [data-nav-wide] [data-header-row],
+  [data-nav-wide] [data-header-actions] {
+    flex-wrap: nowrap;
+  }
+  [data-nav-wide] [data-header-brand],
+  [data-nav-wide] [data-header-nav] {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+  [data-nav-wide] [data-header-nav],
+  [data-nav-wide] [data-header-wide-action],
+  [data-nav-wide] [data-header-search-label] {
+    display: inline-flex;
+  }
+  [data-nav-wide] [data-header-search-text] {
+    position: static;
+    inline-size: auto;
+    block-size: auto;
+    margin: 0;
+    overflow: visible;
+    clip-path: none;
+    white-space: normal;
+  }
+  [data-nav-wide] [data-mobile-menu-open] {
+    display: none;
+  }
+  /* Measure the inline row without hiding the focused collapsed-layout trigger. */
+  [data-nav-measuring] [data-mobile-menu-open] {
+    display: inline-flex;
+    position: absolute;
+    inset-inline-end: 1.25rem;
+  }
+</style>
+
 <script>
+  import { shouldMeasureNavigation } from "./navigation-fit";
   // Shows the theme the switch will change to. The choice itself is made by the script in the page head.
   const root = document.documentElement;
   const buttons = document.querySelectorAll<HTMLButtonElement>("[data-theme-switch]");
@@ -119,4 +222,66 @@ const isCurrent = (href: string) => Boolean(current) && (current === href || (hr
   );
   window.addEventListener("themechange", sync);
   sync();
+
+  const header = document.querySelector<HTMLElement>("[data-site-header]");
+  const row = header?.querySelector<HTMLElement>("[data-header-row]");
+  const nav = header?.querySelector<HTMLElement>("[data-header-nav]");
+  const brand = header?.querySelector<HTMLAnchorElement>("[data-header-brand]");
+  const actions = header?.querySelector<HTMLElement>("[data-header-actions]");
+  const trigger = header?.querySelector<HTMLButtonElement>("[data-mobile-menu-open]");
+  if (header && row && nav && brand && actions && trigger) {
+    const dialog = document.querySelector<HTMLDialogElement>("[data-mobile-menu]");
+    const syncHeight = () => {
+      const value = `${Math.ceil(header.getBoundingClientRect().height)}px`;
+      if (root.style.getPropertyValue("--sitekit-header-height") !== value) {
+        root.style.setProperty("--sitekit-header-height", value);
+      }
+    };
+    let frame = 0;
+    let forceMeasure = false;
+    let lastWidth = -1;
+    const measure = () => {
+      frame = 0;
+      const width = row.clientWidth;
+      const wasWide = header.hasAttribute("data-nav-wide");
+      // A collapsed row shrinking again cannot fit. Its own hidden-nav resize must not cause a loop.
+      if (!shouldMeasureNavigation(wasWide, forceMeasure, width, lastWidth)) {
+        lastWidth = width;
+        return;
+      }
+      forceMeasure = false;
+      lastWidth = width;
+      const focused = document.activeElement;
+      const focusedInline = focused instanceof Element && (nav.contains(focused) || Boolean(focused.closest("[data-header-wide-action]")));
+      header.setAttribute("data-nav-measuring", "");
+      header.setAttribute("data-nav-wide", "");
+      const fits = row.scrollWidth <= row.clientWidth;
+      header.toggleAttribute("data-nav-wide", fits);
+      if (fits && dialog?.open) {
+        const href = focused instanceof HTMLAnchorElement ? focused.getAttribute("href") : null;
+        dialog.close();
+        const destination = href ? [...row.querySelectorAll<HTMLAnchorElement>("a[href]")].find((link) => link.getAttribute("href") === href) : null;
+        (destination ?? brand).focus({ preventScroll: true });
+      } else if (!fits && wasWide && focusedInline) {
+        trigger.focus({ preventScroll: true });
+      } else if (fits && focused === trigger) {
+        brand.focus({ preventScroll: true });
+      }
+      // The measurement and final layout settle in this animation frame, before paint.
+      header.removeAttribute("data-nav-measuring");
+      syncHeight();
+    };
+    const schedule = (force = false) => {
+      forceMeasure ||= force;
+      if (!frame) frame = requestAnimationFrame(measure);
+    };
+    const observer = new ResizeObserver(() => { syncHeight(); schedule(); });
+    for (const element of [header, row, nav, brand, actions]) observer.observe(element);
+    const mutations = new MutationObserver(() => schedule(true));
+    mutations.observe(header, { childList: true, characterData: true, subtree: true, attributes: true, attributeFilter: ["style", "class"] });
+    mutations.observe(root, { attributes: true, attributeFilter: ["style", "class"] });
+    void document.fonts.ready.then(() => schedule(true));
+    document.fonts.addEventListener("loadingdone", () => schedule(true));
+    schedule(true);
+  }
 </script>

@@ -12,3 +12,5 @@ export * from "./render-markdown";
 export * from "./demo-samples";
 export * from "./load-site";
 export * from "./report-findings";
+export * from "./read-demos";
+export * from "./render-demo";

@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { iconProblem } from "./brands";
 import { DEFAULT_SEVERITY, FINDING_DESCRIPTIONS, FINDING_KINDS, isFindingKind } from "./findings";
+import { analyticsIdProblem, ANALYTICS_PROVIDERS } from "./analytics";
 import { EDIT_HOSTS } from "./edit-link";
 import { socialImageProblem } from "./social-image";
 
@@ -108,7 +109,7 @@ const collection = z.strictObject({
     .string()
     .regex(/^[a-z0-9-]+$/, "id must be lowercase letters, digits and hyphens")
     .describe(
-      "The route segment and the menu key, unique in the site. `changelog`, `gallery`, `404` and `_astro` are reserved.",
+      "The route segment and the menu key, unique in the site. `changelog`, `gallery`, `404` and `_astro` are reserved. `demo-assets` is reserved when demos is configured.",
     ),
   label: z.string().min(1).describe("The name of the collection in the menu and as its title."),
   /** Folder to read, relative to the site folder. A page belongs to the collection with the deepest folder. */
@@ -277,6 +278,20 @@ export const siteConfigSchema = z
       })
       .default({ default: "dark" })
       .describe("The color theme a visitor sees first."),
+    /** Optional prebuilt examples selected by documentation pages. */
+    demos: z
+      .strictObject({
+        dir: z
+          .string()
+          .min(1)
+          .describe(
+            "The demo directory relative to the site folder. It must stay inside sources.root and contain manifest.json and local fixture and source files.",
+          ),
+      })
+      .optional()
+      .describe(
+        "Optional isolated previews on documentation pages. Markdown frontmatter demo selects an example from this directory's closed manifest.json.",
+      ),
     /** Where the repository is, relative to the site folder, and its changelog. */
     sources: z
       .strictObject({
@@ -470,6 +485,32 @@ export const siteConfigSchema = z
       .describe(
         "The date of the last change of each page, at the foot of the page. A site without the key shows none.",
       ),
+    /**
+     * Google Tag Manager or Google Analytics 4, in the head of every page. A site without the key has no script,
+     * no request and no cookie from analytics. One provider per site: the snippet of the other is never written.
+     */
+    analytics: z
+      .strictObject({
+        provider: z
+          .enum(ANALYTICS_PROVIDERS)
+          .describe(
+            "`gtm` loads Google Tag Manager, with its head script and the `noscript` frame after `<body>`. `ga4` loads Google Analytics 4 with the gtag.js snippet. A site has one of them.",
+          ),
+        id: z
+          .string()
+          .min(1)
+          .describe(
+            "The container ID of Google Tag Manager, such as `GTM-XXXXXXX`, or the measurement ID of Google Analytics 4, such as `G-XXXXXXXXXX`. It starts with the prefix of the provider. It is public, so it is safe to commit.",
+          ),
+      })
+      .superRefine((analytics, context) => {
+        const problem = analyticsIdProblem(analytics.provider, analytics.id);
+        if (problem) context.addIssue({ code: "custom", path: ["id"], message: problem });
+      })
+      .optional()
+      .describe(
+        "Google Tag Manager or Google Analytics 4 in the head of every page. A site without the key has no script, no request and no cookie from analytics. The kit does not handle consent: if your visitors need a notice, the site owner writes it.",
+      ),
   })
   .superRefine((config, context) => {
     const known = new Set([...config.collections.map((entry) => entry.id), "changelog"]);
@@ -485,7 +526,7 @@ export const siteConfigSchema = z
 
     const seen = new Set<string>();
     config.collections.forEach((entry, index) => {
-      if (RESERVED_IDS.includes(entry.id)) {
+      if (RESERVED_IDS.includes(entry.id) || (config.demos && entry.id === "demo-assets")) {
         context.addIssue({
           code: "custom",
           path: ["collections", index, "id"],

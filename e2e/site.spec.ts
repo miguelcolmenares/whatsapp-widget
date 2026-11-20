@@ -4,6 +4,8 @@ import { serveCdnFromDist } from "./support/cdn";
 
 const BASE = "/whatsapp-widget/";
 const PAGES = [BASE, `${BASE}docs/getting-started/`, `${BASE}docs/options/`, `${BASE}configurator/`];
+// The Google Tag Manager container of sitekit.config.json (analytics) loads these two hosts on every page.
+const ANALYTICS_HOSTS = ["www.googletagmanager.com", "www.google-analytics.com"];
 
 test.beforeEach(async ({ page }) => {
 	await serveCdnFromDist(page);
@@ -45,7 +47,7 @@ test.describe("nothing leaves the site", () => {
 			page.on("request", request => hosts.add(new URL(request.url()).host));
 			await page.goto(path);
 			await page.waitForLoadState("networkidle");
-			const allowed = new Set([new URL(baseURL!).host]);
+			const allowed = new Set([new URL(baseURL!).host, ...ANALYTICS_HOSTS]);
 			if (path.endsWith("configurator/")) allowed.add("cdn.jsdelivr.net");
 			expect([...hosts].filter(host => !allowed.has(host))).toEqual([]);
 		});

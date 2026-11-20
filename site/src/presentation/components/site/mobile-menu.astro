@@ -5,14 +5,14 @@ import { Icon } from "./icon";
 interface Props {
   links: readonly { label: string; href: string }[];
   action?: { label: string; href: string };
-  /** The repository button of the header, which has no room in the bar on a phone. */
+  /** The repository link available inside the compact navigation. */
   repository?: { href: string; name: string; icon: string };
 }
 const { links, action, repository } = Astro.props;
 ---
 
 {/*
-  The navigation for a phone, shown below the `md` breakpoint. It is a native modal dialog and a few lines of
+  The navigation when the inline header does not fit. It is a native modal dialog and a few lines of
   script, not a React component: the browser traps focus inside it, closes it with Escape, hides the page behind it
   from assistive technology and returns focus to the button, and the page does not download a framework for it.
   The layout renders it after the header, the way it renders the search dialog. The button that opens it, any
@@ -22,7 +22,7 @@ const { links, action, repository } = Astro.props;
   data-mobile-menu
   aria-labelledby="mobile-menu-title"
   aria-modal="true"
-  class="fixed inset-y-0 right-0 left-auto m-0 h-dvh max-h-none w-72 max-w-[calc(100vw-3rem)] flex-col gap-4 border-0 border-l border-border bg-background p-0 text-fg backdrop:bg-black/50 open:flex md:hidden"
+  class="fixed inset-y-0 right-0 left-auto m-0 h-dvh max-h-none w-72 max-w-[calc(100dvw-3rem)] flex-col gap-4 border-0 border-l border-border bg-background p-0 text-fg backdrop:bg-black/50 open:flex"
 >
   <div class="flex items-center justify-between p-4 pr-2">
     <h2 id="mobile-menu-title" class="font-semibold text-fg-bright">Menu</h2>
@@ -80,10 +80,6 @@ const { links, action, repository } = Astro.props;
       if (target === dialog || (target instanceof Element && target.closest("[data-mobile-menu-close], a"))) {
         dialog.close();
       }
-    });
-    // The menu is for a phone: a window made wider while it is open (a rotated tablet) does not keep it on top.
-    window.matchMedia("(min-width: 768px)").addEventListener("change", (query) => {
-      if (query.matches && dialog.open) dialog.close();
     });
   }
 </script>

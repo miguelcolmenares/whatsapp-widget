@@ -42,6 +42,7 @@ export const KNOWN_FRONTMATTER_KEYS = [
   "tags",
   "meta",
   "links",
+  "demo",
 ] as const;
 
 /** A page of the site. */
@@ -64,6 +65,8 @@ export interface Document {
   group: DocumentGroup | null;
   /** The side card of a detail page, from `meta`, `links` and `tags`. Absent when the page has none. */
   card?: SideCard;
+  /** Identifier of a prebuilt example in the optional demos manifest. */
+  demo?: string;
   /** Markdown body, without a leading heading that repeats the title. */
   body: string;
 }
